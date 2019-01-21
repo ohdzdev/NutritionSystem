@@ -1,0 +1,95 @@
+Starting...
+Migrate Selected Objects....
+- Migrating...
+- Migrating schema AnimalDietDatabase_OHDZA_be_ufe_combined...
+- Migrating schema contents for schema AnimalDietDatabase_OHDZA_be_ufe_combined
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.CASE_NOTES migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SPECI_INSTRUC_FOOD_ITEM migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.BUDGET_ID_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.FOOD_CATEGORY_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.PARK_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_HISTORY migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_SUB_HISTORY migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SRC_CD migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TOMORROW_DIET_SUB migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.ANIMAL_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SETTINGS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SPECIES_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.WEIGHT_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.FOOD_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.NUTR_DEF migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_SUB_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DATA_SRC migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.WEEKDAYS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TODAY_DIET_SUB migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.PASTE_ERRORS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_CHANGES migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.LOCATION_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.UNIT_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.NUT_DATA2 migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TODAY_DIET migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.LOGONS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.EMPLOYEE_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.LIFE_STAGES migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DELIVERY_CONTAINER_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SUBENCLOSURE_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.FOOD_PREP_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TOMORROW_DIET migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.PREP_NOTE_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_TABLE migrated
+- Finalizing foreign key migration...
+- Migration finished
+Migrate Selected Objects finished
+Generate SQL CREATE Statements....
+- Generating SQL...
+Generate SQL CREATE Statements finished
+Finished performing tasks.
+
+
+
+Starting...
+Migrate Selected Objects....
+- Migrating...
+- Migrating schema AnimalDietDatabase_OHDZA_be_ufe_combined...
+- Migrating schema contents for schema AnimalDietDatabase_OHDZA_be_ufe_combined
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.CASE_NOTES migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SPECI_INSTRUC_FOOD_ITEM migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.BUDGET_ID_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.FOOD_CATEGORY_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.PARK_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_HISTORY migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_SUB_HISTORY migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SRC_CD migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TOMORROW_DIET_SUB migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.ANIMAL_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SETTINGS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SPECIES_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.WEIGHT_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.FOOD_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.NUTR_DEF migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_SUB_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DATA_SRC migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.WEEKDAYS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TODAY_DIET_SUB migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.PASTE_ERRORS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_CHANGES migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.LOCATION_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.UNIT_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.NUT_DATA2 migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TODAY_DIET migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.LOGONS migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.EMPLOYEE_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.LIFE_STAGES migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DELIVERY_CONTAINER_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.SUBENCLOSURE_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.FOOD_PREP_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.TOMORROW_DIET migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.PREP_NOTE_TABLE migrated
+- Table AnimalDietDatabase_OHDZA_be_ufe_combined.DIET_TABLE migrated
+- Finalizing foreign key migration...
+- Migration finished
+Migrate Selected Objects finished
+Generate SQL CREATE Statements....
+- Generating SQL...
+Generate SQL CREATE Statements finished
+Finished performing tasks.

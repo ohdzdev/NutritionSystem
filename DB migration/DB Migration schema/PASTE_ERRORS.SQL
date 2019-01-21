@@ -1,0 +1,3 @@
+-- CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`PASTE_ERRORS` (
+--   `Field0` LONGTEXT NULL,
+--   `Field1` LONGTEXT NULL)

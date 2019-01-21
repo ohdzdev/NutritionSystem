@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`WEIGHT_TABLE` (
+  `WeightID` INT(10) NOT NULL,
+  `FoodID` INT(10) NULL,
+  `WtAmount` DOUBLE NULL,
+  `UnitIDNum` INT(10) NULL,
+  `Gm_Wgt` DOUBLE NULL,
+  INDEX `UnitIDNum` (`UnitIDNum` ASC),
+  PRIMARY KEY (`WeightID`),
+  CONSTRAINT `FOOD TABLEWEIGHT TABLE`
+    FOREIGN KEY (`FoodID`)
+    REFERENCES `AnimalDietDatabase_OHDZA_be_ufe_combined`.`FOOD_TABLE` (`FOODID`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `UNIT TABLEWEIGHT TABLE`
+    FOREIGN KEY (`UnitIDNum`)
+    REFERENCES `AnimalDietDatabase_OHDZA_be_ufe_combined`.`UNIT_TABLE` (`UNITID`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)

@@ -1,0 +1,6 @@
+-- CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`SETTINGS` (
+--   `SettingsID` INT(10) NOT NULL,
+--   `SettingName` VARCHAR(255) NULL,
+--   `SettingValue` VARCHAR(255) NULL,
+--   `SettingDescription` VARCHAR(255) NULL,
+--   PRIMARY KEY (`SettingsID`))

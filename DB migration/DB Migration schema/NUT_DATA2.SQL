@@ -1,0 +1,46 @@
+CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`NUT_DATA2` (
+  `Data_ID` INT(10) NOT NULL,
+  `FOODID` INT(10) NULL,
+  `Nutr_No` VARCHAR(255) NULL,
+  `Nutr_Val` DOUBLE NULL,
+  `Num_Data_Pts` VARCHAR(255) NULL,
+  `Std_Error` VARCHAR(255) NULL,
+  `Src_Cd` VARCHAR(2) NULL,
+  `Deriv_Cd` VARCHAR(255) NULL,
+  `Ref_NDB_No` VARCHAR(255) NULL,
+  `Add_Nutr_Mark` VARCHAR(255) NULL,
+  `Num_Studies` VARCHAR(255) NULL,
+  `Min` VARCHAR(255) NULL,
+  `Max` VARCHAR(255) NULL,
+  `DF` VARCHAR(255) NULL,
+  `Low_EB` VARCHAR(255) NULL,
+  `Up_EB` VARCHAR(255) NULL,
+  `Stat_Cmt` VARCHAR(255) NULL,
+  `AddMod_Date` DATETIME NULL,
+  `DataSrc_ID` INT(10) NULL,
+  `DataSrc_Name` VARCHAR(255) NULL,
+  INDEX `FOODID` (`FOODID` ASC),
+  UNIQUE INDEX `Data_ID` (`Data_ID` ASC),
+  INDEX `Num_Data_Pts` (`Num_Data_Pts` ASC),
+  INDEX `Num_Studies` (`Num_Studies` ASC),
+  CONSTRAINT `NUTR_DEFNUT_DATA2`
+    FOREIGN KEY (`Nutr_No`)
+    REFERENCES `AnimalDietDatabase_OHDZA_be_ufe_combined`.`NUTR_DEF` (`Nutr_No`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `DATA_SRCNUT_DATA2`
+    FOREIGN KEY (`DataSrc_ID`)
+    REFERENCES `AnimalDietDatabase_OHDZA_be_ufe_combined`.`DATA_SRC` (`DataSrc_ID`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `SRC_CDNUT_DATA2`
+    FOREIGN KEY (`Src_Cd`)
+    REFERENCES `AnimalDietDatabase_OHDZA_be_ufe_combined`.`SRC_CD` (`Src_Cd`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `FOOD_TABLENUT_DATA2`
+    FOREIGN KEY (`FOODID`)
+    REFERENCES  `AnimalDietDatabase_OHDZA_be_ufe_combined`.`FOOD_TABLE` (`FOODID`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+)

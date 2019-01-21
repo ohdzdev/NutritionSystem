@@ -1,0 +1,6 @@
+-- CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`SPECI_INSTRUC_FOOD_ITEM` (
+--   `SIID` INT(10) NOT NULL,
+--   `INSTRUCTIONS` VARCHAR(50) NULL,
+--   `ShortForm` VARCHAR(255) NULL,
+--   INDEX `SIID` (`SIID` ASC),
+--   PRIMARY KEY (`SIID`))

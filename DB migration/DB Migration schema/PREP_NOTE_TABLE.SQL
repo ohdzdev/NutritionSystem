@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`PREP_NOTE_TABLE` (
+  `PrepNoteID` INT(10) NOT NULL,
+  `PrepNote` VARCHAR(255) NULL,
+  `DietID` INT(10) NULL,
+  INDEX `PrepNoteID` (`PrepNoteID` ASC),
+  PRIMARY KEY (`PrepNoteID`),
+  CONSTRAINT `DIET TABLEPREP NOTE TABLE`
+    FOREIGN KEY (`DietID`)
+    REFERENCES `AnimalDietDatabase_OHDZA_be_ufe_combined`.`DIET_TABLE` (`DIETID`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)

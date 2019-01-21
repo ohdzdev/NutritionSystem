@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`UNIT_TABLE` (
+  `UNITID` INT(10) NOT NULL,
+  `UNIT` VARCHAR(50) NULL,
+  `UnitType` VARCHAR(255) NULL,
+  `ConversionToG` DOUBLE NULL,
+  PRIMARY KEY (`UNITID`),
+  INDEX `UNITID` (`UNITID` ASC))

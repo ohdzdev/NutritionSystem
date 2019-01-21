@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS `AnimalDietDatabase_OHDZA_be_ufe_combined`.`NUTR_DEF` (
+  `Nutr_No` VARCHAR(255) NULL,
+  `Units` VARCHAR(7) NULL,
+  `Tagname` VARCHAR(20) NULL,
+  `NutrDesc` VARCHAR(60) NULL,
+  `Num_Dec` VARCHAR(1) NULL,
+  `SR_Order` DOUBLE NULL,
+  `BGT_Name` VARCHAR(255) NULL,
+  `NUTR_DEFID` INT(10) NOT NULL,
+  INDEX `NUTR_DEFID` (`NUTR_DEFID` ASC),
+  INDEX `Num_Dec` (`Num_Dec` ASC),
+  PRIMARY KEY (`NUTR_DEFID`),
+  UNIQUE INDEX `Nutr_No` (`Nutr_No` ASC))

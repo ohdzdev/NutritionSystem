@@ -34,5 +34,113 @@
   "Role": {
     "dataSource": "db",
     "public": false
+  },
+  "WeightTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "AnimalTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "BudgetIdTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "CaseNotes": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DataSrc": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DeliveryContainerTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DietChanges": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DietSubHistory": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DietSubTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DietTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "EmployeeTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "FoodPrepTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "LifeStages": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "LocationTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Logons": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "NutrDef": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "NutData2": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "ParkTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "PrepNoteTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "SrcCd": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "SubenclosureTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TodayDiet": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TodayDietSub": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TomorrowDiet": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TomorrowDietSub": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Weekdays": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "UnitTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
   }
 }

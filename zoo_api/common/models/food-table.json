@@ -1,5 +1,6 @@
 {
   "name": "FoodTable",
+  "plural": "FoodTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

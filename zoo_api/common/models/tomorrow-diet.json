@@ -1,5 +1,6 @@
 {
   "name": "TomorrowDiet",
+  "plural": "TomorrowDiet",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

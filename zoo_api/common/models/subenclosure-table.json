@@ -1,5 +1,6 @@
 {
   "name": "SubenclosureTable",
+  "plural": "SubenclosureTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

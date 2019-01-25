@@ -1,5 +1,6 @@
 {
   "name": "CaseNotes",
+  "plural": "CaseNotes",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

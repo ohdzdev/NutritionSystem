@@ -1,5 +1,6 @@
 {
   "name": "DietSubHistory",
+  "plural": "DietSubHistory",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

@@ -1,5 +1,6 @@
 {
   "name": "DeliveryContainerTable",
+  "plural": "DeliveryContainerTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

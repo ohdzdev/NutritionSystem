@@ -1,5 +1,6 @@
 {
   "name": "AnimalTable",
+  "plural": "AnimalTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

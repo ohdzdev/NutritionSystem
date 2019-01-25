@@ -1,5 +1,6 @@
 {
   "name": "DietChanges",
+  "plural": "DietChanges",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

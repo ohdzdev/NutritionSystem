@@ -1,5 +1,6 @@
 {
   "name": "EmployeeTable",
+  "plural": "EmployeeTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

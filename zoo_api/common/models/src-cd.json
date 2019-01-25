@@ -1,5 +1,6 @@
 {
   "name": "SrcCd",
+  "plural": "SrcCd",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

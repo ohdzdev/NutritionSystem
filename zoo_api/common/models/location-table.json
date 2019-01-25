@@ -1,5 +1,6 @@
 {
   "name": "LocationTable",
+  "plural": "LocationTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

@@ -1,5 +1,6 @@
 {
   "name": "FoodPrepTable",
+  "plural": "FoodPrepTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

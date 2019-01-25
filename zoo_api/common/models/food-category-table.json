@@ -1,5 +1,6 @@
 {
   "name": "FoodCategoryTable",
+  "plural": "FoodCategoryTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

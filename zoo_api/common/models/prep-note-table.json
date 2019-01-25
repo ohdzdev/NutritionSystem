@@ -1,5 +1,6 @@
 {
   "name": "PrepNoteTable",
+  "plural": "PrepNoteTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

@@ -1,5 +1,6 @@
 {
   "name": "TodayDietSub",
+  "plural": "TodayDietSub",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

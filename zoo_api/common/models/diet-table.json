@@ -1,5 +1,6 @@
 {
   "name": "DietTable",
+  "plural": "DietTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

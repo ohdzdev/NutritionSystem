@@ -1,5 +1,6 @@
 {
   "name": "Weekdays",
+  "plural": "UnitTable",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {

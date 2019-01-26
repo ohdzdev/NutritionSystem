@@ -35,11 +35,15 @@
     "dataSource": "db",
     "public": false
   },
-  "Animals": {
+  "WeightTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "BudgetIds": {
+  "AnimalTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "BudgetIdTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
@@ -51,11 +55,7 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "DeliveryContainers": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "Diets": {
+  "DeliveryContainerTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
@@ -63,31 +63,23 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "DietHistory": {
+  "DietSubHistory": {
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "DietPlan": {
+  "DietSubTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "Employees": {
+  "DietTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "Food": {
+  "EmployeeTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "FoodCategories": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "FoodPrepTables": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "FoodWeights": {
+  "FoodPrepTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
@@ -95,7 +87,7 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "Locations": {
+  "LocationTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
@@ -107,7 +99,7 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "NutData": {
+  "NutData2": {
     "dataSource": "zoo_mysql",
     "public": true
   },
@@ -115,11 +107,7 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "PrepNotes": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "Species": {
+  "PrepNoteTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
@@ -127,7 +115,7 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "Subenclosures": {
+  "SubenclosureTable": {
     "dataSource": "zoo_mysql",
     "public": true
   },
@@ -147,11 +135,11 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "Units": {
+  "Weekdays": {
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "Weekdays": {
+  "UnitTable": {
     "dataSource": "zoo_mysql",
     "public": true
   }

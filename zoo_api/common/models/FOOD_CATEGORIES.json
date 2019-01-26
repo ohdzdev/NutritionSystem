@@ -1,15 +1,15 @@
 {
-  "name": "Weekdays",
+  "name": "FoodCategories",
   "options": {
     "idInjection": false,
     "mysql": {
       "schema": "zoo",
-      "table": "WEEKDAYS"
+      "table": "FOOD_CATEGORIES"
     },
     "relations": {}
   },
   "properties": {
-    "weekdayId": {
+    "categoryId": {
       "type": "Number",
       "required": true,
       "length": null,
@@ -17,7 +17,7 @@
       "scale": 0,
       "id": 1,
       "mysql": {
-        "columnName": "weekday_id",
+        "columnName": "category_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -25,33 +25,33 @@
         "nullable": "N"
       }
     },
-    "sameDayText": {
+    "foodCategory": {
       "type": "String",
       "required": false,
-      "length": 255,
+      "length": 50,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "same_day_text",
+        "columnName": "food_category",
         "dataType": "varchar",
-        "dataLength": 255,
+        "dataLength": 50,
         "dataPrecision": null,
         "dataScale": null,
         "nullable": "Y"
       }
     },
-    "nextDayText": {
-      "type": "String",
+    "sortOrder": {
+      "type": "Number",
       "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
-        "columnName": "next_day_text",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
+        "columnName": "sort_order",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     }

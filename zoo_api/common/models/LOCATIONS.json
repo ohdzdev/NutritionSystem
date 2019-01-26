@@ -1,15 +1,15 @@
 {
-  "name": "Logons",
+  "name": "Locations",
   "options": {
     "idInjection": false,
     "mysql": {
       "schema": "zoo",
-      "table": "LOGONS"
+      "table": "LOCATIONS"
     },
     "relations": {}
   },
   "properties": {
-    "loginId": {
+    "locationId": {
       "type": "Number",
       "required": true,
       "length": null,
@@ -17,7 +17,7 @@
       "scale": 0,
       "id": 1,
       "mysql": {
-        "columnName": "login_id",
+        "columnName": "location_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -25,14 +25,29 @@
         "nullable": "N"
       }
     },
-    "windowsLogon": {
+    "location": {
+      "type": "String",
+      "required": false,
+      "length": 50,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "location",
+        "dataType": "varchar",
+        "dataLength": 50,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      }
+    },
+    "color": {
       "type": "String",
       "required": false,
       "length": 255,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "windows_logon",
+        "columnName": "color",
         "dataType": "varchar",
         "dataLength": 255,
         "dataPrecision": null,
@@ -40,44 +55,14 @@
         "nullable": "Y"
       }
     },
-    "logonDate": {
-      "type": "Date",
-      "required": false,
-      "length": null,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "logon_date",
-        "dataType": "datetime",
-        "dataLength": null,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "logoffDate": {
-      "type": "Date",
-      "required": false,
-      "length": null,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "logoff_date",
-        "dataType": "datetime",
-        "dataLength": null,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "dbType": {
+    "shortLocation": {
       "type": "String",
       "required": false,
       "length": 255,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "db_type",
+        "columnName": "short_location",
         "dataType": "varchar",
         "dataLength": 255,
         "dataPrecision": null,

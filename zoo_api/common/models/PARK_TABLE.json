@@ -1,15 +1,15 @@
 {
-  "name": "Logons",
+  "name": "ParkTable",
   "options": {
     "idInjection": false,
     "mysql": {
       "schema": "zoo",
-      "table": "LOGONS"
+      "table": "PARK_TABLE"
     },
     "relations": {}
   },
   "properties": {
-    "loginId": {
+    "parkId": {
       "type": "Number",
       "required": true,
       "length": null,
@@ -17,7 +17,7 @@
       "scale": 0,
       "id": 1,
       "mysql": {
-        "columnName": "login_id",
+        "columnName": "park_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -25,59 +25,29 @@
         "nullable": "N"
       }
     },
-    "windowsLogon": {
+    "park": {
       "type": "String",
       "required": false,
-      "length": 255,
+      "length": 50,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "windows_logon",
+        "columnName": "park",
         "dataType": "varchar",
-        "dataLength": 255,
+        "dataLength": 50,
         "dataPrecision": null,
         "dataScale": null,
         "nullable": "Y"
       }
     },
-    "logonDate": {
-      "type": "Date",
-      "required": false,
-      "length": null,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "logon_date",
-        "dataType": "datetime",
-        "dataLength": null,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "logoffDate": {
-      "type": "Date",
-      "required": false,
-      "length": null,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "logoff_date",
-        "dataType": "datetime",
-        "dataLength": null,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "dbType": {
+    "shortName": {
       "type": "String",
       "required": false,
       "length": 255,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "db_type",
+        "columnName": "short_name",
         "dataType": "varchar",
         "dataLength": 255,
         "dataPrecision": null,

@@ -1,15 +1,15 @@
 {
-  "name": "Weekdays",
+  "name": "BudgetIds",
   "options": {
     "idInjection": false,
     "mysql": {
       "schema": "zoo",
-      "table": "WEEKDAYS"
+      "table": "BUDGET_IDS"
     },
     "relations": {}
   },
   "properties": {
-    "weekdayId": {
+    "budgetId": {
       "type": "Number",
       "required": true,
       "length": null,
@@ -17,7 +17,7 @@
       "scale": 0,
       "id": 1,
       "mysql": {
-        "columnName": "weekday_id",
+        "columnName": "budget_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -25,29 +25,14 @@
         "nullable": "N"
       }
     },
-    "sameDayText": {
+    "budgetCode": {
       "type": "String",
       "required": false,
       "length": 255,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "same_day_text",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "nextDayText": {
-      "type": "String",
-      "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "next_day_text",
+        "columnName": "budget_code",
         "dataType": "varchar",
         "dataLength": 255,
         "dataPrecision": null,

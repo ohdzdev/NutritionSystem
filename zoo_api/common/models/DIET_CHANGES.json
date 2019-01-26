@@ -1,15 +1,21 @@
 {
-  "name": "Logons",
+  "name": "DietChanges",
   "options": {
     "idInjection": false,
     "mysql": {
       "schema": "zoo",
-      "table": "LOGONS"
+      "table": "DIET_CHANGES"
     },
-    "relations": {}
+    "relations": {
+      "dietTabledietChangesrel": {
+        "model": "Diets",
+        "type": "belongsTo",
+        "foreignKey": "dietId"
+      }
+    }
   },
   "properties": {
-    "loginId": {
+    "dietChangeId": {
       "type": "Number",
       "required": true,
       "length": null,
@@ -17,7 +23,7 @@
       "scale": 0,
       "id": 1,
       "mysql": {
-        "columnName": "login_id",
+        "columnName": "diet_change_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -25,29 +31,14 @@
         "nullable": "N"
       }
     },
-    "windowsLogon": {
-      "type": "String",
-      "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "windows_logon",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
-    },
-    "logonDate": {
+    "dietChangeDate": {
       "type": "Date",
       "required": false,
       "length": null,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "logon_date",
+        "columnName": "diet_change_date",
         "dataType": "datetime",
         "dataLength": null,
         "dataPrecision": null,
@@ -55,29 +46,59 @@
         "nullable": "Y"
       }
     },
-    "logoffDate": {
-      "type": "Date",
+    "dietChangeTime": {
+      "type": "Number",
       "required": false,
       "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "diet_change_time",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
+    "dietChangeReason": {
+      "type": "String",
+      "required": false,
+      "length": 4294967295,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "logoff_date",
-        "dataType": "datetime",
-        "dataLength": null,
+        "columnName": "diet_change_reason",
+        "dataType": "longtext",
+        "dataLength": 4294967295,
         "dataPrecision": null,
         "dataScale": null,
         "nullable": "Y"
       }
     },
-    "dbType": {
+    "dietId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "diet_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
+    "bgtUserId": {
       "type": "String",
       "required": false,
       "length": 255,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "db_type",
+        "columnName": "bgt_user_id",
         "dataType": "varchar",
         "dataLength": 255,
         "dataPrecision": null,

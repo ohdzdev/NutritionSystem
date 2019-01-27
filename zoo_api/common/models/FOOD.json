@@ -7,12 +7,12 @@
       "table": "FOOD"
     },
     "relations": {
-      "budgetIdTablefoodTablerel": {
+      "foodBudgetId": {
         "model": "BudgetIds",
         "type": "belongsTo",
         "foreignKey": "budgetId"
       },
-      "food category tablefood tablerel": {
+      "foodFoodCategory": {
         "model": "FoodCategories",
         "type": "belongsTo",
         "foreignKey": "category"

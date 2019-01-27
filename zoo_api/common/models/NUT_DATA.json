@@ -7,22 +7,22 @@
       "table": "NUT_DATA"
     },
     "relations": {
-      "dataSrcnutData2rel": {
+      "nutDataDataSrc": {
         "model": "DataSrc",
         "type": "belongsTo",
         "foreignKey": "dataSrcId"
       },
-      "nutrDefnutData2rel": {
+      "nutDataNutrDef": {
         "model": "NutrDef",
         "type": "belongsTo",
         "foreignKey": "nutrNo"
       },
-      "nutData2FoodTableFkrel": {
+      "nutDataFoods": {
         "model": "Food",
         "type": "belongsTo",
         "foreignKey": "foodId"
       },
-      "srcCdnutData2rel": {
+      "nutDataSrcCd": {
         "model": "SrcCd",
         "type": "belongsTo",
         "foreignKey": "srcCd"

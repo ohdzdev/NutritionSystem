@@ -7,27 +7,27 @@
       "table": "DIETS"
     },
     "relations": {
-      "delivery container tablediet tablerel": {
+      "dietDeliveryContainer": {
         "model": "DeliveryContainers",
         "type": "belongsTo",
         "foreignKey": "dcId"
       },
-      "employee tablediet tablerel": {
+      "dietEmployee": {
         "model": "Employees",
         "type": "belongsTo",
         "foreignKey": "userLogin"
       },
-      "food prep tablediet tablerel": {
+      "dietFoodPrepTable": {
         "model": "FoodPrepTables",
         "type": "belongsTo",
         "foreignKey": "tableId"
       },
-      "species tablediet tablerel": {
+      "dietSpecies": {
         "model": "Species",
         "type": "belongsTo",
         "foreignKey": "speciesId"
       },
-      "subenclosureTabledietTablerel": {
+      "dietSubenclosure": {
         "model": "Subenclosures",
         "type": "belongsTo",
         "foreignKey": "groupId"

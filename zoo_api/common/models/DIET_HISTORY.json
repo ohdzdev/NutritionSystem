@@ -7,22 +7,22 @@
       "table": "DIET_HISTORY"
     },
     "relations": {
-      "diet tabletbldietsubhistoryrel": {
+      "dietHistoryDiets": {
         "model": "Diets",
         "type": "belongsTo",
         "foreignKey": "dietId"
       },
-      "employeeTabledietSubHistoryrel": {
+      "dietHistoryEmployees": {
         "model": "Employees",
         "type": "belongsTo",
         "foreignKey": "bgtUserId"
       },
-      "foodTabledietSubHistoryrel": {
+      "dietHistoryFoods": {
         "model": "Food",
         "type": "belongsTo",
         "foreignKey": "foodId"
       },
-      "unitTabledietSubHistoryrel": {
+      "dietHistoryUnits": {
         "model": "Units",
         "type": "belongsTo",
         "foreignKey": "unitId"

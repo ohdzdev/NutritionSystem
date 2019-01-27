@@ -1,0 +1,158 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "db"
+  },
+  "AccessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "db",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "db",
+    "public": false,
+    "options": {
+      "strictObjectIDCoercion": true
+    }
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Animals": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "BudgetIds": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "CaseNotes": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DataSrc": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DeliveryContainers": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Diets": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DietChanges": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DietHistory": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "DietPlan": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Employees": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Food": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "FoodCategories": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "FoodPrepTables": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "FoodWeights": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "LifeStages": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Locations": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Logons": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "NutrDef": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "NutData": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "ParkTable": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "PrepNotes": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Species": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "SrcCd": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Subenclosures": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TodayDiet": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TodayDietSub": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TomorrowDiet": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "TomorrowDietSub": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Units": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  },
+  "Weekdays": {
+    "dataSource": "zoo_mysql",
+    "public": true
+  }
+}

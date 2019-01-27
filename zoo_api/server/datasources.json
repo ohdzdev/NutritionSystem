@@ -1,0 +1,16 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "zoo_mysql": {
+    "host": "172.245.130.147",
+    "port": 3306,
+    "database": "zoo",
+    "password": "zoo",
+    "name": "zoo_mysql",
+    "connector": "mysql",
+    "user": "zoo",
+    "all": true
+  }
+}

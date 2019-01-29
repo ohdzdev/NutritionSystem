@@ -5,7 +5,9 @@ jobs:
       - image: circleci/node:10.15
     steps:
       - checkout
-      - add_ssh_keys
+      - add_ssh_keys:
+        fingerprints:
+            - 96:42:68:6f:85:1e:82:73:d4:41:05:20:f0:55:c2:cc
       - run: 
           name: Deploy To VPS
           command: ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git checkout develop; git pull; npm install; npm run build:api; npm run build:frontend; pm2 start;"

@@ -1,11 +1,15 @@
 version: 2
 jobs:
-  build:
+  deployDev:
     docker:
       - image: circleci/node:10.15
     steps:
       - checkout
-      - run: echo build
+      - add_ssh_keys
+      - run: 
+        name: Deploy To VPS
+        command: |
+          ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git checkout develop; git pull; npm install; npm run build:api; npm run build:frontend; pm2 start;"
   test:
     docker:
       - image: circleci/node:10.15
@@ -14,7 +18,7 @@ jobs:
       - run: echo test
 workflows:
   version: 2
-  build_and_test:
+  testandDeployToDev:
     jobs:
-      - build
       - test
+      - deployDev

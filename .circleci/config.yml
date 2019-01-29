@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-        fingerprints:
+          fingerprints:
             - "96:42:68:6f:85:1e:82:73:d4:41:05:20:f0:55:c2:cc"
       - run: 
           name: Deploy To VPS

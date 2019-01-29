@@ -10,7 +10,9 @@ jobs:
             - "96:42:68:6f:85:1e:82:73:d4:41:05:20:f0:55:c2:cc"
       - run: 
           name: Deploy To VPS
-          command: ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git checkout develop; git pull; npm install; npm run build:api; npm run build:frontend; pm2 start;"
+          command: |
+            ssh-keyscan $SSH_HOST >> ~/.ssh/config
+            ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git checkout develop; git pull; npm install; npm run build:api; npm run build:frontend; pm2 start;"
   test:
     docker:
       - image: circleci/node:10.15
@@ -23,3 +25,8 @@ workflows:
     jobs:
       - test
       - deployDev
+          requires:
+            - test
+          filters:
+            branches:
+              only: develop

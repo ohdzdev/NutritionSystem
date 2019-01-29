@@ -21,9 +21,8 @@ jobs:
       - run: echo test
 workflows:
   version: 2
-  testandDeployToDev:
+  testAndDeployDev:
     jobs:
-      - test
       - deployDev
           requires:
             - test

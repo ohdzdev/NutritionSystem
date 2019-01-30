@@ -7,17 +7,17 @@
       "table": "DIET_PLAN"
     },
     "relations": {
-      "diet tablediet sub tablerel": {
+      "dietPlanDiets": {
         "model": "Diets",
         "type": "belongsTo",
         "foreignKey": "dietId"
       },
-      "foodTabledietSubTablerel": {
+      "dietPlanFoods": {
         "model": "Food",
         "type": "belongsTo",
         "foreignKey": "foodId"
       },
-      "unit tablediet sub tablerel": {
+      "dietPlanUnits": {
         "model": "Units",
         "type": "belongsTo",
         "foreignKey": "unitId"

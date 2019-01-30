@@ -7,7 +7,7 @@
       "table": "PREP_NOTES"
     },
     "relations": {
-      "diet tableprep note tablerel": {
+      "prepNotesDiet": {
         "model": "Diets",
         "type": "belongsTo",
         "foreignKey": "dietId"

@@ -7,7 +7,7 @@
       "table": "ANIMALS"
     },
     "relations": {
-      "diet tableanimal tablerel": {
+      "animalDiets": {
         "model": "Diets",
         "type": "belongsTo",
         "foreignKey": "dietId"

@@ -7,12 +7,12 @@
       "table": "FOOD_WEIGHTS"
     },
     "relations": {
-      "food tableweight tablerel": {
+      "foodWeightFoods": {
         "model": "Food",
         "type": "belongsTo",
         "foreignKey": "foodId"
       },
-      "unit tableweight tablerel": {
+      "foodWeightUnits": {
         "model": "Units",
         "type": "belongsTo",
         "foreignKey": "unitIdNum"

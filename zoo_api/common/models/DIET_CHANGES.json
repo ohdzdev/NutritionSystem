@@ -7,7 +7,7 @@
       "table": "DIET_CHANGES"
     },
     "relations": {
-      "dietTabledietChangesrel": {
+      "dietChangesDiets": {
         "model": "Diets",
         "type": "belongsTo",
         "foreignKey": "dietId"

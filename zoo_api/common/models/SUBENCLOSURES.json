@@ -7,7 +7,7 @@
       "table": "SUBENCLOSURES"
     },
     "relations": {
-      "locationTablesubenclosureTablerel": {
+      "subenclosureLocation": {
         "model": "Locations",
         "type": "belongsTo",
         "foreignKey": "locationId"

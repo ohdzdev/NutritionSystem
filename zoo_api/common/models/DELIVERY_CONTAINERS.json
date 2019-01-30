@@ -7,7 +7,7 @@
       "table": "DELIVERY_CONTAINERS"
     },
     "relations": {
-      "locationTabledeliveryContainerTablerel": {
+      "deliveryContainerLocations": {
         "model": "Locations",
         "type": "belongsTo",
         "foreignKey": "locationId"

@@ -1,0 +1,25 @@
+{
+  "name": "zoo",
+  "version": "1.0.0",
+  "description": "this is a stub",
+  "main": "ecosystem.config.js",
+  "scripts": {
+    "build:api": "cd ./zoo_api && npm install && cd ../",
+    "build:frontend": "cd ./zoo_frontend && npm install && npm run build && cd ../",
+    "deploy:api": "cd ./zoo_api && npm run start",
+    "deploy:frontend": "cd ./zoo_frontend && npm run start"
+  },
+  "devDependencies": {
+    "node-cmd": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ColinKrist/OmahaZooNutrition.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ColinKrist/OmahaZooNutrition/issues"
+  },
+  "homepage": "https://github.com/ColinKrist/OmahaZooNutrition#readme"
+}

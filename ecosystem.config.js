@@ -4,10 +4,10 @@
 module.exports = {
   apps : [{
     name: 'zoo_api',
-    script: 'yarn',
+    script: 'deploy_api.sh',
 
     // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
-    args: 'deploy:api',
+    args: '',
     instances: 2,
     autorestart: true,
     watch: false,
@@ -18,10 +18,10 @@ module.exports = {
   },
   {
     name: 'zoo_frontend',
-    script: 'yarn',
+    script: 'deploy_frontend.sh',
 
     // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
-    args: 'deploy:frontend',
+    args: '',
     instances: 2,
     autorestart: true,
     watch: false,

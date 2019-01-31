@@ -8,7 +8,10 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "dc:fb:3e:17:32:51:3b:50:de:a0:81:22:58:79:e6:3e"
-      - run: 
+      - run:
+          name: Populate known hosts
+          command: ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+      - run:
           name: Deploy To VPS
           command: ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git checkout develop; git pull; yarn; yarn build:api; yarn build:frontend; echo hi"
   test:

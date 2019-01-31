@@ -14,7 +14,9 @@ module.exports = {
     max_memory_restart: '1G',
     output: "./api.out.log",
     error: "./api.error.log",
-    log: "./api.log.log"
+    log: "./api.log.log",
+    exec_interpreter: "bash",
+    exec_mode: "fork-mode"
   },
   {
     name: 'zoo_frontend',
@@ -28,6 +30,8 @@ module.exports = {
     max_memory_restart: '1G',
     output: "./frontend.out.log",
     error: "./frontend.error.log",
-    log: "./frontend.log.log"
+    log: "./frontend.log.log",
+    "exec_interpreter": "bash",
+    "exec_mode"  : "fork_mode"
   }]
 };

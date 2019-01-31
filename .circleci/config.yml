@@ -7,12 +7,12 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "96:42:68:6f:85:1e:82:73:d4:41:05:20:f0:55:c2:cc"
+            - "dc:fb:3e:17:32:51:3b:50:de:a0:81:22:58:79:e6:3e"
       - run: 
           name: Deploy To VPS
           command: |
             ssh-keyscan $SSH_HOST >> ~/.ssh/config
-            ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git checkout develop; git pull; yarn; yarn build:api; yarn build:frontend; pm2 start;"
+            ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git checkout develop; git pull; yarn; yarn build:api; yarn build:frontend; echo hi"
   test:
     docker:
       - image: circleci/node:10.15
@@ -23,7 +23,7 @@ workflows:
   version: 2
   testAndDeployDev:
     jobs:
-      - deployDev
+      - deployDev:
           requires:
             - test
           filters:

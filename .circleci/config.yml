@@ -23,7 +23,7 @@ workflows:
   version: 2
   testAndDeployDev:
     jobs:
-      - test:
+      - test
       - deployDev:
           requires:
             - test

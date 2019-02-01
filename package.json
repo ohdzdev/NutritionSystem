@@ -5,9 +5,7 @@
   "main": "ecosystem.config.js",
   "scripts": {
     "build:api": "cd ./zoo_api && yarn && cd ../",
-    "build:frontend": "cd ./zoo_frontend && yarn && yarn build && cd ../",
-    "deploy:api": "cd ./zoo_api && yarn start",
-    "deploy:frontend": "cd ./zoo_frontend && yarn start"
+    "build:frontend": "cd ./zoo_frontend && yarn && yarn build && cd ../"
   },
   "devDependencies": {
     "node-cmd": "^3.0.0"

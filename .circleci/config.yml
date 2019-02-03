@@ -29,7 +29,7 @@ jobs:
           name: Run eslint - frontend
           command: |
             cd ./zoo_frontend
-            yarn eslint
+            yarn test-eslint
       - run:
           name: Run jest tests - frontend
           command: |

@@ -4,7 +4,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "eslint": "yarn eslint ."
+    "test-eslint": "yarn eslint ."
   },
   "dependencies": {
     "@material-ui/core": "^3.9.1",

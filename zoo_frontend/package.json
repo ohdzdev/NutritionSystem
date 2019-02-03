@@ -1,14 +1,28 @@
 {
   "name": "create-next-example-app",
+  "license": "ISC",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test:eslint": "yarn eslint .",
+    "test": "echo TODO"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.1",
+    "jss": "^9.8.7",
     "next": "7.0.2",
+    "prop-types": "^15.6.2",
     "react": "16.7.0",
-    "react-dom": "16.7.0"
+    "react-dom": "16.7.0",
+    "react-jss": "^8.6.1",
+    "styled-jsx": "^3.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.0",
+    "eslint-plugin-react": "^7.12.4"
   }
 }

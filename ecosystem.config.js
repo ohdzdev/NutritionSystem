@@ -10,7 +10,7 @@ module.exports = {
     watch: false,
     max_memory_restart: '1G',
     output: "api.out.log",
-    error: "/api.error.log",
+    error: "api.error.log",
     log: "api.log.log",
     log_type: 'json'
   },

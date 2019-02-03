@@ -19,7 +19,25 @@ jobs:
       - image: circleci/node:10.15
     steps:
       - checkout
-      - run: echo test
+      - run:
+          name: run yarns
+          command: |
+            yarn
+            yarn build:api
+            yarn build:frontend
+      - run: 
+          name: Run eslint - frontend
+          command: yarn eslint:frontend
+      - run:
+          name: Run jest tests - frontend
+          command: yarn test:frontend
+      - run:
+          name: run api eslint tests
+          command: yarn eslint:api
+      - run:
+          name: run api functional tests
+          command: yarn test:api
+
 workflows:
   version: 2
   testAndDeployDev:

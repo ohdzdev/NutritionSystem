@@ -19,7 +19,33 @@ jobs:
       - image: circleci/node:10.15
     steps:
       - checkout
-      - run: echo test
+      - run:
+        name: Run yarn
+        command: |
+          yarn
+          yarn build:api
+          yarn build:frontend
+      - run: 
+        name: Run eslint - frontend
+        command: |
+          cd ./zoo_frontend
+          yarn eslint
+      - run:
+        name: Run jest tests - frontend
+        command: |
+          echo pretend there are some tests here
+      - run:
+        name: cd back into main directory
+        command: cd ../
+      - run:
+        name: run API tests
+        command: |
+          cd ./zoo_api
+          echo pretend there are some tests here
+      - run:
+        name: cd back into main directory
+        command: cd ../
+
 workflows:
   version: 2
   testAndDeployDev:

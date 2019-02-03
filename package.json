@@ -5,10 +5,11 @@
   "main": "ecosystem.config.js",
   "scripts": {
     "build:api": "cd ./zoo_api && yarn && cd ../",
-    "build:frontend": "cd ./zoo_frontend && yarn && yarn build && cd ../"
-  },
-  "devDependencies": {
-    "node-cmd": "^3.0.0"
+    "build:frontend": "cd ./zoo_frontend && yarn && yarn build && cd ../",
+    "eslint:api": "cd ./zoo_api && yarn test:eslint && cd ../",
+    "eslint:frontend": "cd ./zoo_frontend && yarn test:eslint && cd ../",
+    "test:api": "cd ./zoo_api && yarn test && cd ../",
+    "test:frontend": "cd ./zoo_frontend && yarn test && cd ../"
   },
   "repository": {
     "type": "git",

@@ -20,31 +20,23 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run yarn
+          name: run yarns
           command: |
             yarn
             yarn build:api
             yarn build:frontend
       - run: 
           name: Run eslint - frontend
-          command: |
-            cd ./zoo_frontend
-            yarn test-eslint
+          command: yarn eslint:frontend
       - run:
           name: Run jest tests - frontend
-          command: |
-            echo pretend there are some tests here
+          command: yarn test:frontend
       - run:
-          name: cd back into main directory
-          command: cd ../
+          name: run api eslint tests
+          command: yarn eslint:api
       - run:
-          name: run API tests
-          command: |
-            cd ./zoo_api
-            echo pretend there are some tests here
-      - run:
-          name: cd back into main directory
-          command: cd ../
+          name: run api functional tests
+          command: yarn test:api
 
 workflows:
   version: 2

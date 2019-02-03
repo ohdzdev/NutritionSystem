@@ -1,10 +1,12 @@
 {
   "name": "create-next-example-app",
+  "license": "ISC",
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test-eslint": "yarn eslint ."
+    "test:eslint": "yarn eslint .",
+    "test": "echo TODO"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.1",

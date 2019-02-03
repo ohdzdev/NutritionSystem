@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# set node_env to production for next js and possibly loopback
+export NODE_ENV=production
+
 # build the frontend and api
 yarn
 yarn build:api

@@ -4,13 +4,13 @@
     "connector": "memory"
   },
   "zoo_mysql": {
-    "host": "172.245.130.147",
+    "host": "18.206.162.196",
     "port": 3306,
     "database": "zoo",
-    "password": "zoo",
+    "password": "CSCI4970",
     "name": "zoo_mysql",
     "connector": "mysql",
-    "user": "zoo",
+    "user": "remote",
     "all": true
   }
 }

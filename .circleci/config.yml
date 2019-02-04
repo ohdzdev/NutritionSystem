@@ -7,7 +7,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "dc:fb:3e:17:32:51:3b:50:de:a0:81:22:58:79:e6:3e"
+            - "b7:7f:69:26:cd:94:67:ad:2c:c2:14:02:4d:02:74:38"
       - run:
           name: Populate known hosts
           command: ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts

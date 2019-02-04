@@ -4,7 +4,7 @@
     "connector": "memory"
   },
   "zoo_mysql": {
-    "host": "172.245.130.147",
+    "host": "172.245.90.230",
     "port": 3306,
     "database": "zoo",
     "password": "zoo",

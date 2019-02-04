@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-//import Avatar from '@material-ui/core/Avatar';
+// import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -45,52 +45,48 @@ const styles = theme => ({
   },
 });
 
-class SignIn extends React.Component {
-  //export function SignIn(props) {
-  render() {
-    const { classes } = this.props;
 
-    return (
-      <div className={classes.main}>
-        <CssBaseline />
-        <Paper className={classes.paper}>
-          {/* <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar> */}
-          <Typography component="h1" variant="h5">
-            Sign in
-        </Typography>
-          <form className={classes.form}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input id="email" name="email" autoComplete="email" autoFocus />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input name="password" type="password" id="password" autoComplete="current-password" />
-            </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign in
-          </Button>
-          </form>
-        </Paper>
-      </div>
-    );
-  }
-}
+const SignIn = ({
+  classes,
+}) => (
+  <div className={classes.main}>
+    <CssBaseline />
+    <Paper className={classes.paper}>
+      {/* <Avatar className={classes.avatar}>
+    <LockOutlinedIcon />
+  </Avatar> */}
+      <Typography component="h1" variant="h5">
+      Sign in
+      </Typography>
+      <form className={classes.form}>
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="email">Email Address</InputLabel>
+          <Input id="email" name="email" autoComplete="email" autoFocus />
+        </FormControl>
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <Input name="password" type="password" id="password" autoComplete="current-password" />
+        </FormControl>
+        <FormControlLabel
+          control={<Checkbox value="remember" color="primary" />}
+          label="Remember me"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+        >
+        Sign in
+        </Button>
+      </form>
+    </Paper>
+  </div>
+);
 
 SignIn.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 export default withStyles(styles)(SignIn);

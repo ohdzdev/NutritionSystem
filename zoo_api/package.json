@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
-    "posttest": "npm run lint"
+    "test:eslint": "yarn eslint .",
+    "test": "echo TODO"
   },
   "dependencies": {
     "compression": "^1.0.3",

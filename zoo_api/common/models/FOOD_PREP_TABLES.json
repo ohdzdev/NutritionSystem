@@ -11,11 +11,11 @@
   "properties": {
     "tableId": {
       "type": "Number",
+      "id": 1,
       "required": true,
       "length": null,
       "precision": 10,
       "scale": 0,
-      "id": 1,
       "mysql": {
         "columnName": "table_id",
         "dataType": "int",
@@ -55,5 +55,16 @@
         "nullable": "Y"
       }
     }
-  }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
 }

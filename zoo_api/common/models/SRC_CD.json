@@ -11,11 +11,11 @@
   "properties": {
     "srcCd": {
       "type": "String",
+      "id": 1,
       "required": true,
       "length": 2,
       "precision": null,
       "scale": null,
-      "id": 1,
       "mysql": {
         "columnName": "src_cd",
         "dataType": "varchar",
@@ -55,5 +55,16 @@
         "nullable": "Y"
       }
     }
-  }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
 }

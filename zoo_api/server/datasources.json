@@ -7,7 +7,7 @@
     "host": "172.245.90.230",
     "port": 3306,
     "database": "zoo",
-    "password": "zoo",
+    "password": "CSCI4970",
     "name": "zoo_mysql",
     "connector": "mysql",
     "user": "zoo",

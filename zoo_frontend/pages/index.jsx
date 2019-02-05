@@ -1,12 +1,10 @@
 import React from 'react';
-import Head from '../components/head';
-import Nav from '../components/nav';
+import Header from '../components/Header';
 import SignIn from '../components/SignIn';
 
 const Home = () => (
   <div>
-    <Head title="Home" />
-    <Nav />
+    <Header />
     <div className="signin">
       <SignIn className="signin" />
     </div>

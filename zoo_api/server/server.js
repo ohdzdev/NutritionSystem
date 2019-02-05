@@ -1,6 +1,9 @@
 'use strict';
+var path = require('path');
 
-require('dotenv').config();
+require('dotenv').config({
+  path: path.join(__dirname, '../.env'),
+});
 
 var loopback = require('loopback');
 var boot = require('loopback-boot');

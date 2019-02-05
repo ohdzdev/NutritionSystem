@@ -10,9 +10,16 @@ Format:
 ...
 ```
 
+## 0.1.1 - 2019-02-04
+### Added
+* ssh for loopback based off their template repo: [link](https://github.com/strongloop/loopback-example-ssl)
+* update documentation on some of the ssh setup
+
+### Breaking
+* add new `.env` variable `HTTP` which needs set to true if not utilizing https and don't want to get annoying popups about invalid certs
+
 ## 0.1.0 - 2019-02-04
 ### Added
 * `changelog.md`
 * `.env` file to secure our MySQL connection information
 * documentation around `.env` and `README.MD` file
-* 

@@ -1,7 +1,13 @@
 'use strict';
 var path = require('path');
 var fs = require('fs');
-exports.privateKey = fs.readFileSync(path.join(__dirname,
-    './private/privatekey.pem')).toString();
-exports.certificate = fs.readFileSync(path.join(__dirname,
-    './private/certificate.pem')).toString();
+
+try {
+    exports.privateKey = fs.readFileSync(path.join(__dirname,
+        './private/privatekey.pem')).toString();
+    exports.certificate = fs.readFileSync(path.join(__dirname,
+        './private/certificate.pem')).toString();    
+} catch (error) {
+    exports.privateKey = '';
+    exports.certificate = '';
+}

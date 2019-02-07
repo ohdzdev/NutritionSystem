@@ -11,6 +11,10 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 class Login extends Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -21,15 +25,15 @@ class Login extends Component {
     };
   }
 
-  _handleLoginSubmit = (event) => {
+  handleLoginSubmit = (event) => {
     event.preventDefault();
 
     // TODO: Login with email and password from state
   }
 
-  _handleEmailChange = (event) => this.setState({ email: event.target.value });
-  _handlePasswordChange = (event) => this.setState({ password: event.target.value });
-  _handleRememberMeChange = (event) => this.setState({ rememberMe: event.target.checked });
+  handleEmailChange = (event) => this.setState({ email: event.target.value });
+  handlePasswordChange = (event) => this.setState({ password: event.target.value });
+  handleRememberMeChange = (event) => this.setState({ rememberMe: event.target.checked });
 
   render() {
     const { classes } = this.props;
@@ -37,11 +41,11 @@ class Login extends Component {
       <div className={classes.main}>
         <CssBaseline />
         <Paper className={classes.paper}>
-          <img src="/static/zoo_logo.png" className={classes.logo}/>
+          <img src="/static/zoo_logo.png" className={classes.logo} alt="Logo" />
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} onSubmit={this._handleLoginSubmit}>
+          <form className={classes.form} onSubmit={this.handleLoginSubmit}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input
@@ -50,7 +54,7 @@ class Login extends Component {
                 autoComplete="email"
                 autoFocus
                 value={this.state.email}
-                onChange={this._handleEmailChange}
+                onChange={this.handleEmailChange}
               />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
@@ -61,18 +65,18 @@ class Login extends Component {
                 id="password"
                 autoComplete="current-password"
                 value={this.state.password}
-                onChange={this._handlePasswordChange}
+                onChange={this.handlePasswordChange}
               />
             </FormControl>
             <FormControlLabel
-              control={
+              control={(
                 <Checkbox
                   value="remember"
                   color="primary"
                   checked={this.state.rememberMe}
-                  onChange={this._handleRememberMeChange}
+                  onChange={this.handleRememberMeChange}
                 />
-              }
+              )}
               label="Remember me"
             />
             <Button
@@ -90,9 +94,5 @@ class Login extends Component {
     );
   }
 }
-
-Login.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default Login;

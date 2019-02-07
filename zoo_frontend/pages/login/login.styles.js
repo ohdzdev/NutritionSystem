@@ -9,7 +9,7 @@ export default (theme) => ({
       marginLeft: 'auto',
       marginRight: 'auto',
     },
-    paddingTop: 40
+    paddingTop: 40,
   },
   paper: {
     marginTop: theme.spacing.unit * 8,

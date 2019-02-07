@@ -5,6 +5,7 @@
       "commonjs": true
     },
     "extends": "airbnb",
+    "parser": "babel-eslint",
     "parserOptions": {
       "ecmaVersion": 9,
       "ecmaFeatures": {
@@ -19,6 +20,9 @@
       "no-console": 0,
       "jsx-a11y/anchor-is-valid": 0,
       "no-param-reassign": 0,
-      "react/forbid-prop-types": 0
+      "react/forbid-prop-types": 0,
+      "arrow-parens": 0,
+      "lines-between-class-members": 0,
+      "react/destructuring-assignment": 0
     }
   }

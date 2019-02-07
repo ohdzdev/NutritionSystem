@@ -1,5 +1,4 @@
-'use strict';
 
-module.exports = function(Account) {
+module.exports = function(Account) { // eslint-disable-line no-unused-vars
 
 };

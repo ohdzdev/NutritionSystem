@@ -1,7 +1,6 @@
-'use strict';
 
 module.exports = {
-  'zoo_mysql': {
+  zoo_mysql: { // eslint-disable-line camelcase
     host: process.env.DB_HOST,
     port: 3306,
     database: process.env.DB,

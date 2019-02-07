@@ -2,14 +2,14 @@
 // in order to create the tables from loopback
 
 // usage: node ./automigrate.js
-'use strict';
 
-var server = require('./server');
-var ds = server.dataSources.zoo_mysql;
-var lbTables = ['account', 'ACL', 'RoleMapping', 'Role'];
-ds.automigrate(lbTables, function(er) {
+const server = require('./server');
+
+const ds = server.dataSources.zoo_mysql;
+const lbTables = ['account', 'ACL', 'RoleMapping', 'Role'];
+ds.automigrate(lbTables, (er) => {
   if (er) throw er;
-  console.log('Loopback tables [' +
-  lbTables + '] created in ', ds.adapter.name);
+  console.log(`Loopback tables [${
+    lbTables}] created in `, ds.adapter.name);
   ds.disconnect();
 });

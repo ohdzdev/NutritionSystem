@@ -1,15 +1,9 @@
 import React from 'react';
 
+import Login from './login';
+
 const Home = () => (
-  <div>
-    <style jsx>
-      {`
-      .signin {
-        padding-top: 40px;
-      }
-    `}
-    </style>
-  </div>
+  <Login />
 );
 
 export default Home;

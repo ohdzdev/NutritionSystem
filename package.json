@@ -4,12 +4,18 @@
   "description": "this is a stub",
   "main": "ecosystem.config.js",
   "scripts": {
-    "build:api": "cd ./zoo_api && yarn && cd ../",
-    "build:frontend": "cd ./zoo_frontend && yarn && yarn build && cd ../",
+    "dev": "concurrently \"next zoo_frontend\" \"cd ./zoo_api && yarn start\"",
+    "test": "concurrently \"yarn test:api\" \"yarn test:frontend\"",
+    "test:eslint": "concurrently \"yarn eslint:api\" \"yarn eslint:frontend\"",
+
+    "build:frontend": "cd ./zoo_frontend yarn build && cd ../",
+
     "eslint:api": "cd ./zoo_api && yarn test:eslint && cd ../",
     "eslint:frontend": "cd ./zoo_frontend && yarn test:eslint && cd ../",
+
     "test:api": "cd ./zoo_api && yarn test && cd ../",
     "test:frontend": "cd ./zoo_frontend && yarn test && cd ../",
+
     "powershell:prod": "powershell.exe $env:NODE_ENV='production'",
     "bash:prod": "export NODE_ENV=production"
   },
@@ -22,5 +28,12 @@
   "bugs": {
     "url": "https://github.com/ColinKrist/OmahaZooNutrition/issues"
   },
-  "homepage": "https://github.com/ColinKrist/OmahaZooNutrition#readme"
+  "homepage": "https://github.com/ColinKrist/OmahaZooNutrition#readme",
+  "private": true,
+  "workspaces": [
+    "zoo_frontend", "zoo_api"
+  ],
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  }
 }

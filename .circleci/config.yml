@@ -20,23 +20,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: run yarns
+          name: Yarn
           command: |
             yarn
-            yarn build:api
-            yarn build:frontend
       - run: 
-          name: Run eslint - frontend
-          command: yarn eslint:frontend
+          name: Eslint
+          command: yarn test:eslint
       - run:
-          name: Run jest tests - frontend
-          command: yarn test:frontend
-      - run:
-          name: run api eslint tests
-          command: yarn eslint:api
-      - run:
-          name: run api functional tests
-          command: yarn test:api
+          name: Unit Tests
+          command: yarn test
 
 workflows:
   version: 2

@@ -19,24 +19,24 @@ jobs:
       - image: circleci/node:10.15
     steps:
       - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: run yarns
-          command: |
-            yarn
-            yarn build:api
-            yarn build:frontend
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
       - run: 
-          name: Run eslint - frontend
-          command: yarn eslint:frontend
+          name: Eslint
+          command: yarn test:eslint
       - run:
-          name: Run jest tests - frontend
-          command: yarn test:frontend
-      - run:
-          name: run api eslint tests
-          command: yarn eslint:api
-      - run:
-          name: run api functional tests
-          command: yarn test:api
+          name: Unit Tests
+          command: yarn test
 
 workflows:
   version: 2

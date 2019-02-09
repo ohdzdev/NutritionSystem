@@ -4,8 +4,8 @@
   "license": "ISC",
   "scripts": {
     "dev": "next",
-    "build": "next build",
-    "start": "next start",
+    "build": "yarn run next build",
+    "start": "yarn run next start",
     "test:eslint": "yarn eslint .",
     "test": "echo TODO"
   },

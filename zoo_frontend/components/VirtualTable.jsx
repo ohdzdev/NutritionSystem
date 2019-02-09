@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+// Shade every other row
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -181,14 +183,14 @@ function createData(dessert, calories, fat, carbs, protein) {
 
 const rows = [];
 
-for (let i = 0; i < 200; i += 1) {
+for (let i = 0; i < 100; i += 1) {
   const randomSelection = data[Math.floor(Math.random() * data.length)];
   rows.push(createData(...randomSelection));
 }
 
 function ReactVirtualizedTable() {
   return (
-    <Paper style={{ height: 400, width: '100%' }}>
+    <Paper style={{ height: 500, width: '100%' }}>
       <WrappedVirtualizedTable
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}
@@ -197,30 +199,30 @@ function ReactVirtualizedTable() {
           {
             width: 200,
             flexGrow: 1.0,
-            label: 'Dessert',
+            label: 'Food Item',
             dataKey: 'dessert',
           },
           {
             width: 120,
-            label: 'Calories (g)',
+            label: 'Amount',
             dataKey: 'calories',
             numeric: true,
           },
           {
             width: 120,
-            label: 'Fat (g)',
+            label: 'Animal',
             dataKey: 'fat',
             numeric: true,
           },
           {
             width: 120,
-            label: 'Carbs (g)',
+            label: 'Animal Id',
             dataKey: 'carbs',
             numeric: true,
           },
           {
             width: 120,
-            label: 'Protein (g)',
+            label: 'Location',
             dataKey: 'protein',
             numeric: true,
           },

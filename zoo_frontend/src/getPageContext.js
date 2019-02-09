@@ -11,7 +11,9 @@ const theme = createMuiTheme({
     primary: {
       main: '#689f38',
     },
-    secondary: Colors.orange,
+    secondary: {
+      main: '#ef6c00',
+    },
     type: 'light',
   },
   typography: {

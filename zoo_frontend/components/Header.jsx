@@ -11,18 +11,19 @@ const styles = {
   },
 };
 
-const Header = ({ 
+const Header = ({
   classes,
- }) => (
-    <div className={classes.root}>
-      <AppBar position="static" color="default" color="primary">
-        <Toolbar>
-          <Typography variant="h6" color="inherit">
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+}) => (
+  <div className={classes.root}>
+    <AppBar position="static" color="default" color="primary">
+      <Toolbar>
+        <Typography variant="h6" color="inherit">
+            Zoo Nutrition Assistant
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  </div>
+);
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,

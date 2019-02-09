@@ -22,7 +22,7 @@ const Header = ({
   classes,
 }) => (
   <div className={classes.root}>
-    <AppBar position="static" color="default" color="primary">
+    <AppBar position="static" color="primary">
       <Toolbar>
         <Typography variant="h6" color="inherit" className={classes.grow}>
             Zoo Nutrition Assistant

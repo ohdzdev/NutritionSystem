@@ -18,7 +18,7 @@ export default (theme) => ({
     margin: theme.spacing.unit,
     marginRight: theme.spacing.unit * 3,
   },
-  input: {
-    display: 'none',
+  menuButton: {
+    marginRight: theme.spacing.unit * 3,
   },
 });

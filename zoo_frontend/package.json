@@ -1,10 +1,11 @@
 {
-  "name": "create-next-example-app",
+  "name": "zoo_frontend",
+  "version": "1.0.0",
   "license": "ISC",
   "scripts": {
     "dev": "next",
-    "build": "next build",
-    "start": "next start",
+    "build": "yarn run next build",
+    "start": "yarn run next start",
     "test:eslint": "yarn eslint .",
     "test": "echo TODO"
   },
@@ -31,5 +32,6 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.0",
     "eslint-plugin-react": "^7.12.4"
-  }
+  },
+  "description": "zoo_frontend"
 }

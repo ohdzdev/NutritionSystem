@@ -13,6 +13,9 @@ const styles = {
   grow: {
     flexGrow: 1,
   },
+  button: {
+    marginLeft: 15,
+  },
 };
 
 const Header = ({
@@ -24,9 +27,9 @@ const Header = ({
         <Typography variant="h6" color="inherit" className={classes.grow}>
             Zoo Nutrition Assistant
         </Typography>
-        <Button color="inherit">Home</Button>
-        <Button color="inherit">Reports</Button>
-        <Button color="inherit">Logout</Button>
+        <Button className={classes.button} color="inherit">Home</Button>
+        <Button className={classes.button} color="inherit">Reports</Button>
+        <Button className={classes.button} color="inherit">Logout</Button>
       </Toolbar>
     </AppBar>
   </div>

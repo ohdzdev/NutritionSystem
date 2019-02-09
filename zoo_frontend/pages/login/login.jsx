@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -12,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 class Login extends Component {
   static propTypes = {
+    api: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
   };
 
@@ -25,10 +27,17 @@ class Login extends Component {
     };
   }
 
-  handleLoginSubmit = (event) => {
+  handleLoginSubmit = async (event) => {
     event.preventDefault();
 
-    // TODO: Login with email and password from state
+    try {
+      await this.props.api.login(this.state.email, this.state.password);
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+
+    Router.replace('/');
   }
 
   handleEmailChange = (event) => this.setState({ email: event.target.value });

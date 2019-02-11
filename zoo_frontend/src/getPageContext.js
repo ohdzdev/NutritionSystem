@@ -1,6 +1,5 @@
 import { SheetsRegistry } from 'jss';
 import { createMuiTheme, createGenerateClassName } from '@material-ui/core/styles';
-// import * as Colors from '@material-ui/core/colors';
 
 // import secondary from '@material-ui/core/colors/indigo';
 

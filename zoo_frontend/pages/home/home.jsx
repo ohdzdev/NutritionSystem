@@ -1,12 +1,46 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import VirtualTable from '../../components/VirtualTable';
+
+
+const columns=[
+  {
+    width: 200,
+    flexGrow: 1.0,
+    label: 'Food Item',
+    dataKey: 'food'
+  },
+  {
+    width: 120,
+    label: 'Amount',
+    dataKey: 'amount'
+  },
+  {
+    width: 120,
+    label: 'Animal',
+    dataKey: 'animal'
+  },
+  {
+    width: 120,
+    label: 'Animal Id',
+    dataKey: 'animalId'
+  },
+  {
+    width: 120,
+    label: 'Location',
+    dataKey: 'location'
+  },
+];
+
+const data = [
+  {id: 1, food: 'Cucumber', amount: '1500g', animal: 'Sea Turtle', animalId: 899, location: 'Aquarium'},
+  {id: 2, food: 'Apples', amount: '2000g', animal: 'Gorilla', animalId: 765, location: 'Jungle'},
+];
 
 class Home extends Component {
   static propTypes = {
@@ -32,6 +66,7 @@ class Home extends Component {
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
+  
     return (
       <div className={classes.root}>
         <div className={classes.row}>
@@ -73,7 +108,11 @@ class Home extends Component {
                 Edit Foods
               </Button>
             </div>
-            <VirtualTable />
+            <VirtualTable 
+            cols={columns}
+            height={500}
+            rows={data}
+            />
           </div>
         </div>
       </div>

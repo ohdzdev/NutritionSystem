@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-// Shade every other row
+// TODO: Shade every other row
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -114,6 +114,7 @@ class MuiVirtualizedTable extends React.PureComponent {
               cellContentRenderer = null, className, dataKey, ...other
             }, index) => {
               let renderer;
+              // console.log(dataKey);
               if (cellContentRenderer != null) {
                 renderer = cellRendererProps => this.cellRenderer({
                   cellData: cellContentRenderer(cellRendererProps),
@@ -168,68 +169,25 @@ MuiVirtualizedTable.defaultProps = {
 
 const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
-const data = [
-  ['Cucumber', '1500g', 'Sea Turtle', 899, 'Aquarium'],
-  ['Apples', '2000g', 'Gorilla', 765, 'Jungle'],
-];
-
-let id = 0;
-function createData(dessert, calories, fat, carbs, protein) {
-  id += 1;
-  return {
-    id, dessert, calories, fat, carbs, protein,
-  };
-}
-
-const rows = [];
-
-for (let i = 0; i < 100; i += 1) {
-  const randomSelection = data[Math.floor(Math.random() * data.length)];
-  rows.push(createData(...randomSelection));
-}
-
-function ReactVirtualizedTable() {
+const ReactVirtualizedTable = (props) => {
+  const { cols, rows, height } = props;
+  // console.log(cols, input, height);
   return (
-    <Paper style={{ height: 500, width: '100%' }}>
+    <Paper style={{ height, width: '100%' }}>
       <WrappedVirtualizedTable
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}
         onRowClick={event => console.log(event)}
-        columns={[
-          {
-            width: 200,
-            flexGrow: 1.0,
-            label: 'Food Item',
-            dataKey: 'dessert',
-          },
-          {
-            width: 120,
-            label: 'Amount',
-            dataKey: 'calories',
-            numeric: true,
-          },
-          {
-            width: 120,
-            label: 'Animal',
-            dataKey: 'fat',
-            numeric: true,
-          },
-          {
-            width: 120,
-            label: 'Animal Id',
-            dataKey: 'carbs',
-            numeric: true,
-          },
-          {
-            width: 120,
-            label: 'Location',
-            dataKey: 'protein',
-            numeric: true,
-          },
-        ]}
+        columns={cols}
       />
     </Paper>
   );
-}
+};
+
+ReactVirtualizedTable.propTypes = {
+  cols: PropTypes.array.isRequired,
+  rows: PropTypes.array.isRequired,
+  height: PropTypes.number.isRequired,
+};
 
 export default ReactVirtualizedTable;

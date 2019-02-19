@@ -18,8 +18,19 @@
     "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
-    "public": false
+    "dataSource": "zoo_mysql",
+    "public": true,
+    "acls": [{
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW",
+      "property": "*"
+    },{
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "validateToken"
+    }]
   },
   "ACL": {
     "dataSource": "zoo_mysql",

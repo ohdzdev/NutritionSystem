@@ -2016,6 +2016,13 @@ commondir@^1.0.1:
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
 
+component-cookie@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/component-cookie/-/component-cookie-1.1.3.tgz#053e14a3bd7748154f55724fd39a60c01994ebed"
+  integrity sha1-BT4Uo713SBVPVXJP05pgwBmU6+0=
+  dependencies:
+    debug "*"
+
 component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
@@ -2311,6 +2318,13 @@ debounce@^1.1.0:
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
   integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
+debug@*, debug@^4.0.1, debug@^4.1.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
+  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
+  dependencies:
+    ms "^2.1.1"
+
 debug@2.6.9, debug@^2.0.0, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2322,13 +2336,6 @@ debug@^3.1.0, debug@^3.2.6:
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
   integrity sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==
-  dependencies:
-    ms "^2.1.1"
-
-debug@^4.0.1, debug@^4.1.0:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
-  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   dependencies:
     ms "^2.1.1"
 
@@ -2555,15 +2562,15 @@ duplex@~1.0.0:
   resolved "https://registry.yarnpkg.com/duplex/-/duplex-1.0.0.tgz#6abc5c16ec17e4c578578727126700590d3a2dda"
   integrity sha1-arxcFuwX5MV4V4cnEmcAWQ06Ldo=
 
+duplexer@^0.1.1, duplexer@~0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
+  integrity sha1-rOb/gIwc5mtX0ev5eXessCM0z8E=
+
 duplexer@~0.0.3:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.0.4.tgz#afcb7f1f8b8d74f820726171d5d64ac9e4a8ff20"
   integrity sha1-r8t/H4uNdPggcmFx1dZKyeSo/yA=
-
-duplexer@~0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
-  integrity sha1-rOb/gIwc5mtX0ev5eXessCM0z8E=
 
 duplexify@^3.4.2, duplexify@^3.6.0:
   version "3.7.1"
@@ -2931,18 +2938,18 @@ event-source-polyfill@0.0.12:
   resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-0.0.12.tgz#e539cd67fdef2760a16aa5262fa98134df52e3af"
   integrity sha1-5TnNZ/3vJ2ChaqUmL6mBNN9S468=
 
-event-stream@3.3.4, event-stream@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
-  integrity sha1-SrTJoPWlTbkzi0w02Gv86PSzVXE=
+event-stream@^3.3.4:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/event-stream/-/event-stream-3.3.5.tgz#e5dd8989543630d94c6cf4d657120341fa31636b"
+  integrity sha512-vyibDcu5JL20Me1fP734QBH/kenBGLZap2n0+XXM7mvuUPzJ20Ydqj1aKcIeMdri1p+PU+4yAKugjN8KCVst+g==
   dependencies:
-    duplexer "~0.1.1"
-    from "~0"
-    map-stream "~0.1.0"
-    pause-stream "0.0.11"
-    split "0.3"
-    stream-combiner "~0.0.4"
-    through "~2.3.1"
+    duplexer "^0.1.1"
+    from "^0.1.7"
+    map-stream "0.0.7"
+    pause-stream "^0.0.11"
+    split "^1.0.1"
+    stream-combiner "^0.2.2"
+    through "^2.3.8"
 
 eventemitter2@^5.0.1:
   version "5.0.1"
@@ -3315,7 +3322,7 @@ from2@^2.1.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
-from@~0:
+from@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/from/-/from-0.1.7.tgz#83c60afc58b9c56997007ed1a768b3ab303a44fe"
   integrity sha1-g8YK/Fi5xWmXAH7Rp2izqzA6RP4=
@@ -4680,10 +4687,10 @@ map-cache@^0.2.2:
   resolved "https://registry.yarnpkg.com/map-cache/-/map-cache-0.2.2.tgz#c32abd0bd6525d9b051645bb4f26ac5dc98a0dbf"
   integrity sha1-wyq9C9ZSXZsFFkW7TyasXcmKDb8=
 
-map-stream@~0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/map-stream/-/map-stream-0.1.0.tgz#e56aa94c4c8055a16404a0674b78f215f7c8e194"
-  integrity sha1-5WqpTEyAVaFkBKBnS3jyFffI4ZQ=
+map-stream@0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/map-stream/-/map-stream-0.0.7.tgz#8a1f07896d82b10926bd3744a2420009f88974a8"
+  integrity sha1-ih8HiW2CsQkmvTdEokIACfiJdKg=
 
 map-visit@^1.0.0:
   version "1.0.0"
@@ -5032,6 +5039,14 @@ neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
+
+next-cookies@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/next-cookies/-/next-cookies-1.1.0.tgz#0f6b5797c2b7106199a3a75e1f44df7cb0115e63"
+  integrity sha512-NcDCKPgGNoCClTJ0pFGe/xIoGn3dgaFYNSvO5M57DpB7bm2tuf7+RsnIxfvjHLDeppYOtt7LUcTRSWp1TzFpAw==
+  dependencies:
+    component-cookie "1.1.3"
+    cookie "^0.3.1"
 
 next-server@8.0.1:
   version "8.0.1"
@@ -5620,7 +5635,7 @@ path-type@^2.0.0:
   dependencies:
     pify "^2.0.0"
 
-pause-stream@0.0.11:
+pause-stream@^0.0.11:
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/pause-stream/-/pause-stream-0.0.11.tgz#fe5a34b0cbce12b5aa6a2b403ee2e73b602f1445"
   integrity sha1-/lo0sMvOErWqaitAPuLnO2AvFEU=
@@ -6659,10 +6674,10 @@ split-string@^3.0.1, split-string@^3.0.2:
   dependencies:
     extend-shallow "^3.0.0"
 
-split@0.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/split/-/split-0.3.3.tgz#cd0eea5e63a211dfff7eb0f091c4133e2d0dd28f"
-  integrity sha1-zQ7qXmOiEd//frDwkcQTPi0N0o8=
+split@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/split/-/split-1.0.1.tgz#605bd9be303aa59fb35f9229fbea0ddec9ea07d9"
+  integrity sha512-mTyOoPbrivtXnwnIxZRFYRrPNtEFKlpB2fvjSnCQUiAA6qAZzqwna5envK4uk6OIeP17CsdF3rSBGYVBsU0Tkg==
   dependencies:
     through "2"
 
@@ -6765,12 +6780,13 @@ stream-combiner@0.0.2:
   dependencies:
     duplexer "~0.0.3"
 
-stream-combiner@~0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/stream-combiner/-/stream-combiner-0.0.4.tgz#4d5e433c185261dde623ca3f44c586bcf5c4ad14"
-  integrity sha1-TV5DPBhSYd3mI8o/RMWGvPXErRQ=
+stream-combiner@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/stream-combiner/-/stream-combiner-0.2.2.tgz#aec8cbac177b56b6f4fa479ced8c1912cee52858"
+  integrity sha1-rsjLrBd7Vrb0+kec7YwZEs7lKFg=
   dependencies:
     duplexer "~0.1.1"
+    through "~2.3.4"
 
 stream-each@^1.1.0:
   version "1.2.3"
@@ -7118,7 +7134,7 @@ through2@^2.0.0:
     readable-stream "~2.3.6"
     xtend "~4.0.1"
 
-through@2, "through@>=2.2.7 <3", through@^2.3.6, through@~2.3, through@~2.3.1:
+through@2, "through@>=2.2.7 <3", through@^2.3.6, through@^2.3.8, through@~2.3, through@~2.3.1, through@~2.3.4:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=

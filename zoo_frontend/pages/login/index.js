@@ -5,8 +5,6 @@ import login from './login';
 
 const page = withStyles(styles)(login);
 
-page.getInitialProps = () => ({
-  allowedRoles: ['unauthenticated'],
-});
+page.allowedRoles = ['unauthenticated'];
 
 export default page;

@@ -2,8 +2,8 @@ import React from 'react';
 
 import Login from './login';
 
-const Home = () => (
-  <Login />
+const Home = (props) => (
+  <Login {...props} />
 );
 
 export default Home;

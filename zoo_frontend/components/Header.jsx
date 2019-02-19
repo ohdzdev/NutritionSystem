@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 
 
@@ -52,17 +51,16 @@ const Header = (props) => {
 Header.propTypes = {
   api: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  firstName: PropTypes.string.isRequired,
-  lastName: PropTypes.string.isRequired,
-  loggedIn: PropTypes.bool.isRequired,
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  loggedIn: PropTypes.bool,
 };
 
-const mapStateToProps = (state) => ({
-  loggedIn: state.login.loggedIn,
-  firstName: state.login.firstName,
-  lastName: state.login.lastName,
-});
+Header.defaultProps = {
+  firstName: '',
+  lastName: '',
+  loggedIn: false,
+};
 
-const conectedHeader = connect(mapStateToProps)(Header);
-const styledHeader = withStyles(styles)(conectedHeader);
+const styledHeader = withStyles(styles)(Header);
 export default styledHeader;

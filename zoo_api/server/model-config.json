@@ -23,13 +23,13 @@
     "acls": [{
       "principalType": "ROLE",
       "principalId": "$unauthenticated",
-      "permission": "ALLOW",
+      "permission": "DENY",
       "property": "*"
     },{
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
-      "property": "validateToken"
+      "property": "validateAndRetreiveUser"
     }]
   },
   "ACL": {

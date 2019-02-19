@@ -1,27 +1,17 @@
 import axios from 'axios';
 
-import { LoginActions } from '../redux/ActionTypes';
-
 const API_BASE_URL = process.env.BACKEND_URL;
 
 class Api {
   static validateToken = async (token) => {
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/accessTokens/validateToken`, {
+      const res = await axios.post(`${API_BASE_URL}/api/accessTokens/validateAndRetreiveUser`, {
         token,
       });
-      console.log(res.data);
       return res.data;
     } catch (err) {
-      console.log(err);
       throw err;
     }
-  }
-
-  store = null;
-
-  constructor(store) {
-    this.store = store;
   }
 
   login = async (email, password) => {
@@ -31,10 +21,6 @@ class Api {
         password,
       });
       document.cookie = `authToken=${res.data.token}`;
-      this.store.dispatch({
-        type: LoginActions.LOGIN,
-        ...res.data,
-      });
     } catch (err) {
       console.log(err);
       throw err;
@@ -47,9 +33,6 @@ class Api {
         params: {
           access_token: this.store.getState().login.token,
         },
-      });
-      this.store.dispatch({
-        type: LoginActions.LOGOUT,
       });
     } catch (err) {
       console.log(err);

@@ -1,9 +1,13 @@
 import React from 'react';
+import Home from './home';
 
-import Login from './login';
 
-const Home = () => (
-  <Login />
+const index = (props) => (
+  <Home
+    {...props}
+  />
 );
 
-export default Home;
+index.allowedRoles = ['authenticated', 'kitchen', 'admin'];
+
+export default index;

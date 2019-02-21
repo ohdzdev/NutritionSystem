@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import { Button } from '@material-ui/core';
+
 
 const styles = {
   root: {
@@ -13,30 +15,58 @@ const styles = {
   grow: {
     flexGrow: 1,
   },
-  button: {
-    marginLeft: 15,
+};
+
+const Header = (props) => {
+  const { classes, api, account } = props;
+
+  const logoutClicked = async () => {
+    // log out via the api so current auth token will be removed in db
+    await api.logout();
+    // navigate to the login page
+    Router.push('/login');
+  };
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="primary">
+        <Toolbar>
+          <Typography variant="h6" color="inherit" className={classes.grow}>
+            Nutritional Assistant
+          </Typography>
+          <Typography>
+            Hello {account.firstName} {account.lastName}!
+          </Typography>
+          {account.role !== 'unauthenticated' &&
+            <Button color="inherit" onClick={logoutClicked}>Logout</Button>
+          }
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+};
+
+Header.propTypes = {
+  api: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  account: PropTypes.shape({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    id: PropTypes.number,
+    lastName: PropTypes.string,
+    role: PropTypes.string,
+  }),
+};
+
+Header.defaultProps = {
+  account: {
+    email: '',
+    id: 0,
+    firstName: 'Guest',
+    lastName: '',
+    role: 'unauthenticated',
   },
 };
 
-const Header = ({
-  classes,
-}) => (
-  <div className={classes.root}>
-    <AppBar position="static" color="primary">
-      <Toolbar>
-        <Typography variant="h6" color="inherit" className={classes.grow}>
-            Zoo Nutrition Assistant
-        </Typography>
-        <Button className={classes.button} color="inherit">Home</Button>
-        <Button className={classes.button} color="inherit">Reports</Button>
-        <Button className={classes.button} color="inherit">Logout</Button>
-      </Toolbar>
-    </AppBar>
-  </div>
-);
-
-Header.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Header);
+const styledHeader = withStyles(styles)(Header);
+export default styledHeader;

@@ -31,16 +31,12 @@ const Header = (props) => {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          {account &&
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              Nutritional Assistant
-            </Typography>
-          }
-          {account &&
-            <Typography>
-              Hello {account.firstName} {account.lastName}!
-            </Typography>
-          }
+          <Typography variant="h6" color="inherit" className={classes.grow}>
+            Nutritional Assistant
+          </Typography>
+          <Typography>
+            Hello {account.firstName} {account.lastName}!
+          </Typography>
           {account.role !== 'unauthenticated' &&
             <Button color="inherit" onClick={logoutClicked}>Logout</Button>
           }

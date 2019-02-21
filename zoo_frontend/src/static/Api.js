@@ -22,6 +22,8 @@ class Api {
       }
       const res = await axios.post(`${API_BASE_URL}/api/AccessTokens/validateAndRetreiveUser`, {
         token: this.token,
+      }).catch((e) => {
+        throw new Error('validate failed', e);
       });
       return res.data;
     } catch (err) {

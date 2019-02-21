@@ -74,6 +74,9 @@ class MyApp extends App {
     if (jssStyles && jssStyles.parentNode) {
       jssStyles.parentNode.removeChild(jssStyles);
     }
+
+    const appContainer = document.getElementById('__next');
+    appContainer.style.height = '100vh';
   }
 
   render() {

@@ -26,32 +26,35 @@ class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {
     let pageProps = {};
     const c = cookies(ctx);
-
+    this.api = new Api(c.authToken || '');
     const allowedRoles = Component.allowedRoles || ['authenticated'];
-
-    if (typeof c.authToken === 'undefined') {
+    console.log(`page roles ${allowedRoles} - auth: ${c.authToken}`);
+    if (typeof c.authToken === 'undefined' || c.authToken === '') {
       if (allowedRoles.includes('unauthenticated')) {
         if (Component.getInitialProps) {
           pageProps = await Component.getInitialProps(ctx);
         }
         return { ...pageProps };
       }
+      // redirecting to login because current page does not support unauth users
       redirectTo('/login', { res: ctx.res, status: 301 });
     } else {
+      // we have a token let's try to authenticate so user can get data from backend
       try {
-        const res = await Api.validateToken(c.authToken);
+        const res = await this.api.validateToken();
+        console.log(`user validated account: ${JSON.stringify(res)}`);
 
         if (allowedRoles.includes(res.data.role)) {
           if (Component.getInitialProps) {
             pageProps = await Component.getInitialProps(ctx);
           }
-          return { ...pageProps, account: res.data, token: c.authToken };
         }
-
-        redirectTo('/', { res: ctx.res, status: 301 });
+        return { ...pageProps, account: res.data || null, token: c.authToken || '' };
       } catch (err) {
-        // Call failed in some way, lets redirect to login
-        document.cookie = 'authtoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        // TODO make popup to user saying their session expired or something here
+
+        // Call failed in some way - clear cookie / logout and redirect to login.
+        this.api.logout();
         redirectTo('/login', { res: ctx.res, status: 301 });
       }
     }
@@ -62,7 +65,7 @@ class MyApp extends App {
   constructor(props) {
     super(props);
     this.pageContext = getPageContext();
-    this.api = new Api();
+    this.api = new Api(props.token);
   }
 
   componentDidMount() {
@@ -74,7 +77,7 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component } = this.props;
     return (
       <Container>
         <Head>
@@ -98,11 +101,12 @@ class MyApp extends App {
                 to render collected styles on server-side. */}
             <Header
               api={this.api}
+              account={this.props.account}
             />
             <Component
               pageContext={this.pageContext}
               api={this.api}
-              {...pageProps}
+              {...this.props}
             />
           </MuiThemeProvider>
         </JssProvider>

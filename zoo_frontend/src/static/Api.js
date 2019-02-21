@@ -3,13 +3,31 @@ import axios from 'axios';
 const API_BASE_URL = process.env.BACKEND_URL;
 
 class Api {
-  static validateToken = async (token) => {
+  constructor(token) {
+    this.token = token;
+  }
+
+  setToken() {
+    return this.token;
+  }
+
+  getToken(newToken) {
+    this.token = newToken;
+  }
+
+  validateToken = async () => {
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/accessTokens/validateAndRetreiveUser`, {
-        token,
+      if (this.token === '' || this.token === 'undefined') {
+        throw new Error('Session Token Blank');
+      }
+      const res = await axios.post(`${API_BASE_URL}/api/AccessTokens/validateAndRetreiveUser`, {
+        token: this.token,
       });
       return res.data;
     } catch (err) {
+      console.error(err);
+      document.cookie = 'authToken=';
+      this.token = '';
       throw err;
     }
   }
@@ -21,22 +39,30 @@ class Api {
         password,
       });
       document.cookie = `authToken=${res.data.token}`;
+      this.setToken(res.data.token);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw err;
     }
   }
 
   logout = async () => {
-    try {
-      await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
-        params: {
-          access_token: this.store.getState().login.token,
-        },
-      });
-    } catch (err) {
-      console.log(err);
-      throw err;
+    if (this.token) {
+      try {
+        await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
+          params: {
+            access_token: this.token,
+          },
+        });
+        document.cookie = 'authToken=';
+      } catch (e) {
+        // call failed auth token is probably already cleared, supress errors and clear cookie
+        document.cookie = 'authToken=';
+      }
+    } else {
+      // just in case
+      this.token = '';
+      document.cookie = 'authToken=';
     }
   }
 }

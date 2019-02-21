@@ -5,6 +5,6 @@ import login from './login';
 
 const page = withStyles(styles)(login);
 
-page.allowedRoles = ['unauthenticated'];
+page.allowedRoles = ['unauthenticated', 'authenticated', 'kitchen', 'admin'];
 
 export default page;

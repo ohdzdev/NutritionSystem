@@ -8,38 +8,42 @@ import IconButton from '@material-ui/core/IconButton';
 import VirtualTable from '../../components/VirtualTable';
 
 
-const columns=[
+const columns = [
   {
     width: 200,
     flexGrow: 1.0,
     label: 'Food Item',
-    dataKey: 'food'
+    dataKey: 'food',
   },
   {
     width: 120,
     label: 'Amount',
-    dataKey: 'amount'
+    dataKey: 'amount',
   },
   {
     width: 120,
     label: 'Animal',
-    dataKey: 'animal'
+    dataKey: 'animal',
   },
   {
     width: 120,
     label: 'Animal Id',
-    dataKey: 'animalId'
+    dataKey: 'animalId',
   },
   {
     width: 120,
     label: 'Location',
-    dataKey: 'location'
+    dataKey: 'location',
   },
 ];
 
 const data = [
-  {id: 1, food: 'Cucumber', amount: '1500g', animal: 'Sea Turtle', animalId: 899, location: 'Aquarium'},
-  {id: 2, food: 'Apples', amount: '2000g', animal: 'Gorilla', animalId: 765, location: 'Jungle'},
+  {
+    id: 1, food: 'Cucumber', amount: '1500g', animal: 'Sea Turtle', animalId: 899, location: 'Aquarium',
+  },
+  {
+    id: 2, food: 'Apples', amount: '2000g', animal: 'Gorilla', animalId: 765, location: 'Jungle',
+  },
 ];
 
 class Home extends Component {
@@ -49,7 +53,6 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       anchorEl: null,
     };
@@ -66,7 +69,7 @@ class Home extends Component {
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
-  
+
     return (
       <div className={classes.root}>
         <div className={classes.row}>
@@ -108,10 +111,10 @@ class Home extends Component {
                 Edit Foods
               </Button>
             </div>
-            <VirtualTable 
-            cols={columns}
-            height={500}
-            rows={data}
+            <VirtualTable
+              cols={columns}
+              height={500}
+              rows={data}
             />
           </div>
         </div>

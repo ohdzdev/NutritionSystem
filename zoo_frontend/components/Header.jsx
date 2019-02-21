@@ -18,10 +18,12 @@ const styles = {
 };
 
 const Header = (props) => {
-  const { classes, api } = props;
+  const { classes, api, account } = props;
 
-  const logoutClicked = () => {
-    api.logout();
+  const logoutClicked = async () => {
+    // log out via the api so current auth token will be removed in db
+    await api.logout();
+    // navigate to the login page
     Router.push('/login');
   };
 
@@ -29,17 +31,17 @@ const Header = (props) => {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          {props.loggedIn &&
+          {account &&
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Nutritional Assistant
             </Typography>
           }
-          {props.loggedIn &&
+          {account &&
             <Typography>
-              Hello {props.firstName} {props.lastName}!
+              Hello {account.firstName} {account.lastName}!
             </Typography>
           }
-          {props.loggedIn &&
+          {account.role !== 'unauthenticated' &&
             <Button color="inherit" onClick={logoutClicked}>Logout</Button>
           }
         </Toolbar>
@@ -51,15 +53,23 @@ const Header = (props) => {
 Header.propTypes = {
   api: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  firstName: PropTypes.string,
-  lastName: PropTypes.string,
-  loggedIn: PropTypes.bool,
+  account: PropTypes.shape({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    id: PropTypes.number,
+    lastName: PropTypes.string,
+    role: PropTypes.string,
+  }),
 };
 
 Header.defaultProps = {
-  firstName: '',
-  lastName: '',
-  loggedIn: false,
+  account: {
+    email: '',
+    id: 0,
+    firstName: 'Guest',
+    lastName: '',
+    role: 'unauthenticated',
+  },
 };
 
 const styledHeader = withStyles(styles)(Header);

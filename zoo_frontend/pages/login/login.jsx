@@ -15,7 +15,12 @@ class Login extends Component {
   static propTypes = {
     api: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
+    account: PropTypes.object,
   };
+
+  static defaultProps = {
+    account: undefined,
+  }
 
   constructor(props) {
     super(props);
@@ -27,17 +32,23 @@ class Login extends Component {
     };
   }
 
+  componentDidMount(prevProps, prevState) { // eslint-disable-line
+    if (this.props.account) {
+      Router.push('/');
+    }
+  }
+
   handleLoginSubmit = async (event) => {
     event.preventDefault();
 
     try {
       await this.props.api.login(this.state.email, this.state.password);
+      Router.push('/');
     } catch (err) {
-      console.log(err);
-      return;
-    }
+      // TODO break down login error and present info to user for what is wrong
 
-    Router.replace('/');
+      console.log(err);
+    }
   }
 
   handleEmailChange = (event) => this.setState({ email: event.target.value });

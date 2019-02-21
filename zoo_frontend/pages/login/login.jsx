@@ -32,7 +32,7 @@ class Login extends Component {
     };
   }
 
-  componentDidMount(prevProps, prevState) { // eslint-disable-line
+  componentDidMount() {
     if (this.props.account) {
       Router.push('/');
     }

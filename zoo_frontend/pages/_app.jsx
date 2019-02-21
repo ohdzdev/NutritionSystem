@@ -26,7 +26,7 @@ class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {
     let pageProps = {};
     const c = cookies(ctx);
-    this.api = new Api(c.authToken || '');
+    const api = new Api(c.authToken || '');
     const allowedRoles = Component.allowedRoles || ['authenticated'];
     console.log(`page roles ${allowedRoles} - auth: ${c.authToken}`);
     if (typeof c.authToken === 'undefined' || c.authToken === '') {
@@ -41,7 +41,7 @@ class MyApp extends App {
     } else {
       // we have a token let's try to authenticate so user can get data from backend
       try {
-        const res = await this.api.validateToken();
+        const res = await api.validateToken();
         console.log(`user validated account: ${JSON.stringify(res)}`);
 
         if (allowedRoles.includes(res.data.role)) {
@@ -54,7 +54,7 @@ class MyApp extends App {
         // TODO make popup to user saying their session expired or something here
 
         // Call failed in some way - clear cookie / logout and redirect to login.
-        this.api.logout();
+        api.logout();
         redirectTo('/login', { res: ctx.res, status: 301 });
       }
     }

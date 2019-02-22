@@ -39,12 +39,12 @@ class Home extends Component {
               View user
             </Button>
           </Link>
-          <Link href="admin/user/new">
+          <Link href="/admin/user/new">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
               NEW user
             </Button>
           </Link>
-          <Link href="reports/user">
+          <Link href="/reports/user">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
               user Reports
             </Button>

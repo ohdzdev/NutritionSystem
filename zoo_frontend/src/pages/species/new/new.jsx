@@ -39,12 +39,12 @@ class Home extends Component {
               View Species
             </Button>
           </Link>
-          <Link href="admin/species/new">
+          <Link href="/admin/species/new">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
               NEW Species
             </Button>
           </Link>
-          <Link href="reports/species">
+          <Link href="/reports/species">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
               Species Reports
             </Button>

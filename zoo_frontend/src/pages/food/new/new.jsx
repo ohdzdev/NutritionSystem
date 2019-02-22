@@ -34,30 +34,21 @@ class Home extends Component {
           justifyContent: 'space-around', alignItems: 'center', display: 'flex',
         }}
         >
-          <Link
-            href="/department"
-          >
+          <Link href="/food">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
-            Department Management
+              View Foods
             </Button>
           </Link>
-
-          <Link
-            href="/species"
-          >
+          <Link href="/food/new">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
-            Species Management
+              NEW Food
             </Button>
           </Link>
-
-          <Link
-            href="/user"
-          >
+          <Link href="/reports/food">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
-            User Management
+              Food Reports
             </Button>
           </Link>
-
         </div>
       </div>
     );

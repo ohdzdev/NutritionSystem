@@ -1,9 +1,9 @@
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import { page, styles } from '../../src/pages/food';
+import { page, styles } from '../../src/pages/diet/new';
 
 const p = withStyles(styles)(page);
 
-p.allowedRoles = ['kitchen', 'admin'];
+p.allowedRoles = ['admin', 'kitchen'];
 
 export default p;

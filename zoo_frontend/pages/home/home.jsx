@@ -7,6 +7,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import { ListItemIcon } from '@material-ui/core';
 import { Print, RemoveRedEye, Star } from '@material-ui/icons';
+// import Router from 'next/router';
+import Link from 'next/link';
 import VirtualTable from '../../components/VirtualTable';
 
 const columns = [
@@ -121,10 +123,19 @@ class Home extends Component {
                 </MenuItem>
 
               </Menu>
-              <Button variant="contained" className={classes.button} color="secondary">
+              <Link
+                href="/home/asdf/test"
+              >
+                <Button variant="contained" className={classes.button} color="secondary">
                 Edit Diets
-              </Button>
-              <Button variant="contained" className={classes.button} color="secondary">
+                </Button>
+              </Link>
+              <Button
+                variant="contained"
+                className={classes.button}
+                color="secondary"
+                onClick={this.testClick}
+              >
                 Edit Foods
               </Button>
             </div>

@@ -1,7 +1,7 @@
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import styles from './admin.styles';
-import admin from './admin';
+import styles from '../../src/pages/admin/admin.styles';
+import admin from '../../src/pages/admin/admin';
 
 const page = withStyles(styles)(admin);
 

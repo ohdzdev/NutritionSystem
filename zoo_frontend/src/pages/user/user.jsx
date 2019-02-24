@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
+import MaterialTable from 'material-table';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Search from '@material-ui/icons/Search';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import NextPage from '@material-ui/icons/ChevronRight';
+import PreviousPage from '@material-ui/icons/ChevronLeft';
 
 import { hasAccess, Admin, User } from '../PageAccess';
 
@@ -72,6 +79,71 @@ class Home extends Component {
               User Reports
             </Button>
           </Link>
+        </div>
+        <div className={this.props.classes.table}>
+          <MaterialTable
+            icons={{
+              Search,
+              FirstPage,
+              LastPage,
+              NextPage,
+              PreviousPage,
+            }}
+            columns={[
+              { title: 'EmployeeID', field: 'employeeId' },
+              { title: 'Employee', field: 'employee' },
+              { title: 'User Login', field: 'userLogin' },
+              { title: 'Initials', field: 'initials' },
+              { title: 'LocationID', field: 'locationId' },
+            ]}
+            data={[
+              {
+                employeeId: 'Mehmet', employee: 'Baran', userLogin: 1987, initials: 63, locationId: 23,
+              },
+            ]}
+            title="User Management"
+            actions={[
+              {
+                icon: AccountCircle,
+                tooltip: 'Show User Info',
+                onClick: (event, rowData) => {
+                  alert(`You clicked user ${rowData.name}`);
+                },
+              },
+            ]}
+            localization={{
+              pagination: {
+                labelDisplayedRows: '{from}-{to} of {count}',
+                labelRowsPerPage: 'Rows per page:',
+                firstAriaLabel: 'First Page',
+                firstTooltip: 'First Page',
+                previousAriaLabel: 'Previous Page',
+                previousTooltip: 'Previous Page',
+                nextAriaLabel: 'Next Page',
+                nextTooltip: 'Next Page',
+                lastAriaLabel: 'Last Page',
+                lastTooltip: 'Last Page',
+              },
+              toolbar: {
+                nRowsSelected: '{0} rows(s) selected',
+                showColumnsTitle: 'Show Columns',
+                showColumnsAriaLabel: 'Show Columns',
+                exportTitle: 'Export',
+                exportAriaLabel: 'Export',
+                exportName: 'Export as CSV',
+                searchTooltip: 'Search',
+              },
+              header: {
+                actions: 'Actions',
+              },
+              body: {
+                emptyDataSourceMessage: 'No records to display',
+                filterRow: {
+                  filterTooltip: 'Filter',
+                },
+              },
+            }}
+          />
         </div>
       </div>
     );

@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 
-class Home extends Component {
+import { hasAccess, Home, Diet } from '../PageAccess';
+
+export default class extends Component {
   static propTypes = {
+    account: PropTypes.object.isRequired,
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
   };
@@ -22,6 +25,7 @@ class Home extends Component {
   }
 
   render() {
+    const { role } = this.props.account;
     return (
       <div
         style={{
@@ -34,16 +38,28 @@ class Home extends Component {
           justifyContent: 'space-around', alignItems: 'center', display: 'flex',
         }}
         >
-          <Link href="/diet/edit">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-              EDIT Diet
-            </Button>
-          </Link>
-          <Link href="/diet/new">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-              NEW Diet
-            </Button>
-          </Link>
+          {hasAccess(role, Home.roles) &&
+            <Link href={Home.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                Home
+              </Button>
+            </Link>
+          }
+          {hasAccess(role, Diet.edit.roles) &&
+            <Link href={Diet.edit.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                EDIT Diet
+              </Button>
+            </Link>
+          }
+          {hasAccess(role, Diet.new.roles) &&
+            <Link href={Diet.new.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                NEW Diet
+              </Button>
+            </Link>
+          }
+          {/* TODO add report link logic here */}
           <Link href="/reports/diet">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
               Diet Reports
@@ -54,5 +70,3 @@ class Home extends Component {
     );
   }
 }
-
-export default Home;

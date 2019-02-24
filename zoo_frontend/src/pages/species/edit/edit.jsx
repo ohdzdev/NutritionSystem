@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 
+import { hasAccess, Admin, Species } from '../../PageAccess';
+
 class Home extends Component {
   static propTypes = {
+    account: PropTypes.object.isRequired,
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
   };
@@ -22,6 +25,7 @@ class Home extends Component {
   }
 
   render() {
+    const { role } = this.props.account;
     return (
       <div
         style={{
@@ -34,16 +38,28 @@ class Home extends Component {
           justifyContent: 'space-around', alignItems: 'center', display: 'flex',
         }}
         >
-          <Link href="/admin/species">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-              View Species
-            </Button>
-          </Link>
-          <Link href="/admin/species/new">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-              NEW Species
-            </Button>
-          </Link>
+          {hasAccess(role, Admin.roles) &&
+            <Link href={Admin.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                Admin Home
+              </Button>
+            </Link>
+          }
+          {hasAccess(role, Species.roles) &&
+            <Link href={Species.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                View Species
+              </Button>
+            </Link>
+          }
+          {hasAccess(role, Species.new.roles) &&
+            <Link href={Species.new.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                NEW Species
+              </Button>
+            </Link>
+          }
+          {/* TODO add report link logic here */}
           <Link href="/reports/species">
             <Button className={this.props.classes.button} color="secondary" variant="contained">
               Species Reports

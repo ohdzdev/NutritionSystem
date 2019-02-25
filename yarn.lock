@@ -5053,10 +5053,10 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-next-cookies@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/next-cookies/-/next-cookies-1.1.1.tgz#faa3705cf5c5a636f23897b2bd308261c8ec1165"
-  integrity sha512-4ChxwXSSUFFtJOsYGgx5ruwldhw/77iQKy5PRYA/XxBWaa9Bd0LIvEZLuaCkeCaTevASh+jZVKR2OOKqGgWnIA==
+next-cookies@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/next-cookies/-/next-cookies-1.1.2.tgz#f19d5c5d68038015b495b0e7dcceaccbeff266f1"
+  integrity sha512-YjMqDD7dyb8afl7RXyqAThVl7Izjr1EHiqahkLyFLpw3UJvqy0kBv4r2Cs52pJFXZwRAmkZ6VoM8VU2r5hbe9g==
   dependencies:
     component-cookie "1.1.3"
     cookie "^0.3.1"

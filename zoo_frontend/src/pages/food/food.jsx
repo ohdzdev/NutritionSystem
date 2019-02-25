@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 
-import FoodAPI from '../../static/Food';
+import FoodAPI from '../../api/Food';
 
 import { hasAccess, Home, Food } from '../PageAccess';
 

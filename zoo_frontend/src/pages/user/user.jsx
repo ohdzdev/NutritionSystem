@@ -10,7 +10,7 @@ import LastPage from '@material-ui/icons/LastPage';
 import NextPage from '@material-ui/icons/ChevronRight';
 import PreviousPage from '@material-ui/icons/ChevronLeft';
 
-import UsersAPI from '../../static/Users';
+import UsersAPI from '../../api/Users';
 
 import { hasAccess, Admin, User } from '../PageAccess';
 
@@ -40,7 +40,6 @@ class Home extends Component {
     this.state = {
       asdf: props.token, // eslint-disable-line react/no-unused-state
     };
-    console.log(props.classes);
   }
 
   render() {
@@ -116,7 +115,7 @@ class Home extends Component {
                 icon: AccountCircle,
                 tooltip: 'Show User Info',
                 onClick: (event, rowData) => {
-                  alert(`You clicked user ${rowData.name}`);
+                  alert(`You clicked user ${rowData.employeeId}`); // eslint-disable-line
                 },
               },
             ]}

@@ -10,13 +10,25 @@ import LastPage from '@material-ui/icons/LastPage';
 import NextPage from '@material-ui/icons/ChevronRight';
 import PreviousPage from '@material-ui/icons/ChevronLeft';
 
+import UsersAPI from '../../static/Users';
+
 import { hasAccess, Admin, User } from '../PageAccess';
 
 class Home extends Component {
+  /**
+   * Server side data retrieval
+   */
+  static async getInitialProps({ authToken }) {
+    this.api = new UsersAPI(authToken);
+    const res = await this.api.getUsers().catch((err) => ({ data: [{ err: true, msg: err }] }));
+    return { users: res.data };
+  }
+
   static propTypes = {
     account: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     token: PropTypes.string,
+    users: PropTypes.array.isRequired,
   };
 
   static defaultProps = {
@@ -33,6 +45,7 @@ class Home extends Component {
 
   render() {
     const { role } = this.props.account;
+    const userData = this.props.users;
     return (
       <div
         style={{
@@ -96,11 +109,7 @@ class Home extends Component {
               { title: 'Initials', field: 'initials' },
               { title: 'LocationID', field: 'locationId' },
             ]}
-            data={[
-              {
-                employeeId: 'Mehmet', employee: 'Baran', userLogin: 1987, initials: 63, locationId: 23,
-              },
-            ]}
+            data={userData}
             title="User Management"
             actions={[
               {

@@ -21,7 +21,6 @@ class Home extends Component {
     this.state = {
       asdf: props.token, // eslint-disable-line react/no-unused-state
     };
-    
   }
 
   render() {

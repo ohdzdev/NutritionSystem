@@ -13,7 +13,7 @@ export default class extends Component {
    */
   static async getInitialProps({ authToken }) {
     this.api = new FoodAPI(authToken);
-    const res = await this.api.getFood().catch((err) => ({ foodItems: { err: true, msg: err } }));
+    const res = await this.api.getFood().catch((err) => ({ foodItems: [{ err: true, msg: err }] }));
     return { foodItems: res.data };
   }
 

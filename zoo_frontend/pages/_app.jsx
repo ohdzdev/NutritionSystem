@@ -37,7 +37,7 @@ class MyApp extends App {
         return { ...pageProps };
       }
       // redirecting to login because current page does not support unauth users
-      // redirectTo('/login', { res: ctx.res, status: 301 });
+      redirectTo('/login', { res: ctx.res, status: 301 });
     } else {
       // we have a token let's try to authenticate so user can get data from backend
       try {

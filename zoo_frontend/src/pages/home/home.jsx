@@ -73,8 +73,8 @@ export default class extends Component {
   };
 
   render() {
-    const { classes, account } = this.props;
-    const { role } = account;
+    const { classes, account = {} } = this.props;
+    const { role = '' } = account;
     const { anchorEl } = this.state;
 
     return (

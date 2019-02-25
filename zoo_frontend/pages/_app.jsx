@@ -46,6 +46,7 @@ class MyApp extends App {
 
         if (allowedRoles.includes(res.data.role)) {
           if (Component.getInitialProps) {
+            ctx.authToken = c.authToken;
             pageProps = await Component.getInitialProps(ctx);
           }
         }

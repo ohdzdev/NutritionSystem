@@ -12,8 +12,8 @@ export default class extends Component {
    * Server side data retrieval
    */
   static async getInitialProps({ authToken }) {
-    this.api = new FoodAPI(authToken);
-    const res = await this.api.getFood().catch((err) => ({ foodItems: [{ err: true, msg: err }] }));
+    const api = new FoodAPI(authToken);
+    const res = await api.getFood().catch((err) => ({ foodItems: [{ err: true, msg: err }] }));
     return { foodItems: res.data };
   }
 

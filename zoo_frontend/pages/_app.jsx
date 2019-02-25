@@ -37,26 +37,43 @@ class MyApp extends App {
         return { ...pageProps };
       }
       // redirecting to login because current page does not support unauth users
-      redirectTo('/login', { res: ctx.res, status: 301 });
+      // redirectTo('/login', { res: ctx.res, status: 301 });
     } else {
       // we have a token let's try to authenticate so user can get data from backend
       try {
-        const res = await api.validateToken();
+        const res = await api.validateToken().catch(() => {
+          if (process.browser) {
+            document.cookie = 'authToken=';
+          }
+          console.log('SETTING CLEAR TOKEN');
+          api.setToken('');
+          return {};
+        });
         console.log(`user validated account: ${JSON.stringify(res)}`);
 
+        if (Object.keys(res).length === 0) {
+          console.log('SERVER SIDE SENDING CLEAR TOKEN');
+          return { clearSession: true, token: '', account: { role: 'unauthenticated' } };
+        }
         if (allowedRoles.includes(res.data.role)) {
           if (Component.getInitialProps) {
             ctx.authToken = c.authToken;
             pageProps = await Component.getInitialProps(ctx);
           }
+        } else {
+          redirectTo('/', { res: ctx.res, status: 301 });
         }
         return { ...pageProps, account: res.data || null, token: c.authToken || '' };
       } catch (err) {
         // TODO make popup to user saying their session expired or something here
 
         // Call failed in some way - clear cookie / logout and redirect to login.
-        api.logout();
-        redirectTo('/login', { res: ctx.res, status: 301 });
+        await api.logout().catch(() => {
+          if (process.browser) {
+            document.cookie = 'authToken=';
+          }
+        });
+        // redirectTo('/login', { res: ctx.res, status: 301 });
       }
     }
 
@@ -65,6 +82,14 @@ class MyApp extends App {
 
   constructor(props) {
     super(props);
+
+    if (props.clearSession) {
+      console.log('BROWSER RECEIVED CLEAR TOKEN');
+      if (process.browser) {
+        console.log('BROWSER IS NOW CLEARING TOKEN');
+        document.cookie = 'authToken=';
+      }
+    }
     this.pageContext = getPageContext();
     this.api = new Api(props.token);
   }

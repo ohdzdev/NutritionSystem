@@ -3,26 +3,25 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 
+import FoodAPI from '../../static/Food';
+
 import { hasAccess, Home, Food } from '../PageAccess';
 
 export default class extends Component {
+  /**
+   * Server side data retrieval
+   */
+  static async getInitialProps({ authToken }) {
+    this.api = new FoodAPI(authToken);
+    const res = await this.api.getFood().catch((err) => ({ foodItems: [{ err: true, msg: err }] }));
+    return { foodItems: res.data };
+  }
+
   static propTypes = {
     account: PropTypes.object.isRequired,
-    token: PropTypes.string,
     classes: PropTypes.object.isRequired,
+    foodItems: PropTypes.array.isRequired,
   };
-
-  static defaultProps = {
-    token: '',
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      asdf: props.token, // eslint-disable-line react/no-unused-state
-    };
-    console.log(props.classes);
-  }
 
   render() {
     const { role } = this.props.account;
@@ -65,6 +64,11 @@ export default class extends Component {
             food Reports
             </Button>
           </Link>
+        </div>
+        <div>
+          <pre>
+            {JSON.stringify(this.props.foodItems, null, 2)}
+          </pre>
         </div>
       </div>
     );

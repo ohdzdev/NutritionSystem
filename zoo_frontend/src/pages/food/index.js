@@ -16,6 +16,10 @@ const allowedRoles = {
     link: '/food/new',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST],
   },
+  nicknames: {
+    link: '/food/nicknames',
+    roles: [Roles.ADMIN, Roles.KITCHEN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  },
 };
 
 const styledPage = withStyles(styles)(page);

@@ -9,7 +9,9 @@ import { ListItemIcon } from '@material-ui/core';
 import { Print, RemoveRedEye, Star } from '@material-ui/icons';
 // import Router from 'next/router';
 import Link from 'next/link';
-import VirtualTable from '../../components/VirtualTable';
+import VirtualTable from '../../../components/VirtualTable';
+
+import { hasAccess, Diet, Food } from '../PageAccess';
 
 const columns = [
   {
@@ -49,8 +51,9 @@ const data = [
   },
 ];
 
-class Home extends Component {
+export default class extends Component {
   static propTypes = {
+    account: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
   };
 
@@ -70,7 +73,8 @@ class Home extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, account } = this.props;
+    const { role } = account;
     const { anchorEl } = this.state;
 
     return (
@@ -123,21 +127,27 @@ class Home extends Component {
                 </MenuItem>
 
               </Menu>
-              <Link
-                href="/home/asdf/test"
-              >
-                <Button variant="contained" className={classes.button} color="secondary">
-                Edit Diets
-                </Button>
-              </Link>
-              <Button
-                variant="contained"
-                className={classes.button}
-                color="secondary"
-                onClick={this.testClick}
-              >
-                Edit Foods
-              </Button>
+              {hasAccess(role, Diet.edit.roles) &&
+                <Link href={Diet.edit.link}>
+                  <Button variant="contained" className={classes.button} color="secondary">
+                  Edit Diets
+                  </Button>
+                </Link>
+              }
+              {hasAccess(role, Food.edit.roles) &&
+                <Link href={Diet.edit.link}>
+                  <Button variant="contained" className={classes.button} color="secondary">
+                    Edit Foods
+                  </Button>
+                </Link>
+              }
+              {hasAccess(role, Food.nicknames.roles) &&
+                <Link href={Food.nicknames.link}>
+                  <Button variant="contained" className={classes.button} color="secondary">
+                    Edit Food Nicknames
+                  </Button>
+                </Link>
+              }
             </div>
             <VirtualTable
               cols={columns}
@@ -150,5 +160,3 @@ class Home extends Component {
     );
   }
 }
-
-export default Home;

@@ -6,7 +6,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
+import Link from 'next/link';
 
+import { hasAccess, Admin } from '../src/pages/PageAccess';
 
 const styles = {
   root: {
@@ -19,7 +21,7 @@ const styles = {
 
 const Header = (props) => {
   const { classes, api, account } = props;
-
+  const { role } = account;
   const logoutClicked = async () => {
     // log out via the api so current auth token will be removed in db
     await api.logout();
@@ -34,6 +36,13 @@ const Header = (props) => {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             Nutritional Assistant
           </Typography>
+          {hasAccess(role, Admin.roles) &&
+            <Link href={Admin.link}>
+              <Button variant="contained" className={classes.button} color="secondary">
+                  Admin
+              </Button>
+            </Link>
+          }
           <Typography>
             Hello {account.firstName} {account.lastName}!
           </Typography>

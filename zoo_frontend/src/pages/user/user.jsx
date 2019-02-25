@@ -19,8 +19,8 @@ class Home extends Component {
    * Server side data retrieval
    */
   static async getInitialProps({ authToken }) {
-    this.api = new UsersAPI(authToken);
-    const res = await this.api.getUsers().catch((err) => ({ data: [{ err: true, msg: err }] }));
+    const api = new UsersAPI(authToken);
+    const res = await api.getUsers().catch((err) => ({ data: [{ err: true, msg: err }] }));
     return { users: res.data };
   }
 

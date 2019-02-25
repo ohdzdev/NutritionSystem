@@ -9,7 +9,7 @@ import Router from 'next/router';
 
 import getPageContext from '../src/getPageContext';
 import Header from '../components/Header';
-import Api from '../src/static/Api';
+import Api from '../src/api/Api';
 
 const redirectTo = (destination, { res, status } = {}) => {
   if (res) {

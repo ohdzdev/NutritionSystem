@@ -11,9 +11,6 @@ export default (theme) => ({
   column: {
     flex: '100%',
   },
-  date: {
-    marginRight: theme.spacing.unit * 3,
-  },
   button: {
     margin: theme.spacing.unit,
     marginRight: theme.spacing.unit * 3,

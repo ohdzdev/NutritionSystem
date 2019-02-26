@@ -22,10 +22,11 @@ class Api {
       }
       const res = await axios.post(`${API_BASE_URL}/api/AccessTokens/validateAndRetreiveUser`, {
         token: this.token,
+      }).catch((e) => {
+        throw new Error('validate failed', e);
       });
       return res.data;
     } catch (err) {
-      console.error(err);
       document.cookie = 'authToken=';
       this.token = '';
       throw err;
@@ -48,17 +49,11 @@ class Api {
 
   logout = async () => {
     if (this.token) {
-      try {
-        await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
-          params: {
-            access_token: this.token,
-          },
-        });
-        document.cookie = 'authToken=';
-      } catch (e) {
-        // call failed auth token is probably already cleared, supress errors and clear cookie
-        document.cookie = 'authToken=';
-      }
+      await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
+        params: {
+          access_token: this.token,
+        },
+      });
     } else {
       // just in case
       this.token = '';

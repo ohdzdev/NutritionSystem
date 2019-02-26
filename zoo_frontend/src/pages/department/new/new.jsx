@@ -1,0 +1,76 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Link from 'next/link';
+import { Button } from '@material-ui/core';
+
+import {
+  Admin, Department, hasAccess,
+} from '../../PageAccess';
+
+
+class Home extends Component {
+  static propTypes = {
+    token: PropTypes.string,
+    classes: PropTypes.object.isRequired,
+    account: PropTypes.object.isRequired,
+  };
+
+  static defaultProps = {
+    token: '',
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      asdf: props.token, // eslint-disable-line react/no-unused-state
+    };
+  }
+
+  render() {
+    const { role } = this.props.account;
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        <div style={{
+          justifyContent: 'space-around', alignItems: 'center', display: 'flex',
+        }}
+        >
+          { hasAccess(role, Admin.roles) &&
+            <Link href={Admin.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                Admin Home
+              </Button>
+            </Link>
+          }
+          { hasAccess(role, Department.roles) &&
+            <Link href={Department.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                View Department
+              </Button>
+            </Link>
+          }
+          { hasAccess(role, Department.new.roles) &&
+            <Link href={Department.new.link}>
+              <Button className={this.props.classes.button} color="secondary" variant="contained">
+                NEW Department
+              </Button>
+            </Link>
+          }
+          {/* TODO add Reports Roles logic here */}
+          <Link href="reports/department">
+            <Button className={this.props.classes.button} color="secondary" variant="contained">
+              Department Reports
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Home;

@@ -5,8 +5,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
-import VirtualTable from '../../components/VirtualTable';
+import { ListItemIcon } from '@material-ui/core';
+import { Print, RemoveRedEye, Star } from '@material-ui/icons';
+// import Router from 'next/router';
+import Link from 'next/link';
+import VirtualTable from '../../../components/VirtualTable';
 
+import { hasAccess, Diet, Food } from '../PageAccess';
 
 const columns = [
   {
@@ -46,8 +51,9 @@ const data = [
   },
 ];
 
-class Home extends Component {
+export default class extends Component {
   static propTypes = {
+    account: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
   };
 
@@ -67,7 +73,8 @@ class Home extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, account = {} } = this.props;
+    const { role = '' } = account;
     const { anchorEl } = this.state;
 
     return (
@@ -90,26 +97,57 @@ class Home extends Component {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={this.handleClose}
+
               >
-                <MenuItem onClick={this.handleClose}>Print Labels</MenuItem>
-                <MenuItem onClick={this.handleClose}>Print Prep Sheets</MenuItem>
-                <MenuItem onClick={this.handleClose}>View Diets</MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <ListItemIcon>
+                    <Print />
+                  </ListItemIcon>
+                  Print Labels
+                </MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <ListItemIcon>
+                    <Print />
+                  </ListItemIcon>
+                  Print Prep Sheets
+                </MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <ListItemIcon>
+                    <RemoveRedEye />
+                  </ListItemIcon>
+                  View Diets
+                </MenuItem>
                 <MenuItem onClick={this.handleClose}>Produce Order</MenuItem>
                 <MenuItem onClick={this.handleClose}>Rodent Order</MenuItem>
-                <MenuItem onClick={this.handleClose}>Special Order</MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <ListItemIcon>
+                    <Star />
+                  </ListItemIcon>
+                  Special Order
+                </MenuItem>
 
               </Menu>
-              <div className={classes.date}>
-                {// date component
-                }
-                <h3>2/11/2019</h3>
-              </div>
-              <Button variant="contained" className={classes.button} color="secondary">
-                Edit Diets
-              </Button>
-              <Button variant="contained" className={classes.button} color="secondary">
-                Edit Foods
-              </Button>
+              {hasAccess(role, Diet.edit.roles) &&
+                <Link href={Diet.edit.link}>
+                  <Button variant="contained" className={classes.button} color="secondary">
+                  Edit Diets
+                  </Button>
+                </Link>
+              }
+              {hasAccess(role, Food.edit.roles) &&
+                <Link href={Diet.edit.link}>
+                  <Button variant="contained" className={classes.button} color="secondary">
+                    Edit Foods
+                  </Button>
+                </Link>
+              }
+              {hasAccess(role, Food.nicknames.roles) &&
+                <Link href={Food.nicknames.link}>
+                  <Button variant="contained" className={classes.button} color="secondary">
+                    Edit Food Nicknames
+                  </Button>
+                </Link>
+              }
             </div>
             <VirtualTable
               cols={columns}
@@ -122,5 +160,3 @@ class Home extends Component {
     );
   }
 }
-
-export default Home;

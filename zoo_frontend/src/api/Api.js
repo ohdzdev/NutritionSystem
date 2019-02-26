@@ -1,4 +1,5 @@
 import axios from 'axios';
+import LocalStorage from '../static/LocalStorage';
 
 const API_BASE_URL = process.env.BACKEND_URL;
 
@@ -7,11 +8,11 @@ class Api {
     this.token = token;
   }
 
-  setToken() {
+  getToken() {
     return this.token;
   }
 
-  getToken(newToken) {
+  setToken(newToken) {
     this.token = newToken;
   }
 
@@ -20,14 +21,11 @@ class Api {
       if (this.token === '' || this.token === 'undefined') {
         throw new Error('Session Token Blank');
       }
-      const res = await axios.post(`${API_BASE_URL}/api/AccessTokens/validateAndRetreiveUser`, {
+      return await axios.post(`${API_BASE_URL}/api/AccessTokens/validate`, {
         token: this.token,
-      }).catch((e) => {
-        throw new Error('validate failed', e);
       });
-      return res.data;
     } catch (err) {
-      document.cookie = 'authToken=';
+      document.cookie = 'authToken=; path=/';
       this.token = '';
       throw err;
     }
@@ -39,8 +37,18 @@ class Api {
         email,
         password,
       });
-      document.cookie = `authToken=${res.data.token}`;
-      this.setToken(res.data.token);
+      const { data } = res;
+      if (data) {
+        LocalStorage.setEmail(data.email);
+        LocalStorage.setFirstName(data.firstName);
+        LocalStorage.setLastName(data.lastName);
+        LocalStorage.setRole(data.role);
+        LocalStorage.setId(data.id);
+        document.cookie = `authToken=${res.data.token}; path=/`;
+        this.setToken(res.data.token);
+      } else {
+        throw new Error('Invalid login return');
+      }
     } catch (err) {
       console.error(err);
       throw err;
@@ -48,17 +56,20 @@ class Api {
   }
 
   logout = async () => {
+    LocalStorage.setEmail('');
+    LocalStorage.setFirstName('');
+    LocalStorage.setLastName('');
+    LocalStorage.setRole('');
+    LocalStorage.setId(0);
     if (this.token) {
       await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
         params: {
           access_token: this.token,
         },
       });
-    } else {
-      // just in case
-      this.token = '';
-      document.cookie = 'authToken=';
     }
+    this.token = '';
+    document.cookie = 'authToken=; path=/';
   }
 }
 

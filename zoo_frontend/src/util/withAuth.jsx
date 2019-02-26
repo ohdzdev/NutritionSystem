@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import cookies from 'next-cookies';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import Router from 'next/router';
@@ -27,8 +28,6 @@ export default (WrappedComponent) => {
 
       const allowedRoles = WrappedComponent.allowedRoles || ['authenticated'];
 
-      console.log(allowedRoles);
-
       if (c.authToken == null || c.authToken === '') {
         if (allowedRoles.includes('unauthenticated')) {
           if (WrappedComponent.getInitialProps) {
@@ -47,7 +46,7 @@ export default (WrappedComponent) => {
       try {
         await api.validateToken().catch(() => {
           if (process.browser) {
-            document.cookie = 'authToken=';
+            document.cookie = 'authToken=; path=/';
           }
           api.setToken('');
           return {};
@@ -65,11 +64,19 @@ export default (WrappedComponent) => {
           // ignore this error
         }
         if (process.browser) {
-          document.cookie = 'authToken=';
+          document.cookie = 'authToken=; path=/';
         }
         redirectTo('/login', { res: ctx.res, status: 301 });
       }
       return { ...pageProps };
+    }
+
+    static propTypes = {
+      token: PropTypes.string,
+    }
+
+    static defaultProps = {
+      token: '',
     }
 
     constructor(props) {
@@ -89,14 +96,14 @@ export default (WrappedComponent) => {
         firstName: LocalStorage.getFirstName(),
         lastName: LocalStorage.getLastName(),
         email: LocalStorage.getEmail(),
-        role: LocalStorage.getRole(),
+        role: LocalStorage.getRole() || 'unauthenticated',
         id: LocalStorage.getId(),
       };
 
       const allowedRoles = WrappedComponent.allowedRoles || ['authenticated'];
 
-      if (!allowedRoles.includes(account.role || 'unauthenticated')) {
-        Router.push('/');
+      if (!allowedRoles.includes(account.role)) {
+        Router.push(account.role === 'unauthenticated' ? '/login' : '/');
         return;
       }
 

@@ -20,8 +20,23 @@ const setRole = (role) => localStorage.setItem(ROLE_KEY, role);
 
 const ID_KEY = 'profile_id';
 
-const getId = () => localStorage.getItem(ID_KEY);
+const getId = () => Number(localStorage.getItem(ID_KEY));
 const setId = (id) => localStorage.setItem(ID_KEY, id);
+
+const LOGIN_EMAIL_KEY = 'login_email';
+
+const getLoginEmail = () => localStorage.getItem(LOGIN_EMAIL_KEY);
+const setLoginEmail = (email) => localStorage.setItem(LOGIN_EMAIL_KEY, email);
+
+const LOGIN_PASSWORD_KEY = 'login_password';
+
+const getLoginPassword = () => localStorage.getItem(LOGIN_PASSWORD_KEY);
+const setLoginPassword = (password) => localStorage.setItem(LOGIN_PASSWORD_KEY, password);
+
+const LOGIN_REMEMBER_KEY = 'login_remember';
+
+const getRememberMe = () => localStorage.getItem(LOGIN_REMEMBER_KEY) === 'true';
+const setRememberMe = (rememberMe) => localStorage.setItem(LOGIN_REMEMBER_KEY, rememberMe);
 
 export default {
   getEmail,
@@ -34,4 +49,10 @@ export default {
   setRole,
   getId,
   setId,
+  getLoginEmail,
+  setLoginEmail,
+  getLoginPassword,
+  setLoginPassword,
+  getRememberMe,
+  setRememberMe,
 };

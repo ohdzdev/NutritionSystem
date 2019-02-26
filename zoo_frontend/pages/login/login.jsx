@@ -5,11 +5,14 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+
+import LocalStorage from '../../src/static/LocalStorage';
 
 class Login extends Component {
   static propTypes = {
@@ -25,10 +28,16 @@ class Login extends Component {
   constructor(props) {
     super(props);
 
+    const rememberMe = LocalStorage.getRememberMe();
+    const email = rememberMe ? LocalStorage.getLoginEmail() : '';
+    const password = rememberMe ? LocalStorage.getLoginPassword() : '';
+
     this.state = {
-      email: '',
-      password: '',
-      rememberMe: false,
+      email,
+      password,
+      rememberMe,
+      error: false,
+      errorMessage: '',
     };
   }
 
@@ -41,13 +50,19 @@ class Login extends Component {
   handleLoginSubmit = async (event) => {
     event.preventDefault();
 
+    this.setState({ error: false });
+
+    const { email, password, rememberMe } = this.state;
+
+    LocalStorage.setLoginEmail(rememberMe ? email : '');
+    LocalStorage.setLoginPassword(rememberMe ? password : '');
+    LocalStorage.setRememberMe(rememberMe);
+
     try {
-      await this.props.api.login(this.state.email, this.state.password);
+      await this.props.api.login(email, password);
       Router.push('/');
     } catch (err) {
-      // TODO break down login error and present info to user for what is wrong
-
-      console.log(err);
+      this.setState({ error: true, errorMessage: 'Invalid username/password!' });
     }
   }
 
@@ -66,7 +81,17 @@ class Login extends Component {
             Sign in
           </Typography>
           <form className={classes.form} onSubmit={this.handleLoginSubmit}>
-            <FormControl margin="normal" required fullWidth>
+            {this.state.error &&
+              <FormHelperText error className={classes.errorText}>
+                {this.state.errorMessage}
+              </FormHelperText>
+            }
+            <FormControl
+              margin="normal"
+              required
+              fullWidth
+              error={this.state.error}
+            >
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input
                 id="email"
@@ -77,7 +102,12 @@ class Login extends Component {
                 onChange={this.handleEmailChange}
               />
             </FormControl>
-            <FormControl margin="normal" required fullWidth>
+            <FormControl
+              margin="normal"
+              required
+              fullWidth
+              error={this.state.error}
+            >
               <InputLabel htmlFor="password">Password</InputLabel>
               <Input
                 name="password"

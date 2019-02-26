@@ -29,7 +29,7 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
-      "property": "validateAndRetreiveUser"
+      "property": "validate"
     }]
   },
   "ACL": {

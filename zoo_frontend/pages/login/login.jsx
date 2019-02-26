@@ -33,7 +33,7 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if (this.props.account) {
+    if (this.props.account.loggedIn) {
       Router.push('/');
     }
   }

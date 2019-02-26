@@ -4,77 +4,19 @@ import Head from 'next/head';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
-import cookies from 'next-cookies';
-import Router from 'next/router';
 
 import getPageContext from '../src/getPageContext';
-import Header from '../components/Header';
+import withAuth from '../src/util/withAuth';
 import Api from '../src/api/Api';
-
-const redirectTo = (destination, { res, status } = {}) => {
-  if (res) {
-    res.writeHead(status || 302, { Location: destination });
-    res.end();
-  } else if (destination[0] === '/' && destination[1] !== '/') {
-    Router.push(destination);
-  } else {
-    window.location = destination;
-  }
-};
 
 class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {
     let pageProps = {};
-    const c = cookies(ctx);
-    const api = new Api(c.authToken || '');
-    const allowedRoles = Component.allowedRoles || ['authenticated'];
-    console.log(`page roles ${allowedRoles} - auth: ${c.authToken}`);
-    if (typeof c.authToken === 'undefined' || c.authToken === '') {
-      if (allowedRoles.includes('unauthenticated')) {
-        if (Component.getInitialProps) {
-          pageProps = await Component.getInitialProps(ctx);
-        }
-        return { ...pageProps };
-      }
-      // redirecting to login because current page does not support unauth users
-      redirectTo('/login', { res: ctx.res, status: 301 });
-    } else {
-      // we have a token let's try to authenticate so user can get data from backend
-      try {
-        const res = await api.validateToken().catch(() => {
-          if (process.browser) {
-            document.cookie = 'authToken=';
-          }
-          console.log('SETTING CLEAR TOKEN');
-          api.setToken('');
-          return {};
-        });
-        console.log(`user validated account: ${JSON.stringify(res)}`);
 
-        if (Object.keys(res).length === 0) {
-          console.log('SERVER SIDE SENDING CLEAR TOKEN');
-          return { clearSession: true, token: '', account: { role: 'unauthenticated' } };
-        }
-        if (allowedRoles.includes(res.data.role)) {
-          if (Component.getInitialProps) {
-            ctx.authToken = c.authToken;
-            pageProps = await Component.getInitialProps(ctx);
-          }
-        } else {
-          redirectTo('/', { res: ctx.res, status: 301 });
-        }
-        return { ...pageProps, account: res.data || null, token: c.authToken || '' };
-      } catch (err) {
-        // TODO make popup to user saying their session expired or something here
+    const AuthedComponent = withAuth(Component);
 
-        // Call failed in some way - clear cookie / logout and redirect to login.
-        await api.logout().catch(() => {
-          if (process.browser) {
-            document.cookie = 'authToken=';
-          }
-        });
-        // redirectTo('/login', { res: ctx.res, status: 301 });
-      }
+    if (AuthedComponent.getInitialProps) {
+      pageProps = await AuthedComponent.getInitialProps(ctx);
     }
 
     return { ...pageProps };
@@ -83,13 +25,6 @@ class MyApp extends App {
   constructor(props) {
     super(props);
 
-    if (props.clearSession) {
-      console.log('BROWSER RECEIVED CLEAR TOKEN');
-      if (process.browser) {
-        console.log('BROWSER IS NOW CLEARING TOKEN');
-        document.cookie = 'authToken=';
-      }
-    }
     this.pageContext = getPageContext();
     this.api = new Api(props.token);
   }
@@ -107,6 +42,8 @@ class MyApp extends App {
 
   render() {
     const { Component } = this.props;
+
+    const AuthedComponent = withAuth(Component);
     return (
       <Container>
         <Head>
@@ -128,11 +65,7 @@ class MyApp extends App {
             <CssBaseline />
             {/* Pass pageContext to the _document though the renderPage enhancer
                 to render collected styles on server-side. */}
-            <Header
-              api={this.api}
-              account={this.props.account}
-            />
-            <Component
+            <AuthedComponent
               pageContext={this.pageContext}
               api={this.api}
               {...this.props}

@@ -30,4 +30,7 @@ export default (theme) => ({
   submit: {
     marginTop: theme.spacing.unit * 3,
   },
+  errorText: {
+    textAlign: 'center',
+  },
 });

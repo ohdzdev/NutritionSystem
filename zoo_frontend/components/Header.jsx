@@ -48,7 +48,7 @@ const Header = (props) => {
             </Link>
           }
           <Typography style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-            Hello {account.firstName} {account.lastName}!
+            Hello {account.loggedIn ? `${account.firstName} ${account.lastName}` : 'Guest'}!
           </Typography>
           {account.role !== 'unauthenticated' &&
             <Button color="inherit" onClick={logoutClicked}>Logout</Button>

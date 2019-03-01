@@ -33,13 +33,13 @@ const Header = (props) => {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <div className={classes.grow}>
-            <Link href={Home.link}>
-              <Typography variant="h6" color="inherit" style={{ cursor: 'pointer' }}>
+
+          <Link href={Home.link}>
+            <Typography variant="h6" color="inherit" style={{ cursor: 'pointer' }}>
               Nutritional Assistant
-              </Typography>
-            </Link>
-          </div>
+            </Typography>
+          </Link>
+          <div className={classes.grow} />
           {hasAccess(role, Admin.roles) &&
             <Link href={Admin.link}>
               <Button variant="contained" className={classes.button} color="secondary">

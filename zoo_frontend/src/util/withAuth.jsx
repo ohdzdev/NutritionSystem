@@ -117,9 +117,7 @@ export default (WrappedComponent) => {
             account={this.state.account}
             api={this.api}
           />
-          {this.state.loading ?
-            <div>LOADING...</div>
-            :
+          {!this.state.loading &&
             <WrappedComponent
               {...this.props}
               account={this.state.account}

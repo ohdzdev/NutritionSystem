@@ -165,6 +165,9 @@ MuiVirtualizedTable.propTypes = {
 MuiVirtualizedTable.defaultProps = {
   headerHeight: 56,
   rowHeight: 56,
+  onRowClick: () => {},
+  rowClassName: '',
+  sort: null,
 };
 
 const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);

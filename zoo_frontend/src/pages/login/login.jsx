@@ -12,7 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import LocalStorage from '../../src/static/LocalStorage';
+import LocalStorage from '../../static/LocalStorage';
 
 class Login extends Component {
   static propTypes = {

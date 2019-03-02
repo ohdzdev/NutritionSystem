@@ -6,10 +6,11 @@ import Router from 'next/router';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 
+import { AuthContext } from './AuthProvider';
 import Api from '../api/Api';
 import LocalStorage from '../static/LocalStorage';
-import Header from '../../components/Header';
-import Drawer from '../../components/SidebarDrawer';
+import Header from '../components/Header';
+import Drawer from '../components/SidebarDrawer';
 
 const redirectTo = (destination, { res, status } = {}) => {
   if (res) {
@@ -53,14 +54,12 @@ const styles = theme => ({
   },
 });
 
-export default (WrappedComponent) => {
+export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
   class withAuth extends Component {
     static async getInitialProps(ctx) {
       let pageProps = {};
 
       const c = cookies(ctx);
-
-      const allowedRoles = WrappedComponent.allowedRoles || ['authenticated'];
 
       if (c.authToken == null || c.authToken === '') {
         if (allowedRoles.includes('unauthenticated')) {
@@ -124,6 +123,8 @@ export default (WrappedComponent) => {
       };
 
       this.api = new Api(props.token);
+
+      this.context.setApi(this.api);
     }
 
     componentDidMount() {
@@ -136,12 +137,12 @@ export default (WrappedComponent) => {
         id: LocalStorage.getId(),
       };
 
-      const allowedRoles = WrappedComponent.allowedRoles || ['authenticated'];
-
       if (!allowedRoles.includes(account.role)) {
         Router.push(account.role === 'unauthenticated' ? '/login' : '/');
         return;
       }
+
+      this.context.setAccount(account);
 
       this.setState({ account, loading: false });
     }
@@ -191,6 +192,8 @@ export default (WrappedComponent) => {
 
   hoistNonReactStatics(withAuth, WrappedComponent, { getInitialProps: true });
 
+  withAuth.allowedRoles = allowedRoles;
+  withAuth.contextType = AuthContext;
   withAuth.displayName = `withAuth(${WrappedComponent.displayName})`;
 
   return withStyles(styles)(withAuth);

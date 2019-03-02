@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from 'classnames';
 
-import { hasAccess, Admin, Home } from '../src/pages/PageAccess';
+import { hasAccess, Admin, Home } from '../pages/PageAccess';
 
 const drawerWidth = 240;
 
@@ -79,7 +79,7 @@ const Header = (props) => {
           {!account.loggedIn &&
             <div style={{ width: '15px' }} />
           }
-          {drawerOpen &&<div style={{ width: '20px' }} /> }
+          {drawerOpen && <div style={{ width: '20px' }} /> }
           <Link href={Home.link}>
             <Typography variant="h6" color="inherit" style={{ cursor: 'pointer' }}>
               Nutritional Assistant

@@ -7,9 +7,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import { ListItemIcon } from '@material-ui/core';
 import { Print, RemoveRedEye, Star } from '@material-ui/icons';
-// import Router from 'next/router';
 import Link from 'next/link';
-import VirtualTable from '../../../components/VirtualTable';
+import VirtualTable from '../../components/VirtualTable';
 
 import { hasAccess, Diet, Food } from '../PageAccess';
 

@@ -31,6 +31,7 @@
     "react-dom": "16.8.3",
     "react-jss": "^8.6.1",
     "react-virtualized": "^9.21.0",
+    "recompose": "^0.30.0",
     "styled-jsx": "^3.2.1"
   },
   "devDependencies": {

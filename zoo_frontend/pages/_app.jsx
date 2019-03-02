@@ -6,17 +6,14 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 
 import getPageContext from '../src/getPageContext';
-import withAuth from '../src/util/withAuth';
-import Api from '../src/api/Api';
+import AuthProvider from '../src/util/AuthProvider';
 
 class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {
     let pageProps = {};
 
-    const AuthedComponent = withAuth(Component);
-
-    if (AuthedComponent.getInitialProps) {
-      pageProps = await AuthedComponent.getInitialProps(ctx);
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
     }
 
     return { ...pageProps };
@@ -26,7 +23,6 @@ class MyApp extends App {
     super(props);
 
     this.pageContext = getPageContext();
-    this.api = new Api(props.token);
   }
 
   componentDidMount() {
@@ -43,7 +39,6 @@ class MyApp extends App {
   render() {
     const { Component } = this.props;
 
-    const AuthedComponent = withAuth(Component);
     return (
       <Container>
         <Head>
@@ -61,15 +56,16 @@ class MyApp extends App {
             theme={this.pageContext.theme}
             sheetsManager={this.pageContext.sheetsManager}
           >
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            {/* Pass pageContext to the _document though the renderPage enhancer
-                to render collected styles on server-side. */}
-            <AuthedComponent
-              pageContext={this.pageContext}
-              api={this.api}
-              {...this.props}
-            />
+            <AuthProvider>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              {/* Pass pageContext to the _document though the renderPage enhancer
+                  to render collected styles on server-side. */}
+              <Component
+                pageContext={this.pageContext}
+                {...this.props}
+              />
+            </AuthProvider>
           </MuiThemeProvider>
         </JssProvider>
       </Container>

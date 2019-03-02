@@ -1,12 +1,15 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cookies from 'next-cookies';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import Router from 'next/router';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
 
 import Api from '../api/Api';
 import LocalStorage from '../static/LocalStorage';
 import Header from '../../components/Header';
+import Drawer from '../../components/SidebarDrawer';
 
 const redirectTo = (destination, { res, status } = {}) => {
   if (res) {
@@ -18,6 +21,37 @@ const redirectTo = (destination, { res, status } = {}) => {
     window.location = destination;
   }
 };
+
+const drawerWidth = 240;
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+});
 
 export default (WrappedComponent) => {
   class withAuth extends Component {
@@ -72,6 +106,7 @@ export default (WrappedComponent) => {
     }
 
     static propTypes = {
+      classes: PropTypes.object.isRequired,
       token: PropTypes.string,
     }
 
@@ -85,6 +120,7 @@ export default (WrappedComponent) => {
       this.state = {
         loading: true,
         account: {},
+        drawerOpen: false,
       };
 
       this.api = new Api(props.token);
@@ -110,21 +146,45 @@ export default (WrappedComponent) => {
       this.setState({ account, loading: false });
     }
 
+    handleDrawerOpen = () => {
+      this.setState({ drawerOpen: true });
+    };
+
+    handleDrawerClose = () => {
+      this.setState({ drawerOpen: false });
+    };
+
+
     render() {
+      const { classes, ...rest } = this.props;
       return (
-        <Fragment>
+        <div className={classes.root}>
           <Header
             account={this.state.account}
             api={this.api}
+            drawerOpen={this.state.drawerOpen}
+            handleDrawerOpen={this.handleDrawerOpen}
+          />
+          <Drawer
+            account={this.state.account}
+            drawerOpen={this.state.drawerOpen}
+            handleDrawerClose={this.handleDrawerClose}
           />
           {!this.state.loading &&
+          <main
+            className={classNames(classes.content, {
+              [classes.contentShift]: this.state.drawerOpen,
+            })}
+          >
+            <div className={classes.drawerHeader} />
             <WrappedComponent
-              {...this.props}
+              {...rest}
               account={this.state.account}
               api={this.api}
             />
+          </main>
           }
-        </Fragment>
+        </div>
       );
     }
   }
@@ -133,5 +193,5 @@ export default (WrappedComponent) => {
 
   withAuth.displayName = `withAuth(${WrappedComponent.displayName})`;
 
-  return withAuth;
+  return withStyles(styles)(withAuth);
 };

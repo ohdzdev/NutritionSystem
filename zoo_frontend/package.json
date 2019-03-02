@@ -6,7 +6,7 @@
     "dev": "next",
     "build": "yarn run next build",
     "start": "yarn run next start",
-    "test:eslint": "yarn eslint .",
+    "test:eslint": "eslint */**/*.js */**/*.jsx",
     "test": "echo TODO"
   },
   "dependencies": {

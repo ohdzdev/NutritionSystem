@@ -3,19 +3,12 @@ import { compose } from 'recompose';
 
 import withAuth from '../../util/withAuth';
 
-import Roles from '../../static/Roles';
+import { Admin } from '../PageAccess';
 
 import page from './admin';
 import styles from './admin.styles';
 
-const allowedRoles = {
-  link: '/admin',
-  roles: [Roles.ADMIN],
-};
-
 export default compose(
+  withAuth(Admin.roles),
   withStyles(styles),
-  withAuth(allowedRoles.roles),
 )(page);
-
-export { allowedRoles };

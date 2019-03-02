@@ -7,6 +7,7 @@ import JssProvider from 'react-jss/lib/JssProvider';
 
 import getPageContext from '../src/getPageContext';
 import AuthProvider from '../src/util/AuthProvider';
+import PageLayout from '../src/util/PageLayout';
 
 class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {
@@ -23,6 +24,8 @@ class MyApp extends App {
     super(props);
 
     this.pageContext = getPageContext();
+
+    console.log(props);
   }
 
   componentDidMount() {
@@ -37,7 +40,7 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component } = this.props;
+    const { Component, ...rest } = this.props;
 
     return (
       <Container>
@@ -61,10 +64,13 @@ class MyApp extends App {
               <CssBaseline />
               {/* Pass pageContext to the _document though the renderPage enhancer
                   to render collected styles on server-side. */}
-              <Component
-                pageContext={this.pageContext}
-                {...this.props}
-              />
+
+              <PageLayout>
+                <Component
+                  pageContext={this.pageContext}
+                  {...rest}
+                />
+              </PageLayout>
             </AuthProvider>
           </MuiThemeProvider>
         </JssProvider>

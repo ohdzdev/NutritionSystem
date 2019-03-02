@@ -3,14 +3,10 @@ import PropTypes from 'prop-types';
 import cookies from 'next-cookies';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import Router from 'next/router';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
 
 import { AuthContext } from './AuthProvider';
 import Api from '../api/Api';
 import LocalStorage from '../static/LocalStorage';
-import Header from '../components/Header';
-import Drawer from '../components/SidebarDrawer';
 
 const redirectTo = (destination, { res, status } = {}) => {
   if (res) {
@@ -23,43 +19,14 @@ const redirectTo = (destination, { res, status } = {}) => {
   }
 };
 
-const drawerWidth = 240;
-
-const styles = theme => ({
-  root: {
-    display: 'flex',
-  },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 1,
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
-});
-
 export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
   class withAuth extends Component {
     static async getInitialProps(ctx) {
       let pageProps = {};
 
       const c = cookies(ctx);
+
+      console.log(c);
 
       if (c.authToken == null || c.authToken === '') {
         if (allowedRoles.includes('unauthenticated')) {
@@ -105,7 +72,6 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
     }
 
     static propTypes = {
-      classes: PropTypes.object.isRequired,
       token: PropTypes.string,
     }
 
@@ -113,14 +79,15 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
       token: '',
     }
 
-    constructor(props) {
-      super(props);
+    constructor(props, context) {
+      super(props, context);
 
       this.state = {
         loading: true,
         account: {},
-        drawerOpen: false,
       };
+
+      console.log(props);
 
       this.api = new Api(props.token);
 
@@ -147,46 +114,17 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
       this.setState({ account, loading: false });
     }
 
-    handleDrawerOpen = () => {
-      this.setState({ drawerOpen: true });
-    };
-
-    handleDrawerClose = () => {
-      this.setState({ drawerOpen: false });
-    };
-
-
     render() {
-      const { classes, ...rest } = this.props;
-      return (
-        <div className={classes.root}>
-          <Header
+      if (!this.state.loading) {
+        return (
+          <WrappedComponent
+            {...this.props}
             account={this.state.account}
             api={this.api}
-            drawerOpen={this.state.drawerOpen}
-            handleDrawerOpen={this.handleDrawerOpen}
           />
-          <Drawer
-            account={this.state.account}
-            drawerOpen={this.state.drawerOpen}
-            handleDrawerClose={this.handleDrawerClose}
-          />
-          {!this.state.loading &&
-          <main
-            className={classNames(classes.content, {
-              [classes.contentShift]: this.state.drawerOpen,
-            })}
-          >
-            <div className={classes.drawerHeader} />
-            <WrappedComponent
-              {...rest}
-              account={this.state.account}
-              api={this.api}
-            />
-          </main>
-          }
-        </div>
-      );
+        );
+      }
+      return null;
     }
   }
 
@@ -196,5 +134,5 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
   withAuth.contextType = AuthContext;
   withAuth.displayName = `withAuth(${WrappedComponent.displayName})`;
 
-  return withStyles(styles)(withAuth);
+  return withAuth;
 };

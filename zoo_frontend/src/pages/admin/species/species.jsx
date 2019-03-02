@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 
-import { Admin, hasAccess } from '../PageAccess';
+import { hasAccess, Admin } from '../../PageAccess';
 
 class Home extends Component {
   static propTypes = {
+    account: PropTypes.object.isRequired,
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
-    account: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -37,27 +37,33 @@ class Home extends Component {
           justifyContent: 'space-around', alignItems: 'center', display: 'flex',
         }}
         >
-          { hasAccess(role, Admin.department.roles) &&
-            <Link href={Admin.department.link}>
+          {hasAccess(role, Admin.roles) &&
+            <Link href={Admin.link}>
               <Button className={this.props.classes.button} color="secondary" variant="contained">
-              Department Management
+                Admin Home
               </Button>
             </Link>
           }
-          { hasAccess(role, Admin.species.roles) &&
-            <Link href={Admin.species.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-              Species Management
-              </Button>
-            </Link>
+          {hasAccess(role, Admin.species.edit.roles) &&
+          <Link href={Admin.species.edit.link}>
+            <Button className={this.props.classes.button} color="secondary" variant="contained">
+              EDIT species
+            </Button>
+          </Link>
           }
-          { hasAccess(role, Admin.user.roles) &&
-            <Link href={Admin.user.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-              User Management
-              </Button>
-            </Link>
+          {hasAccess(role, Admin.species.new.roles) &&
+          <Link href={Admin.species.new.link}>
+            <Button className={this.props.classes.button} color="secondary" variant="contained">
+              NEW species
+            </Button>
+          </Link>
           }
+          {/* TODO add logic for link here */}
+          <Link href="/reports/species">
+            <Button className={this.props.classes.button} color="secondary" variant="contained">
+              Species Reports
+            </Button>
+          </Link>
         </div>
       </div>
     );

@@ -3,12 +3,12 @@ import { compose } from 'recompose';
 
 import withAuth from '../../../util/withAuth';
 
-import { Food } from '../../PageAccess';
+import { Admin } from '../../PageAccess';
 
-import page from './new';
-import styles from './new.styles';
+import page from './department';
+import styles from './department.styles';
 
 export default compose(
-  withAuth(Food.new.roles),
+  withAuth(Admin.department.roles),
   withStyles(styles),
 )(page);

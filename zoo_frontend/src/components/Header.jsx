@@ -11,6 +11,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from 'classnames';
 
+import { AuthContext } from '../util/AuthProvider';
+
 import { hasAccess, Admin, Home } from '../pages/PageAccess';
 
 const drawerWidth = 240;
@@ -45,89 +47,74 @@ const styles = theme => ({
   },
 });
 
-const Header = (props) => {
-  const {
-    classes, api, account, drawerOpen, handleDrawerOpen,
-  } = props;
-  const { role } = account;
-  const logoutClicked = async () => {
-    // log out via the api so current auth token will be removed in db
-    await api.logout();
-    // navigate to the login page
-    Router.push('/login');
-  };
-
-  return (
-    <div className={classes.root}>
-      <AppBar
-        position="fixed"
-        className={classNames(classes.appBar, {
-          [classes.appBarShift]: drawerOpen,
-        })}
-      >
-        <Toolbar disableGutters>
-          {account.loggedIn &&
-            <IconButton
-              color="inherit"
-              aria-label="Open drawer"
-              onClick={handleDrawerOpen}
-              className={classNames(classes.menuButton, drawerOpen && classes.hide)}
-            >
-              <MenuIcon />
-            </IconButton>
-          }
-          {!account.loggedIn &&
-            <div style={{ width: '15px' }} />
-          }
-          {drawerOpen && <div style={{ width: '20px' }} /> }
-          <Link href={Home.link}>
-            <Typography variant="h6" color="inherit" style={{ cursor: 'pointer' }}>
-              Nutritional Assistant
-            </Typography>
-          </Link>
-          <div className={classes.grow} />
-          {hasAccess(role, Admin.roles) &&
-            <Link href={Admin.link}>
-              <Button variant="contained" className={classes.button} color="secondary">
-                  Admin
-              </Button>
-            </Link>
-          }
-          <Typography style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-            Hello {account.loggedIn ? `${account.firstName} ${account.lastName}` : 'Guest'}!
-          </Typography>
-          {account.role !== 'unauthenticated' &&
-            <Button color="inherit" onClick={logoutClicked}>Logout</Button>
-          }
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
-};
+const Header = ({ classes, drawerOpen, handleDrawerOpen }) => (
+  <div className={classes.root}>
+    <AuthContext.Consumer>
+      {({ api, account }) => {
+        console.log(account);
+        return (
+          <AppBar
+            position="fixed"
+            className={classNames(classes.appBar, {
+              [classes.appBarShift]: drawerOpen,
+            })}
+          >
+            <Toolbar disableGutters>
+              {account.loggedIn &&
+                <IconButton
+                  color="inherit"
+                  aria-label="Open drawer"
+                  onClick={handleDrawerOpen}
+                  className={classNames(classes.menuButton, drawerOpen && classes.hide)}
+                >
+                  <MenuIcon />
+                </IconButton>
+              }
+              {!account.loggedIn &&
+                <div style={{ width: '15px' }} />
+              }
+              {drawerOpen && <div style={{ width: '20px' }} /> }
+              <Link href={Home.link}>
+                <Typography variant="h6" color="inherit" style={{ cursor: 'pointer' }}>
+                  Nutritional Assistant
+                </Typography>
+              </Link>
+              <div className={classes.grow} />
+              {hasAccess(account.role, Admin.roles) &&
+                <Link href={Admin.link}>
+                  <Button variant="contained" className={classes.button} color="secondary">
+                      Admin
+                  </Button>
+                </Link>
+              }
+              <Typography style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                Hello {account.loggedIn ? `${account.firstName} ${account.lastName}` : 'Guest'}!
+              </Typography>
+              {account.role !== 'unauthenticated' &&
+                <Button
+                  color="inherit"
+                  onClick={async () => {
+                    // log out via the api so current auth token will be removed in db
+                    await api.logout();
+                    // navigate to the login page
+                    Router.push('/login');
+                  }}
+                >
+                  Logout
+                </Button>
+              }
+            </Toolbar>
+          </AppBar>
+        );
+      }}
+    </AuthContext.Consumer>
+  </div>
+);
 
 Header.propTypes = {
-  api: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  account: PropTypes.shape({
-    email: PropTypes.string,
-    firstName: PropTypes.string,
-    id: PropTypes.number,
-    lastName: PropTypes.string,
-    role: PropTypes.string,
-  }),
   handleDrawerOpen: PropTypes.func.isRequired,
   drawerOpen: PropTypes.bool.isRequired,
 };
 
-Header.defaultProps = {
-  account: {
-    email: '',
-    id: 0,
-    firstName: 'Guest',
-    lastName: '',
-    role: 'unauthenticated',
-  },
-};
-
-const styledHeader = withStyles(styles)(Header);
-export default styledHeader;
+export default withStyles(styles)(Header);

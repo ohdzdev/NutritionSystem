@@ -87,8 +87,6 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
         account: {},
       };
 
-      console.log(props);
-
       this.api = new Api(props.token);
 
       this.context.setApi(this.api);

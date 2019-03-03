@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 
 import getPageContext from '../src/getPageContext';
-import AuthProvider from '../src/util/AuthProvider';
+import AuthProvider, { AuthContext } from '../src/util/AuthProvider';
 import PageLayout from '../src/util/PageLayout';
 
 class MyApp extends App {
@@ -24,8 +24,6 @@ class MyApp extends App {
     super(props);
 
     this.pageContext = getPageContext();
-
-    console.log(props);
   }
 
   componentDidMount() {
@@ -65,12 +63,19 @@ class MyApp extends App {
               {/* Pass pageContext to the _document though the renderPage enhancer
                   to render collected styles on server-side. */}
 
-              <PageLayout>
-                <Component
-                  pageContext={this.pageContext}
-                  {...rest}
-                />
-              </PageLayout>
+              <AuthContext.Consumer>
+                {({ account }) => (
+                  // https://github.com/facebook/react/issues/12397#issuecomment-374004053
+                  <PageLayout
+                    account={account} // needs to know for sidebar initial drawer position in constructor
+                  >
+                    <Component
+                      pageContext={this.pageContext}
+                      {...rest}
+                    />
+                  </PageLayout>
+                )}
+              </AuthContext.Consumer>
             </AuthProvider>
           </MuiThemeProvider>
         </JssProvider>

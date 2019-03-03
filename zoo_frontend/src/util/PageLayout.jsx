@@ -44,14 +44,28 @@ class PageLayout extends Component {
       PropTypes.arrayOf(PropTypes.node),
       PropTypes.node,
     ]).isRequired,
+    account: PropTypes.object.isRequired,
   }
 
   constructor(props) {
     super(props);
-
+    let drawerInitialState = true;
+    if (props.account && !props.account.loggedIn) {
+      drawerInitialState = false;
+    }
     this.state = {
-      drawerOpen: true,
+      drawerOpen: drawerInitialState,
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!!prevProps.account.loggedIn !== !!this.props.account.loggedIn) { // account can be {} !! forces a boolean returned if key is undefined
+      if (!this.props.account.loggedIn) {
+        this.setState({ drawerOpen: false }); // eslint-disable-line react/no-did-update-set-state
+      } else {
+        this.setState({ drawerOpen: true }); // eslint-disable-line react/no-did-update-set-state
+      }
+    }
   }
 
   handleDrawerOpen = () => {

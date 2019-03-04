@@ -1,11 +1,14 @@
-import { withStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { compose } from 'recompose';
 
-import { allowedRoles } from '..';
+import withAuth from '../../../util/withAuth';
+
+import { Food } from '../../PageAccess';
 
 import page from './new';
 import styles from './new.styles';
 
-const styledPage = withStyles(styles)(page);
-styledPage.allowedRoles = allowedRoles.new.roles;
-
-export default styledPage;
+export default compose(
+  withAuth(Food.new.roles),
+  withStyles(styles),
+)(page);

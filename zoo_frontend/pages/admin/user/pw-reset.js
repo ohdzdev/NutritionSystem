@@ -1,1 +1,1 @@
-export { default } from '../../../src/pages/user/pw-reset';
+export { default } from '../../../src/pages/admin/user/pw-reset';

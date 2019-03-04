@@ -6,10 +6,13 @@
     "dev": "next",
     "build": "yarn run next build",
     "start": "yarn run next start",
-    "test:eslint": "yarn eslint .",
+    "test:eslint": "eslint */**/*.js */**/*.jsx",
     "test": "echo TODO"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-solid-svg-icons": "^5.7.2",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "autosuggest-highlight": "^3.1.1",
@@ -28,6 +31,7 @@
     "react-dom": "16.8.3",
     "react-jss": "^8.6.1",
     "react-virtualized": "^9.21.0",
+    "recompose": "^0.30.0",
     "styled-jsx": "^3.2.1"
   },
   "devDependencies": {

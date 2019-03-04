@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cookies from 'next-cookies';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import Router from 'next/router';
 
+import { AuthContext } from './AuthProvider';
 import Api from '../api/Api';
 import LocalStorage from '../static/LocalStorage';
-import Header from '../../components/Header';
 
 const redirectTo = (destination, { res, status } = {}) => {
   if (res) {
@@ -19,14 +19,14 @@ const redirectTo = (destination, { res, status } = {}) => {
   }
 };
 
-export default (WrappedComponent) => {
+export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
   class withAuth extends Component {
     static async getInitialProps(ctx) {
       let pageProps = {};
 
       const c = cookies(ctx);
 
-      const allowedRoles = WrappedComponent.allowedRoles || ['authenticated'];
+      console.log(c);
 
       if (c.authToken == null || c.authToken === '') {
         if (allowedRoles.includes('unauthenticated')) {
@@ -79,8 +79,8 @@ export default (WrappedComponent) => {
       token: '',
     }
 
-    constructor(props) {
-      super(props);
+    constructor(props, context) {
+      super(props, context);
 
       this.state = {
         loading: true,
@@ -88,6 +88,8 @@ export default (WrappedComponent) => {
       };
 
       this.api = new Api(props.token);
+
+      this.context.setApi(this.api);
     }
 
     componentDidMount() {
@@ -100,39 +102,34 @@ export default (WrappedComponent) => {
         id: LocalStorage.getId(),
       };
 
-      const allowedRoles = WrappedComponent.allowedRoles || ['authenticated'];
-
       if (!allowedRoles.includes(account.role)) {
         Router.push(account.role === 'unauthenticated' ? '/login' : '/');
         return;
       }
 
+      this.context.setAccount(account);
+
       this.setState({ account, loading: false });
     }
 
     render() {
-      return (
-        <Fragment>
-          <Header
+      if (!this.state.loading) {
+        return (
+          <WrappedComponent
+            {...this.props}
             account={this.state.account}
             api={this.api}
           />
-          {this.state.loading ?
-            <div>LOADING...</div>
-            :
-            <WrappedComponent
-              {...this.props}
-              account={this.state.account}
-              api={this.api}
-            />
-          }
-        </Fragment>
-      );
+        );
+      }
+      return null;
     }
   }
 
   hoistNonReactStatics(withAuth, WrappedComponent, { getInitialProps: true });
 
+  withAuth.allowedRoles = allowedRoles;
+  withAuth.contextType = AuthContext;
   withAuth.displayName = `withAuth(${WrappedComponent.displayName})`;
 
   return withAuth;

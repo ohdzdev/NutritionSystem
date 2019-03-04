@@ -1,1 +1,1 @@
-export { default } from '../../../src/pages/species/edit';
+export { default } from '../../../src/pages/admin/species/edit';

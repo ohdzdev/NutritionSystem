@@ -32,8 +32,11 @@ jobs:
           paths:
             - ~/.cache/yarn
       - run: 
-          name: Eslint
-          command: yarn test:eslint
+          name: Eslint Front end
+          command: yarn test:eslint:frontend
+      - run: 
+          name: Eslint Api
+          command: yarn test:eslint:api
       - run:
           name: Unit Tests
           command: yarn test

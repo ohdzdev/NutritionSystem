@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 
-import {
-  Species, Department, User, hasAccess,
-} from '../PageAccess';
+import { Admin, hasAccess } from '../PageAccess';
 
 class Home extends Component {
   static propTypes = {
@@ -39,22 +37,22 @@ class Home extends Component {
           justifyContent: 'space-around', alignItems: 'center', display: 'flex',
         }}
         >
-          { hasAccess(role, Department.roles) &&
-            <Link href={Department.link}>
+          { hasAccess(role, Admin.department.roles) &&
+            <Link href={Admin.department.link}>
               <Button className={this.props.classes.button} color="secondary" variant="contained">
               Department Management
               </Button>
             </Link>
           }
-          { hasAccess(role, Species.roles) &&
-            <Link href={Species.link}>
+          { hasAccess(role, Admin.species.roles) &&
+            <Link href={Admin.species.link}>
               <Button className={this.props.classes.button} color="secondary" variant="contained">
               Species Management
               </Button>
             </Link>
           }
-          { hasAccess(role, User.roles) &&
-            <Link href={User.link}>
+          { hasAccess(role, Admin.user.roles) &&
+            <Link href={Admin.user.link}>
               <Button className={this.props.classes.button} color="secondary" variant="contained">
               User Management
               </Button>

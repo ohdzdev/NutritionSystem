@@ -1,17 +1,14 @@
-import { withStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { compose } from 'recompose';
 
-import Roles from '../../static/Roles';
+import withAuth from '../../util/withAuth';
+
+import { Home } from '../PageAccess';
 
 import page from './home';
 import styles from './home.styles';
 
-const allowedRoles = {
-  link: '/',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
-};
-
-const styledPage = withStyles(styles)(page);
-styledPage.allowedRoles = allowedRoles.roles;
-
-export default styledPage;
-export { allowedRoles }; // eslint-disable-line
+export default compose(
+  withAuth(Home.roles),
+  withStyles(styles),
+)(page);

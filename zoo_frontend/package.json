@@ -30,6 +30,7 @@
     "react-autosuggest": "^9.4.3",
     "react-dom": "16.8.3",
     "react-jss": "^8.6.1",
+    "react-select-material-ui": "^1.2.2",
     "react-virtualized": "^9.21.0",
     "recompose": "^0.30.0",
     "styled-jsx": "^3.2.1"

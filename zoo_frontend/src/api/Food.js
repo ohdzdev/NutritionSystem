@@ -17,6 +17,24 @@ class Food {
     const res = await axios.get(query);
     return res;
   }
+
+  async getRelatedCategory(foodId) {
+    let query = `${API_BASE_URL}/api/Food/`;
+    if (foodId && parseInt(foodId, 10)) {
+      query += `${foodId}/foodFoodCategory?access_token=${this.token}`;
+    }
+    const res = await axios.get(query);
+    return res;
+  }
+
+  async getRelatedBudgetCode(foodId) {
+    let query = `${API_BASE_URL}/api/Food/`;
+    if (foodId && parseInt(foodId, 10)) {
+      query += `${foodId}/foodBudgetId?access_token=${this.token}`;
+    }
+    const res = await axios.get(query);
+    return res;
+  }
 }
 
 export default Food;

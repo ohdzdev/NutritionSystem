@@ -1,0 +1,55 @@
+import axios from 'axios';
+
+const API_BASE_URL = process.env.BACKEND_URL;
+
+class Food {
+  constructor(token) {
+    this.token = token;
+  }
+
+  /**
+   * grab all nutritional records where filter is met
+   * @param {JSON} filter json object in format: https://loopback.io/doc/en/lb3/Querying-data.html#using-stringified-json-in-rest-queries
+   * @returns {JSON} raw data coming back from request, must use .data to get actual data
+   */
+  async getNutData(filter) {
+    let query = `${API_BASE_URL}/api/NutData/`;
+    if (filter) {
+      query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
+    } else {
+      query += `?access_token=${this.token}`;
+    }
+    const res = await axios.get(query);
+    return res;
+  }
+
+  /**
+   * grab related nutritional source
+   * @param {String} id nutData record id where we want to find all related nutrtional sources
+   * @returns {JSON} raw data coming back from request, must use .data to get data back
+   */
+  async getRelatedNutritonSource(id) {
+    let query = `${API_BASE_URL}/api/NutData/`;
+    if (id && parseInt(id, 10)) {
+      query += `${id}/nutDataDataSrc?access_token=${this.token}`;
+    }
+    const res = await axios.get(query);
+    return res;
+  }
+
+  /**
+   * grab all related food records
+   * @param {String} id nutData record id where we want to find all related Foods
+   * @returns {JSON} raw data coming back from request, must use .data to get data back
+   */
+  async getRelatedFoods(id) {
+    let query = `${API_BASE_URL}/api/NutData/`;
+    if (id && parseInt(id, 10)) {
+      query += `${id}/nutDataFoods?access_token=${this.token}`;
+    }
+    const res = await axios.get(query);
+    return res;
+  }
+}
+
+export default Food;

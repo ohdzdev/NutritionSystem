@@ -138,7 +138,7 @@ class FoodPage extends Component {
             <div style={{ flexGrow: 1 }} />
             <div style={{ display: 'inline-flex', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
               {hasAccess(this.props.account.role, Food.edit.roles) &&
-                <Link href={`${Food.new.link}?id=${rowData.foodId}`}>
+                <Link href={`${Food.edit.link}?id=${rowData.foodId}`}>
                   <Button className={this.props.classes.button} color="secondary" variant="contained">
                     <FontAwesomeIcon icon={faEdit} className={this.props.classes.faIcon} />
                       View / Edit

@@ -50,6 +50,34 @@ class Food {
     const res = await axios.get(query);
     return res;
   }
+
+  /**
+   * grab related nutrition source cd
+   * @param {String} id nutData record id where we want to find all related source cd
+   * @returns {JSON} raw data coming back from request, must use .data to get data back
+   */
+  async getRelatedSourceCd(id) {
+    let query = `${API_BASE_URL}/api/NutData/`;
+    if (id && parseInt(id, 10)) {
+      query += `${id}/nutDataSrcCd?access_token=${this.token}`;
+    }
+    const res = await axios.get(query);
+    return res;
+  }
+
+  /**
+   * grab related nutrition Data Def
+   * @param {String} id nutData record id where we want to find all related Data Defs
+   * @returns {JSON} raw data coming back from request, must use .data to get data back
+   */
+  async getRelatedNutrDef(id) {
+    let query = `${API_BASE_URL}/api/NutData/`;
+    if (id && parseInt(id, 10)) {
+      query += `${id}/nutDataNutrDef?access_token=${this.token}`;
+    }
+    const res = await axios.get(query);
+    return res;
+  }
 }
 
 export default Food;

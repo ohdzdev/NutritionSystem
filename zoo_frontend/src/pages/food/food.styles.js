@@ -18,4 +18,19 @@ export default (theme) => ({
   menuButton: {
     marginRight: theme.spacing.unit * 3,
   },
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+  faIcon: {
+    fontSize: 18,
+    // padding if needed (e.g., theme.spacing.unit * 2)
+    margin: theme.spacing.unit * 0.5,
+    // margin if needed
+  },
+  activeIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

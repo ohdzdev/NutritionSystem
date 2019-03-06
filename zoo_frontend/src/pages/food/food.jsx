@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Router from 'next/router';
 
 // material
-import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import {
   Button, Grid, Paper, Divider, Card,
@@ -36,26 +35,6 @@ import { hasAccess, Food } from '../PageAccess';
 
 // util methods
 import camelToNorm from '../../util/camelToNorm';
-
-/**
- * css in js styles for page
- */
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  faIcon: {
-    fontSize: 18,
-    // padding if needed (e.g., theme.spacing.unit * 2)
-    margin: theme.spacing.unit * 0.5,
-    // margin if needed
-  },
-});
 
 
 class FoodPage extends Component {
@@ -147,7 +126,7 @@ class FoodPage extends Component {
               }
               {hasAccess(this.props.account.role, Food.nicknames.roles) &&
                 <Link href={`${Food.nicknames.link}?id=${rowData.foodId}`}>
-                  <Button className={this.props.classes.button} color="secondary" variant="contained" disabled={rowData.active === 1}>
+                  <Button className={this.props.classes.button} color="secondary" variant="contained" disabled={rowData.active}>
                     <FontAwesomeIcon icon={faSignature} className={this.props.classes.faIcon} />
                     Edit Nickname
                   </Button>
@@ -180,6 +159,15 @@ class FoodPage extends Component {
               [
                 { title: 'Id', field: 'foodId' },
                 { title: 'Name', field: 'food' },
+                {
+                  title: 'Active',
+                  field: 'active',
+                  render: ((rowData) => (
+                    <div className={this.props.classes.activeIcon}>
+                      {rowData.active ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
+                    </div>
+                  )),
+                },
               ]
             }
             data={this.props.foodItems}
@@ -223,7 +211,7 @@ class FoodPage extends Component {
               rowData => ({
                 icon: () => (<FontAwesomeIcon icon={faSignature} />),
                 tooltip: 'Edit Nickname',
-                disabled: hasAccess(role, Food.nicknames.roles) && rowData.active === 1,
+                disabled: (rowData.active !== 1 && hasAccess(role, Food.nicknames.roles)),
                 onClick: (e, data) => {
                   Router.push({
                     pathname: Food.nicknames.link,
@@ -239,4 +227,4 @@ class FoodPage extends Component {
   }
 }
 
-export default withStyles(styles)(FoodPage);
+export default FoodPage;

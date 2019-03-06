@@ -21,15 +21,43 @@ export default class extends Component {
       const budgetCode = await serverFoodAPI.getRelatedBudgetCode(query.id);
 
       const nutData = await serverNutDataAPI.getNutData({ where: { foodId: query.id } });
-      // loop over nutData results and grab their respective nutrition sources in a single where query.
-      // ?filter={"where":{"or":[{"id":1},{"id":2},...,{"id":20"},{"id":21}]}}
+      // loop over nutData results and grab their respective nutrition sources
+      const nutDataSourcePromises = nutData.data.map((nut) => new Promise((resolve, reject) => {
+        const nutId = nut.dataId;
+        serverNutDataAPI.getRelatedNutritonSource(nutId).then((res) => {
+          resolve({ ...res.data, dataId: nutId });
+        }, (rej) => {
+          reject(rej);
+        });
+      }));
+
+      const nutDataDataSources = await Promise.all(nutDataSourcePromises).catch((err) => {
+        console.error(err);
+      });
+
+      // loop over nutData results and grab their respective nutrition sources
+      const nutDataNutrDefPromises = nutData.data.map((nut) => new Promise((resolve, reject) => {
+        const nutId = nut.dataId;
+        serverNutDataAPI.getRelatedNutrDef(nutId).then((res) => {
+          resolve({ ...res.data, dataId: nutId });
+        }, (rej) => {
+          reject(rej);
+        });
+      }));
+
+      const nutDataNutrDefs = await Promise.all(nutDataNutrDefPromises).catch((err) => {
+        console.error(err);
+      });
+
 
       return {
         ...query,
         food: food.data,
         category: category.data,
         budgetCode: budgetCode.data,
-        nutrionData: nutData,
+        nutrionData: nutData.data,
+        nutDataSources: nutDataDataSources,
+        nutDataNutrDefs,
       };
     }
     return {};

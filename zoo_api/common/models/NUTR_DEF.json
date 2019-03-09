@@ -11,7 +11,8 @@
   "properties": {
     "nutrNo": {
       "type": "String",
-      "required": false,
+      "required": true,
+      "id": 1,
       "length": 255,
       "precision": null,
       "scale": null,
@@ -116,7 +117,6 @@
     },
     "nutrDefId": {
       "type": "Number",
-      "id": 1,
       "required": true,
       "length": null,
       "precision": 10,

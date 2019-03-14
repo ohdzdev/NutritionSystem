@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
-    "test:eslint": "yarn eslint .",
+    "test:eslint": "eslint */**/*.js",
     "test": "echo TODO"
   },
   "dependencies": {
@@ -21,14 +21,15 @@
     "loopback-component-explorer": "^6.2.0",
     "loopback-connector-mysql": "^5.3.1",
     "loopback-graphql-server": "^1.1.8",
+    "mkdirp": "^0.5.1",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^3.0.0"
   },
   "devDependencies": {
-    "eslint-config-loopback": "^8.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.13.0",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-loopback": "^8.0.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.0",
     "eslint-plugin-react": "^7.12.4"

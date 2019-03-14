@@ -6,11 +6,23 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 
 import getPageContext from '../src/getPageContext';
-import Header from '../components/Header';
+import AuthProvider, { AuthContext } from '../src/util/AuthProvider';
+import PageLayout from '../src/util/PageLayout';
 
 class MyApp extends App {
-  constructor() {
-    super();
+  static async getInitialProps({ ctx, Component }) {
+    let pageProps = {};
+
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return { ...pageProps };
+  }
+
+  constructor(props) {
+    super(props);
+
     this.pageContext = getPageContext();
   }
 
@@ -20,10 +32,14 @@ class MyApp extends App {
     if (jssStyles && jssStyles.parentNode) {
       jssStyles.parentNode.removeChild(jssStyles);
     }
+
+    const appContainer = document.getElementById('__next');
+    appContainer.style.height = '100vh';
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, ...rest } = this.props;
+
     return (
       <Container>
         <Head>
@@ -41,12 +57,26 @@ class MyApp extends App {
             theme={this.pageContext.theme}
             sheetsManager={this.pageContext.sheetsManager}
           >
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            {/* Pass pageContext to the _document though the renderPage enhancer
-                to render collected styles on server-side. */}
-            <Header />
-            <Component pageContext={this.pageContext} {...pageProps} />
+            <AuthProvider>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              {/* Pass pageContext to the _document though the renderPage enhancer
+                  to render collected styles on server-side. */}
+
+              <AuthContext.Consumer>
+                {({ account }) => (
+                  // https://github.com/facebook/react/issues/12397#issuecomment-374004053
+                  <PageLayout
+                    account={account} // needs to know for sidebar initial drawer position in constructor
+                  >
+                    <Component
+                      pageContext={this.pageContext}
+                      {...rest}
+                    />
+                  </PageLayout>
+                )}
+              </AuthContext.Consumer>
+            </AuthProvider>
           </MuiThemeProvider>
         </JssProvider>
       </Container>

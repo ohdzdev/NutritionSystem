@@ -1,8 +1,5 @@
 import { SheetsRegistry } from 'jss';
 import { createMuiTheme, createGenerateClassName } from '@material-ui/core/styles';
-import * as Colors from '@material-ui/core/colors';
-
-// import secondary from '@material-ui/core/colors/indigo';
 
 // A theme with custom primary and secondary color.
 // It's optional.
@@ -11,7 +8,9 @@ const theme = createMuiTheme({
     primary: {
       main: '#689f38',
     },
-    secondary: Colors.orange,
+    secondary: {
+      main: '#ef6c00',
+    },
     type: 'light',
   },
   typography: {

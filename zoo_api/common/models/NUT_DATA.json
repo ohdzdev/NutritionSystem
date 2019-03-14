@@ -36,6 +36,7 @@
       "length": null,
       "precision": 10,
       "scale": 0,
+      "id": 1,
       "mysql": {
         "columnName": "data_id",
         "dataType": "int",

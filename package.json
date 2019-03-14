@@ -14,8 +14,7 @@
     "test:api": "cd zoo_api && yarn test && cd ../",
     "test:frontend": "cd zoo_frontend && yarn test && cd ../",
     "powershell:prod": "powershell.exe $env:NODE_ENV='production'",
-    "bash:prod": "export NODE_ENV=production",
-    "docs:frontend": "docco ./zoo_frontend/{**/*,**/**/*,**/**/**/*,**/**/**/**/*}.{js,jsx}"
+    "bash:prod": "export NODE_ENV=production"
   },
   "repository": {
     "type": "git",

@@ -2,8 +2,29 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
+import MaterialTable from 'material-table';
+
+// icons
+// icons
+import Search from '@material-ui/icons/Search';
+import NextPage from '@material-ui/icons/ChevronRight';
+import PreviousPage from '@material-ui/icons/ChevronLeft';
+import Add from '@material-ui/icons/Add';
+import Check from '@material-ui/icons/Check';
+import Clear from '@material-ui/icons/Clear';
+import Delete from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
+import Export from '@material-ui/icons/SaveAlt';
+import Filter from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import ThirdStateCheck from '@material-ui/icons/Remove';
+import ViewColumn from '@material-ui/icons/ViewColumn';
+
 
 import { hasAccess, Home, Food } from '../../PageAccess';
+
+import columnHelper from '../../../util/TableColumnHelper';
 
 import FoodAPI from '../../../api/Food';
 import NutDataAPI from '../../../api/NutData';
@@ -50,6 +71,20 @@ export default class extends Component {
       });
 
 
+      // loop over nutData results and grab their respective nutrition sources
+      const nutDataSourcedFromPromises = nutData.data.map((nut) => new Promise((resolve, reject) => {
+        const nutId = nut.dataId;
+        serverNutDataAPI.getRelatedSourceCd(nutId).then((res) => {
+          resolve({ ...res.data, dataId: nutId });
+        }, (rej) => {
+          reject(rej);
+        });
+      }));
+
+      const nutDataSourcedFrom = await Promise.all(nutDataSourcedFromPromises).catch((err) => {
+        console.error(err);
+      });
+
       return {
         ...query,
         food: food.data,
@@ -58,6 +93,7 @@ export default class extends Component {
         nutrionData: nutData.data,
         nutDataSources: nutDataDataSources,
         nutDataNutrDefs,
+        nutDataSourcedFrom,
       };
     }
     return {};
@@ -76,15 +112,20 @@ export default class extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
-    console.log(props.id);
+    const {
+      api, account, router, pageContext, classes, ...rest // eslint-disable-line react/prop-types
+    } = props;
     this.state = {
-      asdf: props.token, // eslint-disable-line react/no-unused-state
+      ...rest,
     };
+    console.log(this.state);
   }
 
   render() {
     const { role } = this.props.account;
+
+    const columns = columnHelper(this.state.nutDataNutrDefs);
+    console.log(columns);
     return (
       <div
         style={{
@@ -125,6 +166,56 @@ export default class extends Component {
             </Button>
           </Link>
         </div>
+        <MaterialTable
+          columns={columns}
+          data={this.state.nutDataNutrDefs}
+          editable={{
+
+            onRowAdd: newData => new Promise((resolve, reject) => {
+              resolve();
+              setTimeout(() => {
+                // massive logic tree for adding relevant data
+                resolve();
+              }, 1000);
+            }),
+            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // massive logic tree for modifying current data
+                resolve();
+              }, 1000);
+            }),
+            onRowDelete: oldData => new Promise((resolve, reject) => {
+              setTimeout(() => {
+                // massive logic tree for deleting current data
+                resolve();
+              }, 1000);
+            }),
+          }}
+          options={{
+            pageSize: 20,
+            pageSizeOptions: [20, 50, this.state.nutDataSources.length],
+            exportButton: true,
+            doubleHorizontalScroll: true,
+          }}
+          icons={{
+            Add,
+            Check,
+            Clear,
+            Delete,
+            DetailPanel: NextPage,
+            Edit,
+            Export,
+            Filter,
+            FirstPage,
+            LastPage,
+            NextPage,
+            PreviousPage,
+            ResetSearch: Clear,
+            Search,
+            ThirdStateCheck,
+            ViewColumn,
+          }}
+        />
       </div>
     );
   }

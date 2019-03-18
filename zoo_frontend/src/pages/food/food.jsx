@@ -126,7 +126,7 @@ class FoodPage extends Component {
               }
               {hasAccess(this.props.account.role, Food.nicknames.roles) &&
                 <Link href={`${Food.nicknames.link}?id=${rowData.foodId}`}>
-                  <Button className={this.props.classes.button} color="secondary" variant="contained" disabled={rowData.active}>
+                  <Button className={this.props.classes.button} color="secondary" variant="contained" disabled={rowData.active !== 1}>
                     <FontAwesomeIcon icon={faSignature} className={this.props.classes.faIcon} />
                     Edit Nickname
                   </Button>

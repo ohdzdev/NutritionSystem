@@ -38,14 +38,36 @@
   },
   "RoleMapping": {
     "dataSource": "zoo_mysql",
-    "public": false,
+    "public": true,
     "options": {
       "strictObjectIDCoercion": true
-    }
+    },
+    "acls": [{
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY",
+      "property": "*"
+    },{
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "*"
+    }]
   },
   "Role": {
     "dataSource": "zoo_mysql",
-    "public": false
+    "public": true,
+    "acls": [{
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY",
+      "property": "*"
+    },{
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "*"
+    }]
   },
   "Animals": {
     "dataSource": "zoo_mysql",

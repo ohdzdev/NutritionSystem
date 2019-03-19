@@ -1,50 +1,163 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Link from 'next/link';
-import { Button } from '@material-ui/core';
 import MaterialTable from 'material-table';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import Search from '@material-ui/icons/Search';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import NextPage from '@material-ui/icons/ChevronRight';
 import PreviousPage from '@material-ui/icons/ChevronLeft';
+import Edit from '@material-ui/icons/Edit';
+import Add from '@material-ui/icons/Add';
+import Delete from '@material-ui/icons/Delete';
+import Check from '@material-ui/icons/Check';
+import Clear from '@material-ui/icons/Clear';
+
+import ErrorPage from '../../../components/ErrorPage';
 
 import UsersAPI from '../../../api/Users';
+import DepartmentAPI from '../../../api/Departments';
+import RolesAPI from '../../../api/Roles';
+import RoleMappingsAPI from '../../../api/RoleMappings';
 
-import { hasAccess, Admin } from '../../PageAccess';
+const generateStateData = (users, locations, roles, roleMappings) => {
+  let locationLookupIds = {};
+  locationLookupIds[0] = 'None';
 
-class Home extends Component {
+  locationLookupIds = locations.slice(0).reduce((acc, location) => {
+    acc[location.locationId] = location.location;
+    return acc;
+  }, locationLookupIds);
+
+  let locationLookup = {};
+  locationLookup.None = 'None';
+
+  locationLookup = locations.slice(0).sort((a, b) => (a.location > b.location ? 1 : -1)).reduce((acc, location) => {
+    acc[location.location] = location.location;
+    return acc;
+  }, locationLookup);
+
+  const userData = users.map((user) => {
+    let userRole = 'None';
+
+    roleMappings.forEach((roleMapping) => {
+      if (roleMapping.principalType === 'USER') {
+        if (Number(roleMapping.principalId) === user.id) {
+          roles.forEach((role) => {
+            if (role.id === roleMapping.roleId) {
+              userRole = role.name;
+            }
+          });
+        }
+      }
+    });
+
+    return {
+      ...user,
+      role: userRole,
+      locationId: user.locationId || 0,
+      locationName: locationLookupIds[user.locationId || 0],
+    };
+  });
+
+  let roleLookup = {};
+  roleLookup.None = 'None';
+
+  roleLookup = roles.slice(0).sort((a, b) => (a.name > b.name ? 1 : -1)).reduce((acc, role) => {
+    acc[role.name] = role.name;
+    return acc;
+  }, roleLookup);
+
+  return {
+    userData,
+    locationLookup,
+    roleLookup,
+  };
+};
+
+
+class User extends Component {
   /**
    * Server side data retrieval
    */
   static async getInitialProps({ authToken }) {
-    const api = new UsersAPI(authToken);
-    const res = await api.getUsers().catch((err) => ({ data: [{ err: true, msg: err }] }));
-    return { users: res.data };
+    const usersApi = new UsersAPI(authToken);
+    const departmentsApi = new DepartmentAPI(authToken);
+    const rolesApi = new RolesAPI(authToken);
+    const roleMappings = new RoleMappingsAPI(authToken);
+    try {
+      const [usersRes, locRes, rolesRes, roleMapRes] = await Promise.all([
+        usersApi.getUsers(),
+        departmentsApi.getDepartments(),
+        rolesApi.getRoles(),
+        roleMappings.getRoleMappings(),
+      ]);
+      return {
+        users: usersRes.data,
+        locations: locRes.data,
+        roles: rolesRes.data,
+        roleMappings: roleMapRes.data,
+      };
+    } catch (err) {
+      return {
+        users: [],
+        locations: [],
+        roles: [],
+        roleMappings: [],
+        error: true,
+        errorMessage: 'Error loading data.',
+      };
+    }
   }
 
   static propTypes = {
-    account: PropTypes.object.isRequired,
+    // account: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
+    error: PropTypes.bool,
+    errorMessage: PropTypes.string,
+    locations: PropTypes.arrayOf(PropTypes.object).isRequired,
+    roleMappings: PropTypes.arrayOf(PropTypes.object).isRequired,
+    roles: PropTypes.arrayOf(PropTypes.object).isRequired,
     token: PropTypes.string,
-    users: PropTypes.array.isRequired,
+    users: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
   static defaultProps = {
+    error: false,
+    errorMessage: '',
     token: '',
   }
 
   constructor(props) {
     super(props);
+
     this.state = {
-      asdf: props.token, // eslint-disable-line react/no-unused-state
+      token: props.token,
+      ...generateStateData(this.props.users, this.props.locations, this.props.roles, this.props.roleMappings),
+      locations: this.props.locations,
+      roles: this.props.roles,
     };
   }
 
+  onRowAdd = (newData) => new Promise((resolve, reject) => {
+    console.log(newData);
+    resolve();
+  })
+
+  onRowUpdate = (newData, oldData) => new Promise((resolve, reject) => {
+
+  })
+
+  onRowDelete = (oldData) => new Promise((resolve, reject) => {
+
+  })
+
   render() {
-    const { role } = this.props.account;
-    const userData = this.props.users;
+    if (this.props.error) {
+      return (<ErrorPage message={this.props.errorMessage} />);
+    }
+
+    const { userData, locationLookup, roleLookup } = this.state;
+
     return (
       <div
         style={{
@@ -53,45 +166,6 @@ class Home extends Component {
           justifyContent: 'center',
         }}
       >
-        <div style={{
-          justifyContent: 'space-around', alignItems: 'center', display: 'flex',
-        }}
-        >
-          {hasAccess(role, Admin.roles) &&
-            <Link href={Admin.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                Admin Home
-              </Button>
-            </Link>
-          }
-          {hasAccess(role, Admin.user.roles) &&
-            <Link href={Admin.user.edit.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                EDIT User
-              </Button>
-            </Link>
-          }
-          {hasAccess(role, Admin.user.new.link) &&
-            <Link href="/admin/user/new">
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                NEW User
-              </Button>
-            </Link>
-          }
-          {hasAccess(role, Admin.user['pw-reset'].roles) &&
-            <Link href={Admin.user['pw-reset'].link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                User Password Resets
-              </Button>
-            </Link>
-          }
-          {/* TODO add reports link logic here */}
-          <Link href="/reports/user">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-              User Reports
-            </Button>
-          </Link>
-        </div>
         <div className={this.props.classes.table}>
           <MaterialTable
             icons={{
@@ -100,25 +174,39 @@ class Home extends Component {
               LastPage,
               NextPage,
               PreviousPage,
+              Edit,
+              Add,
+              Delete,
+              Check,
+              Clear,
             }}
             columns={[
-              { title: 'EmployeeID', field: 'employeeId' },
-              { title: 'Employee', field: 'employee' },
-              { title: 'User Login', field: 'userLogin' },
-              { title: 'Initials', field: 'initials' },
-              { title: 'LocationID', field: 'locationId' },
+              { title: 'First Name', field: 'firstName' },
+              { title: 'Last Name', field: 'lastName' },
+              { title: 'Email', field: 'email' },
+              {
+                title: 'Role',
+                field: 'role',
+                lookup: roleLookup,
+              },
+              {
+                title: 'Location',
+                field: 'locationName',
+                lookup: locationLookup,
+              },
             ]}
             data={userData}
             title="User Management"
-            actions={[
-              {
-                icon: AccountCircle,
-                tooltip: 'Show User Info',
-                onClick: (event, rowData) => {
-                  alert(`You clicked user ${rowData.employeeId}`); // eslint-disable-line
-                },
-              },
-            ]}
+            options={{
+              pageSize: 25,
+              pageSizeOptions: [25, 50, 100],
+              exportButton: true,
+            }}
+            editable={{
+              onRowAdd: this.onRowAdd,
+              onRowUpdate: this.onRowUpdate,
+              onRowDelete: this.onRowDelete,
+            }}
             localization={{
               pagination: {
                 labelDisplayedRows: '{from}-{to} of {count}',
@@ -158,4 +246,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default User;

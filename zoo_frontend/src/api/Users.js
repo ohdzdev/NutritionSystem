@@ -8,7 +8,7 @@ class Users {
   }
 
   async getUsers(filter) {
-    let query = `${API_BASE_URL}/api/Employees/`;
+    let query = `${API_BASE_URL}/api/Accounts`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {

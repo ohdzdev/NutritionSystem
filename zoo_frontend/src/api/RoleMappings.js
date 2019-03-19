@@ -2,13 +2,13 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.BACKEND_URL;
 
-class Food {
+class RoleMappings {
   constructor(token) {
     this.token = token;
   }
 
-  async getFood(filter) {
-    let query = `${API_BASE_URL}/api/Food`;
+  async getRoleMappings(filter) {
+    let query = `${API_BASE_URL}/api/RoleMappings`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -19,4 +19,4 @@ class Food {
   }
 }
 
-export default Food;
+export default RoleMappings;

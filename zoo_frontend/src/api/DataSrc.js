@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.BACKEND_URL;
 
-class Food {
+class DataSrc {
   constructor(token) {
     this.token = token;
   }
@@ -12,8 +12,8 @@ class Food {
    * @param {JSON} filter json object in format: https://loopback.io/doc/en/lb3/Querying-data.html#using-stringified-json-in-rest-queries
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
-  async getNutrDef(filter) {
-    let query = `${API_BASE_URL}/api/NutrDefs/`;
+  async getSources(filter) {
+    let query = `${API_BASE_URL}/api/DataSrcs/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -24,4 +24,4 @@ class Food {
   }
 }
 
-export default Food;
+export default DataSrc;

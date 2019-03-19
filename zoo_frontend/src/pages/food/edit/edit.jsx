@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Link from 'next/link';
-import { Button } from '@material-ui/core';
+// import Link from 'next/link';
+import { Grid, Paper, TextField } from '@material-ui/core';
 import MaterialTable from 'material-table';
+import { SingleSelect } from 'react-select-material-ui';
+
 
 // icons
 // icons
@@ -22,12 +24,9 @@ import ThirdStateCheck from '@material-ui/icons/Remove';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
 
-import { hasAccess, Home, Food } from '../../PageAccess';
-
-import columnHelper from '../../../util/TableColumnHelper';
-
-import FoodAPI from '../../../api/Food';
-import NutDataAPI from '../../../api/NutData';
+import {
+  Food as FoodAPI, NutData as NutDataAPI, NutrDef as NutrDefAPI, DataSrc as DataSrcAPI,
+} from '../../../api';
 
 export default class extends Component {
   static async getInitialProps({ query, authToken }) {
@@ -36,6 +35,8 @@ export default class extends Component {
     } else {
       const serverFoodAPI = new FoodAPI(authToken);
       const serverNutDataAPI = new NutDataAPI(authToken);
+      const serverNutrDataAPI = new NutrDefAPI(authToken);
+      const serverDataSrcAPI = new DataSrcAPI(authToken);
 
       const food = await serverFoodAPI.getFood({ where: { foodId: query.id } });
       const category = await serverFoodAPI.getRelatedCategory(query.id);
@@ -85,6 +86,13 @@ export default class extends Component {
         console.error(err);
       });
 
+      const allNutrients = await serverNutrDataAPI.getNutrDef().catch((err) => {
+        console.error(err);
+      });
+      const allSources = await serverDataSrcAPI.getSources().catch((err) => {
+        console.error(err);
+      });
+
       return {
         ...query,
         food: food.data,
@@ -94,6 +102,8 @@ export default class extends Component {
         nutDataSources: nutDataDataSources,
         nutDataNutrDefs,
         nutDataSourcedFrom,
+        allNutrients: allNutrients.data,
+        allSources: allSources.data,
       };
     }
     return {};
@@ -121,11 +131,63 @@ export default class extends Component {
     console.log(this.state);
   }
 
-  render() {
-    const { role } = this.props.account;
+  handleChange(value) { // eslint-disable-line
+    console.log('wow', value);
+  }
 
-    const columns = columnHelper(this.state.nutDataNutrDefs);
-    console.log(columns);
+  render() {
+    const composedData = this.state.nutrionData.map((val, index) => {
+      const { shortForm } = this.state.nutDataSources.find((source) => source.dataSrcId === val.dataSrcId) || {};
+      const { nutrDesc, units } = this.state.nutDataNutrDefs.find((def) => def.dataId === val.dataId) || {};
+      return {
+        meta: {
+          index,
+          relatedIds: {
+            dataId: val.dataId,
+            dataSrcId: val.dataSrcId,
+            nutrNo: val.nutrNo,
+          },
+          types: {
+            nutrDesc: {
+              type: 'picklist', dataSource: 'allNutrients', labelKey: 'nutrDesc', valueKey: 'nutrNo',
+            },
+            addModDate: 'disabled',
+            nutrVal: 'text',
+            units: 'disabled',
+            shortForm: {
+              type: 'picklist', dataSource: 'allSources', labelKey: 'shortForm', valueKey: 'dataSrcId',
+            },
+          },
+        },
+        addModDate: val.addModDate,
+        nutrVal: val.nutrVal,
+        shortForm: shortForm || '',
+        nutrDesc,
+        units,
+      };
+    });
+    const col = [
+      {
+        title: 'Nutrient',
+        field: 'nutrDesc',
+      },
+      {
+        title: 'Nutr Val',
+        field: 'nutrVal',
+      },
+      {
+        title: 'Units',
+        field: 'units',
+      },
+      {
+        title: 'Last Modified',
+        field: 'addModDate',
+      },
+      {
+        title: 'Reference',
+        field: 'shortForm',
+      },
+    ];
     return (
       <div
         style={{
@@ -134,63 +196,72 @@ export default class extends Component {
           justifyContent: 'center',
         }}
       >
-        <div style={{
-          justifyContent: 'space-around', alignItems: 'center', display: 'flex',
-        }}
-        >
-          {hasAccess(role, Home.roles) &&
-            <Link href={Home.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                Home
-              </Button>
-            </Link>
-          }
-          {hasAccess(role, Food.roles) &&
-            <Link href={Food.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                View food
-              </Button>
-            </Link>
-          }
-          {hasAccess(role, Food.new.roles) &&
-            <Link href={Food.new.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                NEW food
-              </Button>
-            </Link>
-          }
-          {/* TODO add report link logic here */}
-          <Link href="/reports/food">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-            food Reports
-            </Button>
-          </Link>
-        </div>
         <MaterialTable
-          columns={columns}
-          data={this.state.nutDataNutrDefs}
-          editable={{
-
-            onRowAdd: newData => new Promise((resolve, reject) => {
-              resolve();
-              setTimeout(() => {
-                // massive logic tree for adding relevant data
-                resolve();
-              }, 1000);
-            }),
-            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => {
-              setTimeout(() => {
-                // massive logic tree for modifying current data
-                resolve();
-              }, 1000);
-            }),
-            onRowDelete: oldData => new Promise((resolve, reject) => {
-              setTimeout(() => {
-                // massive logic tree for deleting current data
-                resolve();
-              }, 1000);
-            }),
-          }}
+          title="Nutrients"
+          columns={col}
+          data={composedData}
+          detailPanel={[
+            {
+              icon: 'edit',
+              tooltip: 'Edit Nutrition Element',
+              render: ((rowData) => {
+                const {
+                  meta, tableData, ...rest
+                } = rowData;
+                console.log(rowData);
+                return (
+                  <div id={rowData.meta.index}>
+                    <Paper>
+                      <form noValidate autoComplete="off">
+                        <Grid container>
+                          { Object.entries(rest).map((item) => {
+                            // from meta in rowData figure out what type of field we have and display information accordingly
+                            const fieldType = meta.types[item[0]];
+                            // if string filter out disabled and then present text input field
+                            if (typeof fieldType === 'string' && fieldType !== 'disabled') {
+                              // from our original columns get the title and label or text input field
+                              console.log(item[0]);
+                              const fieldTitle = 'asdf';
+                              return (
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                  <TextField
+                                    id={item[0]}
+                                    label={fieldTitle}
+                                    value={item[1]}
+                                    // onChange={this.handleChange(item[0])}
+                                    margin="normal"
+                                  />
+                                </Grid>
+                              );
+                            }
+                            // if we have picklist type or another, use the picklist to grab the dataSource from the state and display to user
+                            if (typeof fieldType === 'object') {
+                              // raw data from the state to be iterated and presented to the user as selections
+                              // NOTE: meta should have 2 keys: labelKey and labelValue defined from this object
+                              const picklistSource = this.state[fieldType.dataSource];
+                              return (
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                  <SingleSelect
+                                    options={picklistSource.map((val) => ({
+                                      ...val,
+                                      label: val[fieldType.labelKey],
+                                      value: val[fieldType.labelValue],
+                                    }))}
+                                    value={rest[fieldType.labelKey]}
+                                  />
+                                </Grid>
+                              );
+                            }
+                            return null;
+                          })}
+                        </Grid>
+                      </form>
+                    </Paper>
+                  </div>
+                );
+              }),
+            },
+          ]}
           options={{
             pageSize: 20,
             pageSizeOptions: [20, 50, this.state.nutDataSources.length],

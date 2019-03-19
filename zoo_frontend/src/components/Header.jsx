@@ -13,7 +13,7 @@ import classNames from 'classnames';
 
 import { AuthContext } from '../util/AuthProvider';
 
-import { hasAccess, Admin, Home } from '../pages/PageAccess';
+import { Home } from '../pages/PageAccess';
 
 const drawerWidth = 240;
 
@@ -44,6 +44,9 @@ const styles = theme => ({
   },
   hide: {
     display: 'none',
+  },
+  logoutButton: {
+    marginRight: 12,
   },
 });
 
@@ -76,17 +79,10 @@ const Header = ({ classes, drawerOpen, handleDrawerOpen }) => (
               </Typography>
             </Link>
             <div className={classes.grow} />
-            {hasAccess(account.role, Admin.roles) &&
-              <Link href={Admin.link}>
-                <Button variant="contained" className={classes.button} color="secondary">
-                        Admin
-                </Button>
-              </Link>
-            }
             <Typography style={{ paddingLeft: '10px', paddingRight: '10px' }}>
               Hello {account.loggedIn ? `${account.firstName} ${account.lastName}` : 'Guest'}!
             </Typography>
-            { account.role !== 'unauthenticated' &&
+            { account.loggedIn &&
               <Button
                 color="inherit"
                 onClick={async () => {
@@ -95,6 +91,7 @@ const Header = ({ classes, drawerOpen, handleDrawerOpen }) => (
                   // navigate to the login page
                   Router.push('/login');
                 }}
+                className={classes.logoutButton}
               >
                 Logout
               </Button>

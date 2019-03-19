@@ -2470,11 +2470,6 @@ dasherize@2.0.0:
   resolved "https://registry.yarnpkg.com/dasherize/-/dasherize-2.0.0.tgz#6d809c9cd0cf7bb8952d80fc84fa13d47ddb1308"
   integrity sha1-bYCcnNDPe7iVLYD8hPoT1H3bEwg=
 
-date-fns@2.0.0-alpha.16:
-  version "2.0.0-alpha.16"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.16.tgz#d249a6c9b799252652fb9e3f25460eaf9de86ac7"
-  integrity sha1-0kmmybeZJSZS+54/JUYOr53oasc=
-
 date-fns@^1.23.0:
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
@@ -3354,10 +3349,10 @@ file-entry-cache@^5.0.1:
   dependencies:
     flat-cache "^2.0.1"
 
-filefy@0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/filefy/-/filefy-0.1.8.tgz#9995d6ed7226cda55f5ba7daa13bcf6b3b5d355b"
-  integrity sha512-5gjVOfWSwKNEY30fzzlguEJ51qSz5qDdV5+RQ8/zcxlh/Uj745yp+++iCNkJ8DkAmWKEhS/bwmF6NTLFTpFnFg==
+filefy@0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/filefy/-/filefy-0.1.9.tgz#9f342c2f3f804505cb5011107fcb345378b282bf"
+  integrity sha512-M+9HcR+Hu0LTh5qYTHRnmA2dm+WBHCG6WU+Biw/84RamiV41DzEArSLockUQ0qCSV1fJI0BoCpnniVG/Ch5tMw==
 
 fill-range@^4.0.0:
   version "4.0.0"
@@ -4899,17 +4894,17 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-material-table@^1.18.0:
-  version "1.23.6"
-  resolved "https://registry.yarnpkg.com/material-table/-/material-table-1.23.6.tgz#8bbd5459e4aee534c41e75847c73d7bda3350239"
-  integrity sha512-koN4uCxmYC3kRK8nSyiaAhxtGNzt+ydXV8EKfQuX+wcAOb0c3+Iurmj2J7l6OQRdMko0ZXwnf7TtEwak/3Th+A==
+material-table@^1.23.3:
+  version "1.23.7"
+  resolved "https://registry.yarnpkg.com/material-table/-/material-table-1.23.7.tgz#56c202c6dc009401fe9807a9d3540a2ed5f29432"
+  integrity sha512-pTk6nZTmmkk/sbwKBew0xSHI3LuomOITjg6aokiyi+ub5J3GepNggzgqZll0PnYplcdZaEZYPlF4N6XmJWw1vQ==
   dependencies:
     "@date-io/date-fns" "^1.1.0"
     "@material-ui/core" "^3.9.2"
     classnames "^2.2.6"
     date-fns "^2.0.0-alpha.27"
     debounce "^1.2.0"
-    filefy "0.1.8"
+    filefy "0.1.9"
     material-ui-pickers "2.2.4"
     prop-types "^15.6.2"
     react-beautiful-dnd "10.0.4"

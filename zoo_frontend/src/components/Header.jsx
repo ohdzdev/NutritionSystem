@@ -82,7 +82,7 @@ const Header = ({ classes, drawerOpen, handleDrawerOpen }) => (
             <Typography style={{ paddingLeft: '10px', paddingRight: '10px' }}>
               Hello {account.loggedIn ? `${account.firstName} ${account.lastName}` : 'Guest'}!
             </Typography>
-            { account.role !== 'unauthenticated' &&
+            { account.loggedIn &&
               <Button
                 color="inherit"
                 onClick={async () => {

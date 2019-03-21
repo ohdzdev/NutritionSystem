@@ -138,17 +138,203 @@ class User extends Component {
     };
   }
 
-  onRowAdd = (newData) => new Promise((resolve, reject) => {
+  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
     console.log(newData);
+    // Reject the new user if there is no firstname, lastname, email, role, or location
+    if (!newData.firstName || !newData.lastName || !newData.email || !newData.role || !newData.locationName) {
+      reject();
+      return;
+    }
+
+    const password = window.prompt('Please enter a password for the new user:', 'OmahaZoo'); // eslint-disable-line no-alert
+    if (password) {
+      const usersApi = new UsersAPI(this.state.token);
+      const roleMappingApi = new RoleMappingsAPI(this.state.token);
+
+      // Find the selected location
+      let location = this.state.locations.find((l) => l.location === newData.locationName);
+
+      if (!location) {
+        if (newData.locationName === 'None') {
+          location = { locationId: null };
+        } else {
+          reject();
+          return;
+        }
+      }
+
+      // Find the selected role
+      let role = this.state.roles.find((r) => r.name === newData.role);
+
+      if (!role) {
+        if (newData.role === 'None') {
+          role = { id: -1 };
+        } else {
+          reject();
+          return;
+        }
+      }
+
+      let user = null;
+
+      try {
+        // Create the user
+        const res = await usersApi.createUser(newData.firstName, newData.lastName, newData.email, location.locationId, password);
+        user = res.data;
+      } catch (err) {
+        reject();
+        return;
+      }
+
+      try {
+        // Add the user to the role
+        await roleMappingApi.assignRole(user.id, role.id);
+      } catch (err) {
+        reject();
+        return;
+      }
+
+      // Refresh data
+      try {
+        const [usersRes, roleMapRes] = await Promise.all([
+          usersApi.getUsers(),
+          roleMappingApi.getRoleMappings(),
+        ]);
+        this.setState((prevState) => ({
+          ...generateStateData(usersRes.data, prevState.locations, prevState.roles, roleMapRes.data),
+        }));
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
+
+      resolve();
+    } else {
+      reject();
+    }
+  })
+
+  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
+    const usersApi = new UsersAPI(this.state.token);
+    const roleMappingApi = new RoleMappingsAPI(this.state.token);
+
+    // Determine if we need to update and what to update
+    let fieldUpdated = false;
+    const updatedFields = {};
+
+    if (newData.firstName !== oldData.firstName) {
+      fieldUpdated = true;
+      updatedFields.firstName = newData.firstName;
+    }
+
+    if (newData.lastName !== oldData.lastName) {
+      fieldUpdated = true;
+      updatedFields.lastName = newData.lastName;
+    }
+
+    if (newData.email !== oldData.email) {
+      fieldUpdated = true;
+      updatedFields.email = newData.email;
+    }
+
+    if (newData.locationName !== oldData.locationName) {
+      fieldUpdated = true;
+      let location = this.state.locations.find((l) => l.location === newData.locationName);
+
+      if (!location) {
+        if (newData.locationName === 'None') {
+          location = { locationId: null };
+        } else {
+          reject();
+          return;
+        }
+      }
+
+      updatedFields.locationId = location.locationId;
+    }
+
+    if (fieldUpdated) {
+      // Update the user with the new information
+      await usersApi.updateUser(newData.id, updatedFields);
+    }
+
+    if (newData.role !== oldData.role) {
+      // Find the selected role
+      let role = this.state.roles.find((r) => r.name === newData.role);
+
+      if (!role) {
+        if (newData.role === 'None') {
+          role = { id: -1 };
+        } else {
+          reject();
+          return;
+        }
+      }
+
+      try {
+        // Add the user to the role
+        await roleMappingApi.assignRole(newData.id, role.id);
+      } catch (err) {
+        reject();
+        return;
+      }
+    }
+
+    // Refresh data
+    try {
+      const [usersRes, roleMapRes] = await Promise.all([
+        usersApi.getUsers(),
+        roleMappingApi.getRoleMappings(),
+      ]);
+      this.setState((prevState) => ({
+        ...generateStateData(usersRes.data, prevState.locations, prevState.roles, roleMapRes.data),
+      }));
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
+
     resolve();
   })
 
-  onRowUpdate = (newData, oldData) => new Promise((resolve, reject) => {
+  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
+    const usersApi = new UsersAPI(this.state.token);
+    const roleMappingApi = new RoleMappingsAPI(this.state.token);
 
-  })
+    try {
+      // Delete the user
+      await usersApi.deleteUser(oldData.id);
+    } catch (err) {
+      reject();
+      return;
+    }
 
-  onRowDelete = (oldData) => new Promise((resolve, reject) => {
+    try {
+      // Remove role mappings for the user
+      await roleMappingApi.assignRole(oldData.id, -1);
+    } catch (err) {
+      reject();
+      return;
+    }
 
+    // Refresh data
+    try {
+      const [usersRes, roleMapRes] = await Promise.all([
+        usersApi.getUsers(),
+        roleMappingApi.getRoleMappings(),
+      ]);
+      this.setState((prevState) => ({
+        ...generateStateData(usersRes.data, prevState.locations, prevState.roles, roleMapRes.data),
+      }));
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
+
+    resolve();
   })
 
   render() {

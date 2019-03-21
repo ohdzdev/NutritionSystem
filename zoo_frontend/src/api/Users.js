@@ -17,6 +17,33 @@ class Users {
     const res = await axios.get(query);
     return res;
   }
+
+  async createUser(firstName, lastName, email, locationId, password) {
+    const uri = `${API_BASE_URL}/api/Accounts/replaceOrCreate?access_token=${this.token}`;
+
+    const res = await axios.post(uri, {
+      firstName,
+      lastName,
+      email,
+      locationId,
+      password,
+    });
+    return res;
+  }
+
+  async deleteUser(userId) {
+    const uri = `${API_BASE_URL}/api/Accounts/${userId}?access_token=${this.token}`;
+
+    const res = await axios.delete(uri);
+    return res;
+  }
+
+  async updateUser(userId, updates) {
+    const uri = `${API_BASE_URL}/api/Accounts/update?where=${JSON.stringify({ id: userId })}&access_token=${this.token}`;
+
+    const res = await axios.post(uri, updates);
+    return res;
+  }
 }
 
 export default Users;

@@ -85,7 +85,11 @@ export const Food = {
 };
 
 export const Home = {
-  displayName: 'Home',
   link: '/',
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR, Roles.KEEPER],
+};
+
+export const Profile = {
+  link: '/profile',
   roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR, Roles.KEEPER],
 };

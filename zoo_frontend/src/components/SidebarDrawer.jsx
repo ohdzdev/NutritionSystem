@@ -20,12 +20,18 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import DepartmentIcon from '@material-ui/icons/Business';
 import SpeciesIcon from '@material-ui/icons/Pets';
 import UsersIcon from '@material-ui/icons/SupervisorAccount';
+import ProfileIcon from '@material-ui/icons/AccountCircle';
 import Link from 'next/link';
 
 import { AuthContext } from '../util/AuthProvider';
 
 import {
-  hasAccess, Home, Food, Diet, Admin,
+  hasAccess,
+  Home,
+  Food,
+  Diet,
+  Admin,
+  Profile,
 } from '../pages/PageAccess';
 
 const drawerWidth = 240;
@@ -98,6 +104,14 @@ const SidebarDrawer = (props) => {
                   <ListItem button key="diet" divider>
                     <ListItemIcon><DietIcon /></ListItemIcon>
                     <ListItemText primary="Diets" />
+                  </ListItem>
+                </Link>
+              }
+              {hasAccess(role, Profile.roles) &&
+                <Link href={Profile.link}>
+                  <ListItem button key="profile" divider>
+                    <ListItemIcon><ProfileIcon /></ListItemIcon>
+                    <ListItemText primary="My Profile" />
                   </ListItem>
                 </Link>
               }

@@ -44,6 +44,17 @@ class Users {
     const res = await axios.post(uri, updates);
     return res;
   }
+
+  async resetPasswordByAdmin(userId, password) {
+    const uri = `${API_BASE_URL}/api/Accounts/reset-password?access_token=${this.token}`;
+
+    const res = await axios.post(uri, {
+      id: userId,
+      newPassword: password,
+    });
+
+    return res;
+  }
 }
 
 export default Users;

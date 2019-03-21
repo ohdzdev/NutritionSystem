@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
+
 import Search from '@material-ui/icons/Search';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
@@ -12,7 +13,16 @@ import Delete from '@material-ui/icons/Delete';
 import Check from '@material-ui/icons/Check';
 import Clear from '@material-ui/icons/Clear';
 
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import Typography from '@material-ui/core/Typography';
+import FormHelperText from '@material-ui/core/FormHelperText';
+
 import ErrorPage from '../../../components/ErrorPage';
+import Notifications from '../../../components/Notifications';
 
 import UsersAPI from '../../../api/Users';
 import DepartmentAPI from '../../../api/Departments';
@@ -135,18 +145,34 @@ class User extends Component {
       ...generateStateData(this.props.users, this.props.locations, this.props.roles, this.props.roleMappings),
       locations: this.props.locations,
       roles: this.props.roles,
+      passwordDialogOpen: false,
+      passwordDialogQuestion: '',
+      passwordText: '',
     };
+
+    this.passwordDialogResolve = null;
+
+    this.notificationsRef = React.createRef();
   }
 
+  getPassword = (question) => new Promise((resolve) => {
+    this.setState({
+      passwordDialogOpen: true,
+      passwordDialogQuestion: question,
+      passwordText: 'OmahaZoo',
+    });
+    this.passwordDialogResolve = resolve;
+  });
+
   onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    console.log(newData);
     // Reject the new user if there is no firstname, lastname, email, role, or location
     if (!newData.firstName || !newData.lastName || !newData.email || !newData.role || !newData.locationName) {
+      this.notificationsRef.current.showNotification('error', 'Please fill out all of the fields to create a new user.');
       reject();
       return;
     }
 
-    const password = window.prompt('Please enter a password for the new user:', 'OmahaZoo'); // eslint-disable-line no-alert
+    const password = await this.getPassword('Please enter a password for the new user:');
     if (password) {
       const usersApi = new UsersAPI(this.state.token);
       const roleMappingApi = new RoleMappingsAPI(this.state.token);
@@ -337,11 +363,32 @@ class User extends Component {
     resolve();
   })
 
+  handlePasswordTextChange = (passwordText) => this.setState({ passwordText })
+
+  handlePasswordSubmit = (event) => {
+    event.preventDefault();
+
+    if (!this.state.passwordText) {
+      this.setState({
+        passwordDialogError: true,
+        passwordDialogErrorMessage: 'Please enter a password.',
+      });
+      return;
+    }
+
+    this.setState({ passwordDialogOpen: false, passwordDialogError: false });
+    if (this.passwordDialogResolve) {
+      this.passwordDialogResolve(this.state.passwordText);
+      this.passwordDialogResolve = null;
+    }
+  }
+
   render() {
     if (this.props.error) {
       return (<ErrorPage message={this.props.errorMessage} />);
     }
 
+    const { classes } = this.props;
     const { userData, locationLookup, roleLookup } = this.state;
 
     return (
@@ -352,6 +399,55 @@ class User extends Component {
           justifyContent: 'center',
         }}
       >
+        <Dialog
+          open={this.state.passwordDialogOpen}
+          onClose={() => {
+            if (this.passwordDialogResolve) {
+              this.passwordDialogResolve(null);
+              this.passwordDialogResolve = null;
+            }
+            this.setState({ passwordDialogOpen: false });
+          }}
+        >
+          <div className={this.props.classes.dialogContainer}>
+            <Typography>
+              {this.state.passwordDialogQuestion}
+            </Typography>
+            <form className={classes.form} onSubmit={this.handlePasswordSubmit}>
+              {this.state.passwordDialogError &&
+                <FormHelperText error className={classes.errorText}>
+                  {this.state.passwordDialogErrorMessage}
+                </FormHelperText>
+              }
+              <FormControl
+                margin="normal"
+                required
+                fullWidth
+                error={this.state.error}
+              >
+                <InputLabel htmlFor="password">New Password</InputLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  autoComplete="password"
+                  autoFocus
+                  value={this.state.passwordText}
+                  onChange={this.handlePasswordTextChange}
+                />
+              </FormControl>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Save
+              </Button>
+            </form>
+          </div>
+        </Dialog>
+        <Notifications ref={this.notificationsRef} />
         <div className={this.props.classes.table}>
           <MaterialTable
             icons={{
@@ -379,6 +475,29 @@ class User extends Component {
                 title: 'Location',
                 field: 'locationName',
                 lookup: locationLookup,
+              },
+            ]}
+            actions={[
+              {
+                icon: 'settings_backup_restore',
+                tooltip: 'Reset User Password',
+                onClick: async (event, rowData) => {
+                  const usersApi = new UsersAPI(this.state.token);
+                  const password = await this.getPassword('Please enter the users new temporary password:');
+                  if (password) {
+                    try {
+                      await usersApi.resetPasswordByAdmin(rowData.id, password);
+                      this.notificationsRef.current.showNotification('success', 'Password updated.');
+                    } catch (err) {
+                      this.notificationsRef.current.showNotification('error', 'An error occured while updating the password.');
+                    }
+                  }
+                },
+                iconProps: {
+                  style: {
+                    fontSize: '24px',
+                  },
+                },
               },
             ]}
             data={userData}

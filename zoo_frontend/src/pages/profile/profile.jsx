@@ -112,7 +112,7 @@ class Profile extends Component {
               Change Password
             </Typography>
             {this.state.error &&
-              <FormHelperText error className={classes.errorText}>
+              <FormHelperText error>
                 {this.state.errorMessage}
               </FormHelperText>
             }
@@ -163,16 +163,18 @@ class Profile extends Component {
               />
             </FormControl>
             <div className={classes.wrapper}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={this.state.loading}
-                className={classes.submit}
-              >
-                Change Password
-              </Button>
-              {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              <span style={{ position: 'relative' }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={this.state.loading}
+                  className={classes.submit}
+                >
+                  Change Password
+                </Button>
+                {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              </span>
             </div>
           </form>
         </Paper>

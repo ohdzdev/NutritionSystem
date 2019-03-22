@@ -55,6 +55,17 @@ class Users {
 
     return res;
   }
+
+  async changePassword(oldPassword, newPassword) {
+    const uri = `${API_BASE_URL}/api/Accounts/change-password?access_token=${this.token}`;
+
+    const res = await axios.post(uri, {
+      oldPassword,
+      newPassword,
+    });
+
+    return res;
+  }
 }
 
 export default Users;

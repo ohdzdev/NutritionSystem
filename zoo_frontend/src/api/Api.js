@@ -62,11 +62,15 @@ class Api {
     LocalStorage.setRole('');
     LocalStorage.setId(0);
     if (this.token) {
-      await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
-        params: {
-          access_token: this.token,
-        },
-      });
+      try {
+        await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
+          params: {
+            access_token: this.token,
+          },
+        });
+      } catch (err) {
+        // Ignore the error
+      }
     }
     this.token = '';
     document.cookie = 'authToken=; path=/';

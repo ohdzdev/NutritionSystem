@@ -8,7 +8,7 @@ class Food {
   }
 
   async getFood(filter) {
-    let query = `${API_BASE_URL}/api/Food/`;
+    let query = `${API_BASE_URL}/api/Food`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {

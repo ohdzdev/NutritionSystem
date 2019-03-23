@@ -45,6 +45,7 @@ class MyApp extends App {
         <Head>
           <title>Nutrition Asst</title>
           <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
         <JssProvider

@@ -45,4 +45,41 @@ module.exports = function(Account) {
       }
     });
   };
+
+  Account.resetPasswordByAdmin = function(body, cb) {
+    Account.findById(body.id, (err, account) => {
+      if (err) {
+        cb(Util.createError('Error finding account', 500));
+      } else if (account) {
+        account.setPassword(body.newPassword, (err2) => {
+          if (err2) {
+            cb(Util.createError('Error setting new password', 500));
+          } else {
+            cb(null, { updated: true });
+          }
+        });
+      } else {
+        cb(Util.createError('Error finding account', 500));
+      }
+    });
+  };
+
+  Account.remoteMethod(
+    'resetPasswordByAdmin',
+    {
+      description: 'Reset a users password (admins only)',
+      accepts: [
+        {
+          arg: 'resetInfo', type: 'object', required: true, http: { source: 'body' },
+        },
+      ],
+      returns: {
+        arg: 'data', type: 'object', root: true,
+      },
+      http: { verb: 'post', path: '/reset-password' },
+    }
+  );
+
+  Account.disableRemoteMethodByName('setPassword');
+  Account.disableRemoteMethodByName('resetPassword');
 };

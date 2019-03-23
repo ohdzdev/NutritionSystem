@@ -3,12 +3,12 @@ import { compose } from 'recompose';
 
 import withAuth from '../../util/withAuth';
 
-import { Admin } from '../PageAccess';
+import { Profile } from '../PageAccess';
 
-import page from './admin';
-import styles from './admin.styles';
+import page from './profile';
+import styles from './profile.styles';
 
 export default compose(
-  withAuth(Admin.roles),
+  withAuth(Profile.roles),
   withStyles(styles),
 )(page);

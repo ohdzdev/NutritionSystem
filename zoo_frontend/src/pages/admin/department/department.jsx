@@ -1,69 +1,209 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Link from 'next/link';
-import { Button } from '@material-ui/core';
+import MaterialTable from 'material-table';
 
-import { hasAccess, Admin } from '../../PageAccess';
+import ErrorPage from '../../../components/ErrorPage';
+import Notifications from '../../../components/Notifications';
+
+import DepartmentAPI from '../../../api/Departments';
 
 class Home extends Component {
+  static async getInitialProps({ authToken }) {
+    const departmentsApi = new DepartmentAPI(authToken);
+    try {
+      const locRes = await departmentsApi.getDepartments();
+      return {
+        locations: locRes.data,
+      };
+    } catch (err) {
+      return {
+        locations: [],
+        error: true,
+        errorMessage: 'Error loading data.',
+      };
+    }
+  }
+
   static propTypes = {
-    account: PropTypes.object.isRequired,
+    // account: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
+    error: PropTypes.bool,
+    errorMessage: PropTypes.string,
+    locations: PropTypes.arrayOf(PropTypes.object).isRequired,
     token: PropTypes.string,
   };
 
   static defaultProps = {
+    error: false,
+    errorMessage: '',
     token: '',
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      asdf: props.token, // eslint-disable-line react/no-unused-state
+      locations: props.locations,
     };
+
+    this.notificationsRef = React.createRef();
   }
 
+  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
+    // Reject the new user if there is no firstname, lastname, email, role, or location
+    if (!newData.location || !newData.color || !newData.shortLocation) {
+      this.notificationsRef.current.showNotification('error', 'Please fill out all of the fields to create a new department.');
+      reject();
+      return;
+    }
+
+    const departmentsApi = new DepartmentAPI(this.props.token);
+
+    try {
+      // Create the department
+      await departmentsApi.createDepartment(newData.location, newData.color, newData.shortLocation);
+    } catch (err) {
+      reject();
+      return;
+    }
+
+    // Refresh data
+    try {
+      const locRes = await departmentsApi.getDepartments();
+      this.setState({ locations: locRes.data });
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
+
+    resolve();
+  })
+
+  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
+    const departmentsApi = new DepartmentAPI(this.props.token);
+
+    // Determine if we need to update and what to update
+    let fieldUpdated = false;
+    const updatedFields = {};
+
+    if (newData.location !== oldData.location) {
+      fieldUpdated = true;
+      updatedFields.location = newData.location;
+    }
+
+    if (newData.color !== oldData.color) {
+      fieldUpdated = true;
+      updatedFields.color = newData.color;
+    }
+
+    if (newData.shortLocation !== oldData.shortLocation) {
+      fieldUpdated = true;
+      updatedFields.shortLocation = newData.shortLocation;
+    }
+
+    if (fieldUpdated) {
+      // Update the department with the new information
+      await departmentsApi.updateDepartment(newData.locationId);
+    }
+
+    // Refresh data
+    try {
+      const locRes = await departmentsApi.getDepartments();
+      this.setState({ locations: locRes.data });
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
+
+    resolve();
+  })
+
+  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
+    const departmentsApi = new DepartmentAPI(this.props.token);
+
+    try {
+      // Delete the department
+      await departmentsApi.deleteDepartment(oldData.locationId);
+    } catch (err) {
+      reject();
+      return;
+    }
+
+    // Refresh data
+    try {
+      const locRes = await departmentsApi.getDepartments();
+      this.setState({ locations: locRes.data });
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
+
+    resolve();
+  })
+
   render() {
-    const { role } = this.props.account;
+    if (this.props.error) {
+      return (<ErrorPage message={this.props.errorMessage} />);
+    }
+
+    const { classes } = this.props;
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <div style={{
-          justifyContent: 'space-around', alignItems: 'center', display: 'flex',
-        }}
-        >
-          {hasAccess(role, Admin.roles) &&
-            <Link href={Admin.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                Admin Home
-              </Button>
-            </Link>
-          }
-          {hasAccess(role, Admin.department.edit.roles) &&
-            <Link href={Admin.department.edit.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                EDIT Department
-              </Button>
-            </Link>
-          }
-          {hasAccess(role, Admin.department.new.roles) &&
-            <Link href={Admin.department.new.link}>
-              <Button className={this.props.classes.button} color="secondary" variant="contained">
-                NEW Department
-              </Button>
-            </Link>
-          }
-          {/* TODO add reports link logic here */}
-          <Link href="/reports/department">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-              Department Reports
-            </Button>
-          </Link>
+      <div className={classes.root}>
+        <Notifications ref={this.notificationsRef} />
+        <div className={classes.table}>
+          <MaterialTable
+            columns={[
+              { title: 'Department', field: 'location' },
+              { title: 'Color', field: 'color' },
+              { title: 'Short Name', field: 'shortLocation' },
+            ]}
+            data={this.state.locations}
+            title="Departments"
+            options={{
+              pageSize: 25,
+              pageSizeOptions: [25, 50, 100],
+              exportButton: true,
+            }}
+            editable={{
+              onRowAdd: this.onRowAdd,
+              onRowUpdate: this.onRowUpdate,
+              onRowDelete: this.onRowDelete,
+            }}
+            localization={{
+              pagination: {
+                labelDisplayedRows: '{from}-{to} of {count}',
+                labelRowsPerPage: 'Rows per page:',
+                firstAriaLabel: 'First Page',
+                firstTooltip: 'First Page',
+                previousAriaLabel: 'Previous Page',
+                previousTooltip: 'Previous Page',
+                nextAriaLabel: 'Next Page',
+                nextTooltip: 'Next Page',
+                lastAriaLabel: 'Last Page',
+                lastTooltip: 'Last Page',
+              },
+              toolbar: {
+                nRowsSelected: '{0} rows(s) selected',
+                showColumnsTitle: 'Show Columns',
+                showColumnsAriaLabel: 'Show Columns',
+                exportTitle: 'Export',
+                exportAriaLabel: 'Export',
+                exportName: 'Export as CSV',
+                searchTooltip: 'Search',
+              },
+              header: {
+                actions: 'Actions',
+              },
+              body: {
+                emptyDataSourceMessage: 'No records to display',
+                filterRow: {
+                  filterTooltip: 'Filter',
+                },
+              },
+            }}
+          />
         </div>
       </div>
     );

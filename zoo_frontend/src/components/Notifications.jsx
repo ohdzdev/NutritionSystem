@@ -93,7 +93,7 @@ class Notifications extends Component {
             aria-label="Close"
             color="inherit"
             className={this.props.classes.close}
-            onClick={this.handleClose}
+            onClick={this.onClose}
           >
             <Close />
           </IconButton>,

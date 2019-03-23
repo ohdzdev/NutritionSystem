@@ -49,6 +49,29 @@ class Home extends Component {
     };
   }
 
+  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
+    const speciesApi = new SpeciesApi(this.state.token);
+    // Reject if no species, scientificName
+    if (!newData.species || !newData.scientificName) {
+      // TODO notif
+      // this.notificationsRef.current.showNotification('error', 'Please fill out all of the fields to create a new user.');
+      alert('Please fill in Species and ScientificName');
+      reject();
+      return;
+    }
+
+    try {
+      // Create the species entry
+      await speciesApi.addSpecies(newData);
+    } catch (err) {
+      reject();
+    }
+
+    // Refresh Data
+
+    resolve();
+  })
+
   onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
     const speciesApi = new SpeciesApi(this.state.token);
 
@@ -77,11 +100,28 @@ class Home extends Component {
     }
 
     if (fieldUpdated) {
-      console.log(updatedFields);
-      await speciesApi.updateSpecies(newData.speciesId, updatedFields);
+      await speciesApi.updateSpecies(newData.speciesId, JSON.stringify(updatedFields));
+    } else {
+      reject();
+      return;
     }
     resolve();
   })
+
+  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
+    const speciesApi = new SpeciesApi(this.state.token);
+    try {
+      // Delete the species
+      await speciesApi.deleteSpecies(oldData.speciesId);
+    } catch (err) {
+      reject();
+      return;
+    }
+    // Refresh Data
+
+    resolve();
+  })
+
   render() {
     const { role } = this.props.account;
     const speciesData = this.props.species;

@@ -23,6 +23,18 @@ class Species {
     const res = await axios.post(uri, updates);
     return res;
   }
+
+  async addSpecies(newData) {
+    const uri = `${API_BASE_URL}/api/Species/replaceOrCreate?access_token=${this.token}`;
+    const res = await axios.post(uri, newData);
+    return res;
+  }
+
+  async deleteSpecies(speciesId) {
+    const uri = `${API_BASE_URL}/api/Species/${speciesId}?access_token=${this.token}`;
+    const res = axios.delete(uri);
+    return res;
+  }
 }
 
 export default Species;

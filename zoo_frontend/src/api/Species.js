@@ -7,7 +7,7 @@ class Species {
     this.token = token;
   }
 
-  async getUsers(filter) {
+  async getSpecies(filter) {
     let query = `${API_BASE_URL}/api/Species/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
@@ -15,6 +15,12 @@ class Species {
       query += `?access_token=${this.token}`;
     }
     const res = await axios.get(query);
+    return res;
+  }
+
+  async updateSpecies(speciesID, updates) {
+    const uri = `${API_BASE_URL}/api/Species/update?where=${JSON.stringify({ speciesId: speciesID })}&access_token=${this.token}`;
+    const res = await axios.post(uri, updates);
     return res;
   }
 }

@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import Link from 'next/link';
 import {
   TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl,
 } from '@material-ui/core';
 import MaterialTable from 'material-table';
-import { SingleSelect } from 'react-select-material-ui';
 
 // icons
 import Search from '@material-ui/icons/Search';
@@ -23,6 +21,7 @@ import LastPage from '@material-ui/icons/LastPage';
 import ThirdStateCheck from '@material-ui/icons/Remove';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
+import SingleSelect from '../../../components/ReactSingleSelect';
 
 import {
   Food as FoodAPI, NutData as NutDataAPI, NutrDef as NutrDefAPI, DataSrc as DataSrcAPI,
@@ -156,18 +155,18 @@ export default class extends Component {
       dialogRow: {}, // row for which we are editing
       dirty: false, // was a field editing?
     };
-    console.log(this.state);
   }
 
   handleChange = fieldName => evt => {
     let newVal = null;
-    if (typeof evt !== 'string' && typeof evt !== 'number') {
+    if (typeof evt === 'object' && 'target' in evt && 'value' in evt.target) {
       newVal = evt.target.value;
+    } else if (typeof evt === 'object') {
+      newVal = evt.value;
     } else {
       newVal = evt;
     }
 
-    console.log(fieldName, newVal, this.state.dialogRow);
     if (this.state.dialogRow) {
       this.setState((prevState) => ({
         dialogRow: {
@@ -175,31 +174,31 @@ export default class extends Component {
           [fieldName]: newVal,
         },
         dirty: true,
-      }), () => { console.log('after update', this.state.dialogRow); });
+      }));
     }
   }
 
   handleSave() {
-    console.log('saving dirty: ', this.state.dirty);
     if (this.state.dialogRow && this.state.dirty) {
       // update row on backend
 
 
       // if success then update state for re-render table
       // update original state data
-      console.log(this.state.dialogRow);
       const row = { ...this.state.dialogRow };
       const tableRow = row.meta.index;
       row.addModDate = new Date().toISOString(); // update the modified date
 
-      const previousStateRow = this.state.nutritionData[tableRow];
+      const previousStateRow = { ...this.state.nutritionData[tableRow] };
+
       // iterate over previous nut data row and if previous value had a number, parseFloat the number in state so we match
       // reasoning behind this is when the user is editing we don't want to remove their .'s when they are typing
       Object.entries(previousStateRow).forEach((nutData) => {
         // if key match then check if a number and if it is parseFloat and overwrite previous
         if (nutData[0] in row) {
-          if (typeof nutData[1] === 'number') {
-            row[nutData[0]] = parseFloat(row[nutData[0]]);
+          if (typeof nutData[1] === 'number' && typeof row[nutData[0]] === 'string') {
+            const toBeParsed = row[nutData[0]] === '' ? 0 : row[nutData[0]];
+            row[nutData[0]] = parseFloat(toBeParsed);
           }
         }
       });
@@ -210,7 +209,8 @@ export default class extends Component {
             if (dex !== tableRow) {
               return item;
             }
-            const updatedRow = { ...item, ...row };
+            const updatedRow = item;
+            Object.assign(updatedRow, row);
             return updatedRow;
           })];
           return {
@@ -219,7 +219,7 @@ export default class extends Component {
             dialogRow: {},
             dirty: false,
           };
-        }, () => { console.log(this.state.nutritionData); });
+        });
       }
       // if fail present error from api to user
     } else { // no edits
@@ -232,7 +232,6 @@ export default class extends Component {
   }
 
   render() {
-    console.log('re-render!');
     const composedData = this.state.nutritionData.map((val, index) => {
       const { shortForm, dataSrcId } = this.state.allSources.find((source) => source.dataSrcId === val.dataSrcId) || {};
       const { nutrDesc, units, nutrNo } = this.state.allNutrients.find((def) => def.nutrNo === val.nutrNo) || {};
@@ -282,7 +281,6 @@ export default class extends Component {
               // from meta in rowData figure out what type of field we have and display information accordingly
               const fieldType = meta.types[item[0]];
               // if string filter out disabled and then present text input field
-              console.log(item[0], fieldType);
               if (typeof fieldType === 'string' && fieldType !== 'disabled') {
               // from our original columns get the title and label or text input field
                 const field = col.find((i) => i.field === item[0]);
@@ -302,20 +300,18 @@ export default class extends Component {
               // raw data from the state to be iterated and presented to the user as selections
               // NOTE: meta should have 2 keys: labelKey and labelValue defined from this object
                 const picklistSource = this.state[fieldType.dataSource];
-                console.log(item, picklistSource);
                 const stateUpdateField = meta.types[item[0]].stateSourceKey;
                 const field = col.find((i) => i.field === item[0]);
                 return (
                   <FormControl fullWidth className={this.props.classes.formControl}>
                     <SingleSelect
                       label={field.title}
-                      SelectProps
-                      options={picklistSource.map((val) => ({
+                      suggestions={picklistSource.map((val) => ({
                         ...val,
                         label: val[fieldType.labelKey],
                         value: val[fieldType.valueKey],
                       }))}
-                      value={this.state.dialogRow[fieldType.valueKey]}
+                      defaultValue={this.state.dialogRow[fieldType.valueKey]}
                       onChange={(val) => this.handleChange(stateUpdateField)(val)}
                     />
                   </FormControl>
@@ -342,7 +338,6 @@ export default class extends Component {
               disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
               icon: () => <Edit />,
               onClick: (evt, row) => {
-                console.log(row);
                 this.setState({ dialogOpen: true, dialogRow: row });
               },
               tooltip: 'Edit Nutrition Information',

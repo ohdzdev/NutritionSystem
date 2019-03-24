@@ -8,8 +8,6 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
-import withChecker from '../util/WithPropsChecker';
-
 const styles = theme => ({
   input: {
     display: 'flex',
@@ -283,4 +281,4 @@ IntegrationReactSelect.defaultProps = {
   label: '',
 };
 
-export default withChecker(withTheme()(withStyles(styles, { withTheme: true })(IntegrationReactSelect)));
+export default withTheme()(withStyles(styles, { withTheme: true })(IntegrationReactSelect));

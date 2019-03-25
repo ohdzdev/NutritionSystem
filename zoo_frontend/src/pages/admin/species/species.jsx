@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
+import MaterialTable from 'material-table';
 import Edit from '@material-ui/icons/Edit';
 import Search from '@material-ui/icons/Search';
 import FirstPage from '@material-ui/icons/FirstPage';
@@ -17,9 +18,9 @@ import Filter from '@material-ui/icons/FilterList';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import ThirdStateCheck from '@material-ui/icons/Remove';
 
+import Notifications from '../../../components/Notifications';
+import ErrorPage from '../../../components/ErrorPage';
 
-import MaterialTable from 'material-table';
-import { hasAccess, Admin } from '../../PageAccess';
 import SpeciesApi from '../../../api/Species';
 
 class Home extends Component {
@@ -28,34 +29,46 @@ class Home extends Component {
    */
   static async getInitialProps({ authToken }) {
     const api = new SpeciesApi(authToken);
-    const res = await api.getSpecies().catch((err) => ({ data: [{ err: true, msg: err }] }));
-    return { species: res.data };
+    try {
+      const res = await api.getSpecies().catch((err) => ({ data: [{ err: true, msg: err }] }));
+      return { species: res.data };
+    } catch (err) {
+      return {
+        species: [],
+        error: true,
+        errorMessage: 'Error loading data',
+      };
+    }
   }
   static propTypes = {
-    account: PropTypes.object.isRequired,
+    // account: PropTypes.object.isRequired,
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
     species: PropTypes.array.isRequired,
+    error: PropTypes.bool,
+    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
     token: '',
+    error: false,
+    errorMessage: '',
   }
 
   constructor(props) {
     super(props);
     this.state = {
       token: props.token, // eslint-disable-line react/no-unused-state
+      species: props.species,
     };
+    this.notificationsRef = React.createRef();
   }
 
   onRowAdd = (newData) => new Promise(async (resolve, reject) => {
     const speciesApi = new SpeciesApi(this.state.token);
     // Reject if no species, scientificName
     if (!newData.species || !newData.scientificName) {
-      // TODO notif
-      // this.notificationsRef.current.showNotification('error', 'Please fill out all of the fields to create a new user.');
-      alert('Please fill in Species and ScientificName');
+      this.notificationsRef.current.showNotification('error', 'Please fill out all of the "Species" and "Scientific Name".');
       reject();
       return;
     }
@@ -68,7 +81,14 @@ class Home extends Component {
     }
 
     // Refresh Data
-
+    try {
+      const specRes = await speciesApi.getSpecies();
+      this.setState({ species: specRes.data });
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
     resolve();
   })
 
@@ -105,6 +125,16 @@ class Home extends Component {
       reject();
       return;
     }
+
+    // Refresh Data
+    try {
+      const specRes = await speciesApi.getSpecies();
+      this.setState({ species: specRes.data });
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
     resolve();
   })
 
@@ -118,13 +148,21 @@ class Home extends Component {
       return;
     }
     // Refresh Data
-
+    try {
+      const specRes = await speciesApi.getSpecies();
+      this.setState({ species: specRes.data });
+      resolve();
+    } catch (err) {
+      reject();
+      return;
+    }
     resolve();
   })
 
   render() {
-    const { role } = this.props.account;
-    const speciesData = this.props.species;
+    if (this.props.error) {
+      return (<ErrorPage message={this.props.errorMessage} />);
+    }
     return (
       <div
         style={{
@@ -144,6 +182,7 @@ class Home extends Component {
             </Button>
           </Link>
         </div>
+        <Notifications ref={this.notificationsRef} />
         <div className={this.props.classes.table}>
           <MaterialTable
             options={{
@@ -183,7 +222,7 @@ class Home extends Component {
               onRowUpdate: this.onRowUpdate,
               onRowDelete: this.onRowDelete,
             }}
-            data={speciesData}
+            data={this.state.species}
             title="Species List"
             localization={{
               pagination: {

@@ -171,38 +171,6 @@ class Home extends Component {
               onRowUpdate: this.onRowUpdate,
               onRowDelete: this.onRowDelete,
             }}
-            localization={{
-              pagination: {
-                labelDisplayedRows: '{from}-{to} of {count}',
-                labelRowsPerPage: 'Rows per page:',
-                firstAriaLabel: 'First Page',
-                firstTooltip: 'First Page',
-                previousAriaLabel: 'Previous Page',
-                previousTooltip: 'Previous Page',
-                nextAriaLabel: 'Next Page',
-                nextTooltip: 'Next Page',
-                lastAriaLabel: 'Last Page',
-                lastTooltip: 'Last Page',
-              },
-              toolbar: {
-                nRowsSelected: '{0} rows(s) selected',
-                showColumnsTitle: 'Show Columns',
-                showColumnsAriaLabel: 'Show Columns',
-                exportTitle: 'Export',
-                exportAriaLabel: 'Export',
-                exportName: 'Export as CSV',
-                searchTooltip: 'Search',
-              },
-              header: {
-                actions: 'Actions',
-              },
-              body: {
-                emptyDataSourceMessage: 'No records to display',
-                filterRow: {
-                  filterTooltip: 'Filter',
-                },
-              },
-            }}
           />
         </div>
       </div>

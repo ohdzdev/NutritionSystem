@@ -120,7 +120,7 @@ class Home extends Component {
     }
 
     if (fieldUpdated) {
-      await speciesApi.updateSpecies(newData.speciesId, JSON.stringify(updatedFields));
+      await speciesApi.updateSpecies(newData.speciesId, updatedFields);
     } else {
       reject();
       return;
@@ -171,23 +171,13 @@ class Home extends Component {
           justifyContent: 'center',
         }}
       >
-        <div style={{
-          justifyContent: 'space-around', alignItems: 'center', display: 'flex',
-        }}
-        >
-          {/* TODO add report link logic here */}
-          <Link href="/reports/species">
-            <Button className={this.props.classes.button} color="secondary" variant="contained">
-              Species Reports
-            </Button>
-          </Link>
-        </div>
         <Notifications ref={this.notificationsRef} />
         <div className={this.props.classes.table}>
           <MaterialTable
             options={{
               pageSize: 25,
               pageSizeOptions: [25, 100, 800],
+              exportButton: true,
             }}
             icons={{
               Add,

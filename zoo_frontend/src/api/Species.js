@@ -20,8 +20,6 @@ class Species {
 
   async updateSpecies(speciesId, updates) {
     const uri = `${API_BASE_URL}/api/Species/update?where=${JSON.stringify({ speciesId })}&access_token=${this.token}`;
-    console.log(uri);
-    console.log(updates);
     const res = await axios.post(uri, updates);
     return res;
   }

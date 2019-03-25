@@ -31,4 +31,7 @@ export default (theme) => ({
     marginBottom: theme.spacing.unit,
     marginTop: theme.spacing.unit,
   },
+  nutrientAddButton: {
+    margin: theme.spacing.unit,
+  },
 });

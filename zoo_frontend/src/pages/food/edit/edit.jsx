@@ -21,15 +21,19 @@ import LastPage from '@material-ui/icons/LastPage';
 import ThirdStateCheck from '@material-ui/icons/Remove';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
-import SingleSelect from '../../../components/ReactSingleSelect';
+// custom zoo components
+import { SingleSelect, ConfirmationDialog } from '../../../components';
 
+// api
 import {
   Food as FoodAPI, NutData as NutDataAPI, NutrDef as NutrDefAPI, DataSrc as DataSrcAPI,
 } from '../../../api';
+// actual API repo
+import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
+
+// access control
 import { hasAccess } from '../../PageAccess';
 import Roles from '../../../static/Roles';
-
-import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
 
 const col = [
   {
@@ -154,6 +158,8 @@ export default class extends Component {
     this.state = {
       ...rest,
       dialogOpen: false, // dialog open?
+      deleteDialogOpen: false,
+      newDialogOpen: false,
       dialogRow: {}, // row for which we are editing
       dirty: false, // was a field editing?
     };
@@ -179,7 +185,7 @@ export default class extends Component {
           [fieldName]: newVal,
         },
         dirty: true,
-      }));
+      }), () => { console.log(this.state.dialogRow); });
     }
   }
 
@@ -238,8 +244,8 @@ export default class extends Component {
             }
           });
           console.log(localRow.dataId, localRow);
-          // const res = this.clientNutDataAPI.patchNutData(localRow.dataId, localRow);
-          // console.log(res);
+          const res = this.clientNutDataAPI.updateNutData(localRow.dataId, localRow);
+          console.log(res);
         });
       }
       // if fail present error from api to user
@@ -250,6 +256,55 @@ export default class extends Component {
 
   handleCancelDialogue() {
     this.setState({ dialogOpen: false, dialogRow: {}, dirty: false });
+  }
+
+  async handleDelete(shouldDelete) {
+    if (shouldDelete) {
+      console.log(this.state);
+      if (this.state.dialogRow && this.state.dialogRow.meta && this.state.dialogRow.meta.relatedIds.dataId) {
+        const { dataId } = this.state.dialogRow.meta.relatedIds;
+        try {
+          await this.clientNutDataAPI.deleteNutData(dataId);
+          this.setState((prevState) => ({ deleteDialogOpen: false, nutritionData: prevState.nutritionData.filter((item) => item.dataId !== dataId) }));
+        } catch (error) {
+          // clear incorrect state
+          this.setState({ deleteDialogOpen: false, dialogRow: {} });
+        }
+      } else {
+        // clear incorrect state
+        this.setState({ deleteDialogOpen: false, dialogRow: {} });
+      }
+    }
+  }
+
+  handleNewNutrient() {
+    this.setState({ newDialogOpen: true });
+  }
+
+  async handleNewNutrientDialogClose(cancelled, data) {
+    if (cancelled || !data) {
+      this.setState({ newDialogOpen: false });
+    } else {
+      try {
+        const newRow = { ...data };
+        newRow.addModDate = new Date().toISOString(); // update the modified date
+        newRow.foodId = this.state.food[0].foodId;
+        console.log(newRow);
+        debugger
+        const res = await this.clientNutDataAPI.createNutData(newRow);
+        this.setState((prevState) => ({
+          newDialogOpen: false, nutritionData: [...prevState.nutritionData, res.data], dialgoRow: {}, dirty: false,
+        }));
+      } catch (error) {
+        this.setState({
+          newDialogOpen: false,
+          dialogRow: {},
+          dirty: false,
+        });
+        // TODO present error to user
+        console.error(error);
+      }
+    }
   }
 
   render() {
@@ -289,67 +344,122 @@ export default class extends Component {
 
     return (
       <div>
-        <Dialog
-          open={this.state.dialogOpen}
-          onClose={this.handleClose}
-          aria-labelledby="form-dialog-title"
-          classes={{ paperScrollPaper: this.props.classes.dialogContent }}
-        >
-          <DialogTitle id="form-dialog-title">Edit Nutrition Row</DialogTitle>
-          <DialogContent className={this.props.classes.dialogContent}>
-            { Object.entries(this.state.dialogRow).map((item) => {
-              const { meta } = this.state.dialogRow;
-              // from meta in rowData figure out what type of field we have and display information accordingly
-              const fieldType = meta.types[item[0]];
-              // if string filter out disabled and then present text input field
-              if (typeof fieldType === 'string' && fieldType !== 'disabled') {
-              // from our original columns get the title and label or text input field
-                const field = col.find((i) => i.field === item[0]);
-                return (
-                  <TextField
-                    id={item[0]}
-                    label={field.title}
-                    value={item[1] || ''}
-                    onChange={this.handleChange(item[0])}
-                    margin="normal"
-                    fullWidth
-                  />
-                );
-              }
-              // if we have picklist type or another, use the picklist to grab the dataSource from the state and display to user
-              if (typeof fieldType === 'object') {
-              // raw data from the state to be iterated and presented to the user as selections
-              // NOTE: meta should have 2 keys: labelKey and labelValue defined from this object
-                const picklistSource = this.state[fieldType.dataSource];
-                const stateUpdateField = meta.types[item[0]].stateSourceKey;
-                const field = col.find((i) => i.field === item[0]);
-                return (
-                  <FormControl fullWidth className={this.props.classes.formControl}>
-                    <SingleSelect
+        {this.state.dialogOpen &&
+          <Dialog
+            key="editDialog"
+            open={this.state.dialogOpen}
+            onClose={this.handleClose}
+            aria-labelledby="form-dialog-title"
+            classes={{ paperScrollPaper: this.props.classes.dialogContent }}
+          >
+            <DialogTitle id="form-dialog-title">Edit Nutrition Row</DialogTitle>
+            <DialogContent className={this.props.classes.dialogContent}>
+              { Object.entries(this.state.dialogRow).map((item) => {
+                const { meta } = this.state.dialogRow;
+                // from meta in rowData figure out what type of field we have and display information accordingly
+                const fieldType = meta.types[item[0]];
+                // if string filter out disabled and then present text input field
+                if (typeof fieldType === 'string' && fieldType !== 'disabled') {
+                  // from our original columns get the title and label or text input field
+                  const field = col.find((i) => i.field === item[0]);
+                  return (
+                    <TextField
+                      id={`${item[0]} edit`}
                       label={field.title}
-                      suggestions={picklistSource.map((val) => ({
-                        ...val,
-                        label: val[fieldType.labelKey],
-                        value: val[fieldType.valueKey],
-                      }))}
-                      defaultValue={this.state.dialogRow[fieldType.valueKey]}
-                      onChange={(val) => this.handleChange(stateUpdateField)(val)}
+                      value={item[1] || ''}
+                      onChange={this.handleChange(item[0])}
+                      margin="normal"
+                      fullWidth
                     />
-                  </FormControl>
-                );
-              }
-              return null;
-            })}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.handleCancelDialogue()} color="primary">
+                  );
+                }
+                // if we have picklist type or another, use the picklist to grab the dataSource from the state and display to user
+                if (typeof fieldType === 'object') {
+                  // raw data from the state to be iterated and presented to the user as selections
+                  // NOTE: meta should have 2 keys: labelKey and labelValue defined from this object
+                  const picklistSource = this.state[fieldType.dataSource];
+                  const stateUpdateField = meta.types[item[0]].stateSourceKey;
+                  const field = col.find((i) => i.field === item[0]);
+                  return (
+                    <FormControl fullWidth className={this.props.classes.formControl}>
+                      <SingleSelect
+                        label={field.title}
+                        suggestions={[...[{ label: 'None', val: null }], ...picklistSource.map((val) => ({
+                          ...val,
+                          label: val[fieldType.labelKey],
+                          value: val[fieldType.valueKey],
+                        }))]}
+                        defaultValue={this.state.dialogRow[fieldType.valueKey]}
+                        onChange={(val) => this.handleChange(stateUpdateField)(val)}
+                      />
+                    </FormControl>
+                  );
+                }
+                return null;
+              })}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => this.handleCancelDialogue()} color="primary">
               Cancel
-            </Button>
-            <Button onClick={() => this.handleSave()} color="primary">
+              </Button>
+              <Button onClick={() => this.handleSave()} color="primary">
               Save
-            </Button>
-          </DialogActions>
-        </Dialog>
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
+        {this.state.newDialogOpen &&
+          <Dialog
+            key="newDialog"
+            open={this.state.newDialogOpen}
+            onClose={() => this.handleNewNutrientDialogClose(true)}
+            aria-labelledby="form-dialog-title"
+            classes={{ paperScrollPaper: this.props.classes.dialogContent }}
+          >
+            <DialogTitle id="form-dialog-title">New Nutrition Row</DialogTitle>
+            <DialogContent className={this.props.classes.dialogContent}>
+              <FormControl fullWidth className={this.props.classes.formControl}>
+                <SingleSelect
+                  label="Nutrient"
+                  suggestions={[...[{ label: 'None', val: null }], ...this.state.allNutrients.map((val) => ({
+                    ...val,
+                    label: val.nutrDesc,
+                    value: val.nutrNo,
+                  }))]}
+                  onChange={(val) => this.handleChange('nutrNo')(val)}
+                />
+              </FormControl>
+              <TextField
+                id="nutrVal-new"
+                label="Nutr Val"
+                value={this.state.dialogRow ? this.state.dialogRow.nutrVal : ''}
+                onChange={this.handleChange('nutrVal')}
+                margin="normal"
+                fullWidth
+              />
+              <FormControl fullWidth className={this.props.classes.formControl}>
+                <SingleSelect
+                  label="Reference"
+                  suggestions={[...[{ label: 'None', val: null }], ...this.state.allSources.map((val) => ({
+                    ...val,
+                    label: val.shortForm,
+                    value: val.dataSrcId,
+                  }))]}
+                  onChange={(val) => this.handleChange('dataSrcId')(val)}
+                />
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => this.handleNewNutrientDialogClose(true)} color="primary">
+              Cancel
+              </Button>
+              <Button onClick={() => this.handleNewNutrientDialogClose(false, this.state.dialogRow)} color="primary">
+              Save
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
+
         <div className={this.props.classes.foodBox}>
           <Paper>
             <Typography variant="h2">
@@ -363,6 +473,14 @@ export default class extends Component {
           </Paper>
         </div>
 
+        <Button
+          color="primary"
+          variant="contained"
+          className={this.props.classes.nutrientAddButton}
+          onClick={() => this.handleNewNutrient()}
+        >
+        Add Nutrient
+        </Button>
         <MaterialTable
           title="Nutrients"
           columns={col}
@@ -375,6 +493,15 @@ export default class extends Component {
                 this.setState({ dialogOpen: true, dialogRow: row });
               },
               tooltip: 'Nutrient Form',
+            },
+            {
+              disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
+              icon: () => <Delete />,
+              onClick: (evt, row) => {
+                console.log(row);
+                this.setState({ deleteDialogOpen: true, dialogRow: row });
+              },
+              tooltip: 'Delete Nutrient',
             },
           ]
           }
@@ -402,7 +529,13 @@ export default class extends Component {
             ViewColumn,
           }}
         />
+        <ConfirmationDialog
+          open={this.state.deleteDialogOpen}
+          onClose={(close) => this.handleDelete(close)}
+          title="Are you sure you want to delete this nutrient record?"
+        />
       </div>
+
     );
   }
 }

@@ -12,7 +12,7 @@
     "speciesId": {
       "type": "Number",
       "id": 1,
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,

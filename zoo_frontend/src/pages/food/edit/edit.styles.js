@@ -27,4 +27,8 @@ export default (theme) => ({
   dialogContent: { // https://github.com/mui-org/material-ui/issues/7431#issuecomment-414703875
     overflow: 'visible',
   },
+  foodBox: {
+    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+  },
 });

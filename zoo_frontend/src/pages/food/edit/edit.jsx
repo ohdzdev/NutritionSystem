@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl,
+  TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, Paper, Typography,
 } from '@material-ui/core';
 import MaterialTable from 'material-table';
 
@@ -28,6 +28,8 @@ import {
 } from '../../../api';
 import { hasAccess } from '../../PageAccess';
 import Roles from '../../../static/Roles';
+
+import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
 
 const col = [
   {
@@ -155,6 +157,9 @@ export default class extends Component {
       dialogRow: {}, // row for which we are editing
       dirty: false, // was a field editing?
     };
+    console.log(this.state);
+    console.log(this.state.token);
+    this.clientNutDataAPI = new NutDataAPI(this.state.token);
   }
 
   handleChange = fieldName => evt => {
@@ -219,6 +224,22 @@ export default class extends Component {
             dialogRow: {},
             dirty: false,
           };
+        }, () => {
+          // update api here
+          console.log(this.state.nutritionData[tableRow]);
+          const localRow = { ...this.state.nutritionData[tableRow] };
+          const APIColumns = Object.keys(nutDataAPIModel.properties);
+          console.log(localRow);
+          console.log(APIColumns);
+          // clean all nonAPI colums out of localrow
+          Object.keys(localRow).forEach((key) => {
+            if (APIColumns.indexOf(key) === -1) {
+              delete localRow[key];
+            }
+          });
+          console.log(localRow.dataId, localRow);
+          // const res = this.clientNutDataAPI.patchNutData(localRow.dataId, localRow);
+          // console.log(res);
         });
       }
       // if fail present error from api to user
@@ -288,7 +309,7 @@ export default class extends Component {
                   <TextField
                     id={item[0]}
                     label={field.title}
-                    value={item[1]}
+                    value={item[1] || ''}
                     onChange={this.handleChange(item[0])}
                     margin="normal"
                     fullWidth
@@ -329,6 +350,19 @@ export default class extends Component {
             </Button>
           </DialogActions>
         </Dialog>
+        <div className={this.props.classes.foodBox}>
+          <Paper>
+            <Typography variant="h2">
+              {this.state.food[0].food}
+            </Typography>
+            <div>
+              <pre>
+                {JSON.stringify(this.state.food, null, 2)}
+              </pre>
+            </div>
+          </Paper>
+        </div>
+
         <MaterialTable
           title="Nutrients"
           columns={col}
@@ -340,7 +374,7 @@ export default class extends Component {
               onClick: (evt, row) => {
                 this.setState({ dialogOpen: true, dialogRow: row });
               },
-              tooltip: 'Edit Nutrition Information',
+              tooltip: 'Nutrient Form',
             },
           ]
           }

@@ -78,6 +78,25 @@ class Food {
     const res = await axios.get(query);
     return res;
   }
+
+  /**
+   * Update certain values on a nutData record. Must send in an id
+   * @param {string|number} id required
+   * @param {JSON} updates required
+   */
+  async patchNutData(id, updates) {
+    if (!id) {
+      return Promise.reject(new Error('must have id send into patchNutData()'));
+    }
+    if (Object.keys(updates) === undefined || Object.keys(updates).length < 1) {
+      return Promise.reject(new Error('must have object with some keys that will be updated'));
+    }
+
+    const uri = `${API_BASE_URL}/api/NutData/update?where=${JSON.stringify({ dataId: id })}&access_token=${this.token}`;
+
+    const res = await axios.post(uri, updates).catch((err) => Promise.reject(err));
+    return res;
+  }
 }
 
 export default Food;

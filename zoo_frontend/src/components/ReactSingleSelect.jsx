@@ -256,7 +256,7 @@ const IntegrationReactSelect = (props) => {
         styles={selectStyles}
         options={suggestions}
         components={components}
-        defaultValue={suggestions.find((item) => item.value == defaultValue)} // eslint-disable-line eqeqeq
+        defaultValue={suggestions.find((item) => item.value == defaultValue) || ''} // eslint-disable-line eqeqeq
         onChange={handleChangeSingle}
         onFocus={() => setSelected(true)}
         onBlur={() => setSelected(false)}

@@ -11,11 +11,11 @@
   "properties": {
     "speciesId": {
       "type": "Number",
-      "id": 1,
       "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
+      "id": 1,
       "mysql": {
         "columnName": "species_id",
         "dataType": "int",

@@ -392,13 +392,7 @@ class User extends Component {
     const { userData, locationLookup, roleLookup } = this.state;
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
+      <div className={classes.root}>
         <Dialog
           open={this.state.passwordDialogOpen}
           onClose={() => {
@@ -472,7 +466,7 @@ class User extends Component {
                 lookup: roleLookup,
               },
               {
-                title: 'Location',
+                title: 'Department',
                 field: 'locationName',
                 lookup: locationLookup,
               },

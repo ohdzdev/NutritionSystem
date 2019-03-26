@@ -18,4 +18,7 @@ export default (theme) => ({
   menuButton: {
     marginRight: theme.spacing.unit * 3,
   },
+  table: {
+    margin: theme.spacing.unit * 3,
+  },
 });

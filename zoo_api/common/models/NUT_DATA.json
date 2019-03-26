@@ -36,7 +36,6 @@
       "length": null,
       "precision": 10,
       "scale": 0,
-      "id": 1,
       "mysql": {
         "columnName": "data_id",
         "dataType": "int",
@@ -62,17 +61,17 @@
       }
     },
     "nutrNo": {
-      "type": "String",
+      "type": "Number",
       "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
         "columnName": "nutr_no",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     },
@@ -122,17 +121,17 @@
       }
     },
     "srcCd": {
-      "type": "String",
+      "type": "Number",
       "required": false,
-      "length": 2,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
         "columnName": "src_cd",
-        "dataType": "varchar",
-        "dataLength": 2,
-        "dataPrecision": null,
-        "dataScale": null,
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     },

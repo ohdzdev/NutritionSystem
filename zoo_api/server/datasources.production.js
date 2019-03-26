@@ -1,4 +1,4 @@
-
+// require('dotenv').config();
 module.exports = {
   zoo_mysql: { // eslint-disable-line camelcase
     host: process.env.DB_HOST,

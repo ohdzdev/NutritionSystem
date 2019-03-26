@@ -17,11 +17,11 @@
   "properties": {
     "prepNoteId": {
       "type": "Number",
-      "id": 1,
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
+      "id": 1,
       "mysql": {
         "columnName": "prep_note_id",
         "dataType": "int",

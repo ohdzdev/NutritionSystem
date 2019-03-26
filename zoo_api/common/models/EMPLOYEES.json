@@ -11,11 +11,11 @@
   "properties": {
     "employeeId": {
       "type": "Number",
-      "id": 1,
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
+      "id": 1,
       "mysql": {
         "columnName": "employee_id",
         "dataType": "int",

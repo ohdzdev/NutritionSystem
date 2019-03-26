@@ -103,7 +103,7 @@ class Home extends Component {
 
     if (fieldUpdated) {
       // Update the department with the new information
-      await departmentsApi.updateDepartment(newData.locationId);
+      await departmentsApi.updateDepartment(newData.locationId, updatedFields);
     }
 
     // Refresh data

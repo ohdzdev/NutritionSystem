@@ -39,9 +39,9 @@ class Users {
   }
 
   async updateUser(userId, updates) {
-    const uri = `${API_BASE_URL}/api/Accounts/update?where=${JSON.stringify({ id: userId })}&access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/api/Accounts/${userId}?access_token=${this.token}`;
 
-    const res = await axios.post(uri, updates);
+    const res = await axios.patch(uri, updates);
     return res;
   }
 

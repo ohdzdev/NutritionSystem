@@ -29,8 +29,8 @@ class Departments {
   }
 
   async updateDepartment(locationId, updates) {
-    const uri = `${API_BASE_URL}/api/Locations/update?where=${JSON.stringify({ locationId })}&access_token=${this.token}`;
-    const res = await axios.post(uri, updates);
+    const uri = `${API_BASE_URL}/api/Locations/${locationId}?access_token=${this.token}`;
+    const res = await axios.patch(uri, updates);
     return res;
   }
 

@@ -2,17 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 
-import Search from '@material-ui/icons/Search';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import NextPage from '@material-ui/icons/ChevronRight';
-import PreviousPage from '@material-ui/icons/ChevronLeft';
-import Edit from '@material-ui/icons/Edit';
-import Add from '@material-ui/icons/Add';
-import Delete from '@material-ui/icons/Delete';
-import Check from '@material-ui/icons/Check';
-import Clear from '@material-ui/icons/Clear';
-
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -444,18 +433,6 @@ class User extends Component {
         <Notifications ref={this.notificationsRef} />
         <div className={this.props.classes.table}>
           <MaterialTable
-            icons={{
-              Search,
-              FirstPage,
-              LastPage,
-              NextPage,
-              PreviousPage,
-              Edit,
-              Add,
-              Delete,
-              Check,
-              Clear,
-            }}
             columns={[
               { title: 'First Name', field: 'firstName' },
               { title: 'Last Name', field: 'lastName' },
@@ -505,38 +482,6 @@ class User extends Component {
               onRowAdd: this.onRowAdd,
               onRowUpdate: this.onRowUpdate,
               onRowDelete: this.onRowDelete,
-            }}
-            localization={{
-              pagination: {
-                labelDisplayedRows: '{from}-{to} of {count}',
-                labelRowsPerPage: 'Rows per page:',
-                firstAriaLabel: 'First Page',
-                firstTooltip: 'First Page',
-                previousAriaLabel: 'Previous Page',
-                previousTooltip: 'Previous Page',
-                nextAriaLabel: 'Next Page',
-                nextTooltip: 'Next Page',
-                lastAriaLabel: 'Last Page',
-                lastTooltip: 'Last Page',
-              },
-              toolbar: {
-                nRowsSelected: '{0} rows(s) selected',
-                showColumnsTitle: 'Show Columns',
-                showColumnsAriaLabel: 'Show Columns',
-                exportTitle: 'Export',
-                exportAriaLabel: 'Export',
-                exportName: 'Export as CSV',
-                searchTooltip: 'Search',
-              },
-              header: {
-                actions: 'Actions',
-              },
-              body: {
-                emptyDataSourceMessage: 'No records to display',
-                filterRow: {
-                  filterTooltip: 'Filter',
-                },
-              },
             }}
           />
         </div>

@@ -66,6 +66,14 @@ export const Food = {
     link: '/food/nicknames',
     roles: [Roles.ADMIN, Roles.KITCHEN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
+  dataSrc: {
+    link: '/food/dataSrc',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST],
+  },
+  nutrDef: {
+    link: '/food/nutrDef',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST],
+  },
 };
 
 export const Home = {

@@ -21,6 +21,9 @@ import DepartmentIcon from '@material-ui/icons/Business';
 import SpeciesIcon from '@material-ui/icons/Pets';
 import UsersIcon from '@material-ui/icons/SupervisorAccount';
 import ProfileIcon from '@material-ui/icons/AccountCircle';
+import BookIcon from '@material-ui/icons/Book';
+import AssIcon from '@material-ui/icons/Assignment';
+import SettingsIcon from '@material-ui/icons/Settings';
 import DeliveryContainersIcon from '@material-ui/icons/ShoppingCart';
 import Link from 'next/link';
 
@@ -63,6 +66,8 @@ const SidebarDrawer = (props) => {
   } = props;
 
   const [adminCollapse, setAdminCollapse] = useState(false);
+  const [foodCollapse, setFoodCollapse] = useState(false);
+
 
   return (
     <AuthContext.Consumer>
@@ -92,13 +97,47 @@ const SidebarDrawer = (props) => {
                   </ListItem>
                 </Link>
               }
-              {hasAccess(role, Food.roles) &&
-                <Link href={Food.link}>
-                  <ListItem button key="food" divider>
-                    <ListItemIcon><FoodIcon /></ListItemIcon>
-                    <ListItemText primary="Food" />
+              {hasAccess(role, Admin.roles) &&
+                <Fragment>
+                  <ListItem
+                    button
+                    key="foodMenu"
+                    onClick={() => setFoodCollapse(!foodCollapse)}
+                  >
+                    <ListItemIcon><SettingsIcon /></ListItemIcon>
+                    <ListItemText primary="Nutrition Setup" />
+                    {foodCollapse ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
-                </Link>
+                  <Collapse in={foodCollapse} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {hasAccess(role, Food.roles) &&
+                        <Link href={Food.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon><FoodIcon /></ListItemIcon>
+                            <ListItemText inset primary="Food" />
+                          </ListItem>
+                        </Link>
+                      }
+                      {hasAccess(role, Food.roles) &&
+                        <Link href={Food.nutrDef.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon><AssIcon /></ListItemIcon>
+                            <ListItemText inset primary="Nutrient Definitions" />
+                          </ListItem>
+                        </Link>
+                      }
+                      {hasAccess(role, Food.roles) &&
+                        <Link href={Food.dataSrc.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon><BookIcon /></ListItemIcon>
+                            <ListItemText inset primary="References" />
+                          </ListItem>
+                        </Link>
+                      }
+                    </List>
+                  </Collapse>
+                  <Divider />
+                </Fragment>
               }
               {hasAccess(role, Diet.roles) &&
                 <Link href={Diet.link}>

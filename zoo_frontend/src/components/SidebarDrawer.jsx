@@ -21,6 +21,7 @@ import DepartmentIcon from '@material-ui/icons/Business';
 import SpeciesIcon from '@material-ui/icons/Pets';
 import UsersIcon from '@material-ui/icons/SupervisorAccount';
 import ProfileIcon from '@material-ui/icons/AccountCircle';
+import DeliveryContainersIcon from '@material-ui/icons/ShoppingCart';
 import Link from 'next/link';
 
 import { AuthContext } from '../util/AuthProvider';
@@ -133,6 +134,14 @@ const SidebarDrawer = (props) => {
                           <ListItem button className={classes.nested}>
                             <ListItemIcon><DepartmentIcon /></ListItemIcon>
                             <ListItemText inset primary="Departments" />
+                          </ListItem>
+                        </Link>
+                      }
+                      {hasAccess(role, Admin.deliveryContainers.roles) &&
+                        <Link href={Admin.deliveryContainers.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon><DeliveryContainersIcon /></ListItemIcon>
+                            <ListItemText inset primary="Delivery Containers" />
                           </ListItem>
                         </Link>
                       }

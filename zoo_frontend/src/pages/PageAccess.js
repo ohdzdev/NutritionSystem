@@ -12,17 +12,13 @@ export { hasAccess };
 export const Admin = {
   link: '/admin',
   roles: [Roles.ADMIN],
+  deliveryContainers: {
+    link: '/admin/delivery-containers',
+    roles: [Roles.ADMIN],
+  },
   department: {
     link: '/admin/department',
     roles: [Roles.ADMIN],
-    edit: {
-      link: '/admin/department/edit',
-      roles: [Roles.ADMIN],
-    },
-    new: {
-      link: '/admin/department/new',
-      roles: [Roles.ADMIN],
-    },
   },
   species: {
     link: '/admin/species',
@@ -39,18 +35,6 @@ export const Admin = {
   user: {
     link: '/admin/user',
     roles: [Roles.ADMIN],
-    edit: {
-      link: '/admin/user/edit',
-      roles: [Roles.ADMIN],
-    },
-    new: {
-      link: '/admin/user/new',
-      roles: [Roles.ADMIN],
-    },
-    'pw-reset': {
-      link: '/admin/user/pw-reset',
-      roles: [Roles.ADMIN, Roles.NUTRITIONIST],
-    },
   },
 };
 

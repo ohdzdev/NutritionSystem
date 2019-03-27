@@ -15,6 +15,7 @@ import {
 import MaterialTable from 'material-table';
 
 // icons
+import Delete from '@material-ui/icons/Delete';
 import Search from '@material-ui/icons/Search';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
@@ -32,10 +33,14 @@ import BudgetCodeAPI from '../../api/BudgetIds';
 
 // access control helpers
 import { hasAccess, Food } from '../PageAccess';
+import Roles from '../../static/Roles';
 
 // util methods
 import camelToNorm from '../../util/camelToNorm';
 
+import { ConfirmationDialog } from '../../components';
+
+import FoodForm from './foodForm';
 
 class FoodPage extends Component {
   /**
@@ -64,6 +69,22 @@ class FoodPage extends Component {
     foodCategories: PropTypes.array.isRequired,
     budgetCodes: PropTypes.array.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    const { budgetCodes, foodCategories, ...rest } = props;
+    this.state = {
+      ...rest,
+      budgetCodes: budgetCodes.map((item) => ({ label: item.budgetCode, value: item.budgetId })),
+      foodCategories: foodCategories.map((item) => ({ label: item.foodCategory, value: item.categoryId })),
+      newFoodOpen: false,
+      newFood: { food: '' }, // changing this will reset the form
+      deleteDialogOpen: false,
+      dialogRow: {},
+    };
+
+    this.clientFoodAPI = new FoodAPI(this.state.token);
+  }
 
   /**
    * creates detail pane for the food page, this is quick information that helps the nutritionist get information quickly without having to dig
@@ -143,6 +164,44 @@ class FoodPage extends Component {
     );
   }
 
+  createNewFood(payload) {
+    if (!payload) {
+      return Promise.reject();
+    }
+    const prom = new Promise((r, rej) => {
+      console.log('in view page', payload);
+      this.clientFoodAPI.createFood(payload).then((res) => {
+        console.log('from API', res);
+        this.setState((prevState) => ({ newFoodOpen: false, newFood: { ...res.data }, foodItems: [...prevState.foodItems, res.data] }), () => {
+          r();
+        });
+      }, (rejected) => {
+        console.err(rejected.message);
+        rej();
+      });
+    });
+    return prom;
+  }
+
+  async handleDelete(shouldDelete) {
+    if (shouldDelete) {
+      console.log(this.state);
+      if (this.state.dialogRow && this.state.dialogRow.foodId) {
+        const { foodId } = this.state.dialogRow;
+        try {
+          await this.clientFoodAPI.deleteFood(foodId);
+          this.setState((prevState) => ({ deleteDialogOpen: false, foodItems: prevState.foodItems.filter((item) => item.foodId !== foodId) }));
+        } catch (error) {
+          // clear incorrect state
+          this.setState({ deleteDialogOpen: false, dialogRow: {} });
+        }
+      } else {
+        // clear incorrect state
+        this.setState({ deleteDialogOpen: false, dialogRow: {} });
+      }
+    }
+  }
+
   render() {
     const { role } = this.props.account;
     return (
@@ -153,6 +212,17 @@ class FoodPage extends Component {
           justifyContent: 'center',
         }}
       >
+        { this.state.newFoodOpen &&
+          <FoodForm {...this.state.newFood} foodCategories={this.state.foodCategories} budgetCodes={this.state.budgetCodes} submitForm={(payload) => this.createNewFood(payload)} />
+        }
+        { !this.state.newFoodOpen &&
+          <Grid item xs={12} md={3} style={{ padding: '10px' }}>
+            <Button onClick={() => { this.setState({ newFoodOpen: true }); }} variant="contained" color="primary">
+            Add New Food
+            </Button>
+          </Grid>
+        }
+
         <div>
           <MaterialTable
             columns={
@@ -170,7 +240,7 @@ class FoodPage extends Component {
                 },
               ]
             }
-            data={this.props.foodItems}
+            data={this.state.foodItems}
             options={{
               pageSize: 20,
               pageSizeOptions: [20, 50, 100],
@@ -219,9 +289,23 @@ class FoodPage extends Component {
                   });
                 },
               }),
+              {
+                disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
+                icon: () => <Delete />,
+                onClick: (evt, row) => {
+                  console.log(row);
+                  this.setState({ deleteDialogOpen: true, dialogRow: row });
+                },
+                tooltip: 'Delete Food',
+              },
             ]}
           />
         </div>
+        <ConfirmationDialog
+          open={this.state.deleteDialogOpen}
+          onClose={(close) => this.handleDelete(close)}
+          title="Are you sure you want to delete this nutrient record?"
+        />
       </div>
     );
   }

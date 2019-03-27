@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, Paper, Typography,
+  TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, Paper,
 } from '@material-ui/core';
 import MaterialTable from 'material-table';
 
@@ -40,7 +40,7 @@ import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json'
 import { hasAccess } from '../../PageAccess';
 import Roles from '../../../static/Roles';
 
-import FoodForm from './foodForm';
+import FoodForm from '../foodForm';
 
 const col = [
   {
@@ -183,6 +183,7 @@ export default class extends Component {
     console.log(this.state);
     console.log(this.state.token);
     this.clientNutDataAPI = new NutDataAPI(this.state.token);
+    this.clientFoodAPI = new FoodAPI(this.state.token);
   }
 
   handleChange = fieldName => evt => {
@@ -325,6 +326,21 @@ export default class extends Component {
         console.error(error);
       }
     }
+  }
+
+  handleFoodUpdate(payload) {
+    const prom = new Promise((r, rej) => {
+      this.clientFoodAPI.updateFood(this.state.food[0].foodId, { ...payload, foodId: this.state.food[0].foodId }).then((res) => {
+        console.log('from API', res);
+        this.setState({ food: [{ ...res.data }] }, () => {
+          r();
+        });
+      }, (rejected) => {
+        console.err(rejected.message);
+        rej();
+      });
+    });
+    return prom;
   }
 
   render() {
@@ -486,10 +502,8 @@ export default class extends Component {
               {...this.state.food[0]}
               foodCategories={this.state.foodCategories}
               budgetCodes={this.state.budgetCodes}
+              submitForm={(payload) => this.handleFoodUpdate(payload)}
             />
-            <Typography variant="h2">
-              {this.state.food[0].food}
-            </Typography>
           </Paper>
         </div>
 

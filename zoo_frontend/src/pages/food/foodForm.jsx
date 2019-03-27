@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-no-bind */
-import React from 'react';
+import React, { Fragment } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { Grid } from '@material-ui/core';
+import { Grid, LinearProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withFormik, Field } from 'formik';
 import Select from 'react-select';
 import * as Yup from 'yup';
 
-import { FormCheckbox, SingleSelect } from '../../../components';
+import { FormCheckbox, SingleSelect } from '../../components';
 
 export const DisplayFormikState = props => (
   <div style={{ margin: '1rem 0' }}>
@@ -55,11 +55,11 @@ const formikEnhancer = withFormik({
     preChop: props.preChop === 1,
     preBag: props.preBag === 1,
     active: props.active === 1,
-    topics: [],
+    submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
     const {
-      dry, meat, preChop, preBag, active, ...rest
+      dry, meat, preChop, preBag, active, submitForm, ...rest
     } = values;
     const payload = {
       dry: dry ? 1 : 0,
@@ -68,13 +68,12 @@ const formikEnhancer = withFormik({
       preBag: preBag ? 1 : 0,
       active: active ? 1 : 0,
       ...rest,
-      topics: values.topics.map(t => t.value),
     };
-    setTimeout(() => {
-      // TODO REMOVE
-      alert(JSON.stringify(payload, null, 2)); // eslint-disable-line
+    submitForm(payload).then(() => {
       setSubmitting(false);
-    }, 1000);
+    }, () => {
+      setSubmitting(false);
+    });
   },
   displayName: 'MyForm',
   enableReinitialize: true,
@@ -91,6 +90,7 @@ const Form = props => {
     handleChange,
     isValid,
     setFieldTouched,
+    isSubmitting,
   } = props;
 
   const change = (name, e) => {
@@ -172,7 +172,7 @@ const Form = props => {
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px', alignSelf: 'center' }}>
-          <Field name="category" component={SingleSelect} suggestions={props.budgetCodes} defaultValue={budgetId} />
+          <Field name="budgetId" component={SingleSelect} suggestions={props.budgetCodes} defaultValue={budgetId} />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px', alignSelf: 'center' }}>
           <Field name="category" component={SingleSelect} suggestions={props.foodCategories} defaultValue={category} />
@@ -273,6 +273,13 @@ const Form = props => {
           />
         </Grid>
       </Grid>
+      {isSubmitting &&
+        <Fragment>
+          <br />
+          <LinearProgress />
+          <br />
+        </Fragment>
+      }
       <Grid item xs={12} md={3} style={{ padding: '10px' }}>
         <Button
           type="submit"
@@ -284,7 +291,7 @@ const Form = props => {
         Submit Food Update
         </Button>
       </Grid>
-      <DisplayFormikState {...props} />
+      {/* <DisplayFormikState {...props} /> */}
     </form>
   );
 };
@@ -319,6 +326,7 @@ Form.propTypes = {
     label: PropTypes.string,
     value: PropTypes.number,
   })).isRequired,
+  isSubmitting: PropTypes.bool,
 };
 
 Form.defaultProps = {
@@ -337,6 +345,7 @@ Form.defaultProps = {
     preBag: false,
     active: false,
   },
+  isSubmitting: false,
 };
 
 class FormikSelect extends React.Component {

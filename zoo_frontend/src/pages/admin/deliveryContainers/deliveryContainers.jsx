@@ -172,8 +172,13 @@ class DeliveryContainers extends Component {
     }
 
     if (fieldUpdated) {
-      // Update the department with the new information
-      await deliveryContainersApi.updateDeliveryContainer(newData.locationId);
+      // Update the delivery container with the new information
+      try {
+        await deliveryContainersApi.updateDeliveryContainer(newData.dcId, updatedFields);
+      } catch (err) {
+        reject();
+        return;
+      }
     }
 
     // Refresh data

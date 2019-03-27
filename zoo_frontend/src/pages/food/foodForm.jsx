@@ -32,8 +32,14 @@ const formikEnhancer = withFormik({
     manufacturerName: Yup.string().nullable(),
     ohdzName: Yup.string().nullable(),
     costG: Yup.number().nullable(),
-    budgetId: Yup.number().nullable(),
-    category: Yup.number().nullable(),
+    budgetId: Yup.array().of(Yup.object().shape({
+      label: Yup.string().required(),
+      value: Yup.number().required(),
+    })).required(),
+    category: Yup.array().of(Yup.object().shape({
+      label: Yup.string().required(),
+      value: Yup.number().required(),
+    })).required(),
     usdaFoodGroupDesc: Yup.number().nullable(),
     dry: Yup.bool().required(),
     meat: Yup.bool().required(),
@@ -172,10 +178,26 @@ const Form = props => {
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px', alignSelf: 'center' }}>
-          <Field name="budgetId" component={SingleSelect} suggestions={props.budgetCodes} defaultValue={budgetId} />
+          <Field
+            name="budgetId"
+            label="Budget ID"
+            component={SingleSelect}
+            suggestions={props.budgetCodes}
+            defaultValue={budgetId}
+            error={touched.budgetId && Boolean(errors.budgetId)}
+            helperText={touched.budgetId ? errors.budgetId : ''}
+          />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px', alignSelf: 'center' }}>
-          <Field name="category" component={SingleSelect} suggestions={props.foodCategories} defaultValue={category} />
+          <Field
+            name="category"
+            label="Category"
+            component={SingleSelect}
+            suggestions={props.foodCategories}
+            defaultValue={category}
+            error={touched.category && Boolean(errors.category)}
+            helperText={touched.category ? errors.category : ''}
+          />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
           <TextField
@@ -288,7 +310,7 @@ const Form = props => {
           color="primary"
           disabled={!isValid}
         >
-        Submit Food Update
+          {props.submitButtonText}
         </Button>
       </Grid>
       {/* <DisplayFormikState {...props} /> */}
@@ -327,6 +349,7 @@ Form.propTypes = {
     value: PropTypes.number,
   })).isRequired,
   isSubmitting: PropTypes.bool,
+  submitButtonText: PropTypes.string,
 };
 
 Form.defaultProps = {
@@ -346,6 +369,7 @@ Form.defaultProps = {
     active: false,
   },
   isSubmitting: false,
+  submitButtonText: 'Submit',
 };
 
 class FormikSelect extends React.Component {

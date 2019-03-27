@@ -89,6 +89,7 @@ const Control = (props) => (
         ...props.innerProps,
       },
     }}
+    variant="outlined"
     {...props.selectProps.textFieldProps}
   />
 );
@@ -226,7 +227,7 @@ const components = {
 
 const IntegrationReactSelect = (props) => {
   const {
-    label, suggestions, onChange, defaultValue, classes, theme, field, form,
+    label, suggestions, onChange, defaultValue, classes, theme, field, form, helperText, error,
   } = props;
   const [selected, setSelected] = useState(false);
 
@@ -247,7 +248,6 @@ const IntegrationReactSelect = (props) => {
       },
     }),
   };
-  console.log('re-render');
   return (
     <NoSsr>
       {label &&
@@ -267,6 +267,11 @@ const IntegrationReactSelect = (props) => {
         onBlur={() => setSelected(false)}
         id={props.id}
       />
+      {(error || helperText) &&
+        <Typography color={error ? 'error' : 'textPrimary'}>
+          {helperText}
+        </Typography>
+      }
     </NoSsr>
   );
 };
@@ -286,6 +291,8 @@ IntegrationReactSelect.propTypes = {
     name: PropTypes.string,
   }),
   form: PropTypes.object,
+  helperText: PropTypes.string,
+  error: PropTypes.bool,
 };
 
 IntegrationReactSelect.defaultProps = {
@@ -295,6 +302,8 @@ IntegrationReactSelect.defaultProps = {
   id: Math.random(1000),
   field: {},
   form: undefined,
+  helperText: '',
+  error: false,
 };
 
 export default withTheme()(withStyles(styles, { withTheme: true })(IntegrationReactSelect));

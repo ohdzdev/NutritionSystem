@@ -503,6 +503,7 @@ export default class extends Component {
               foodCategories={this.state.foodCategories}
               budgetCodes={this.state.budgetCodes}
               submitForm={(payload) => this.handleFoodUpdate(payload)}
+              submitButtonText="Submit Edit"
             />
           </Paper>
         </div>

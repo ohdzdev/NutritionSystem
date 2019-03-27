@@ -7,8 +7,13 @@ class NutrDef {
     this.token = token;
   }
 
+  /**
+   * grab all nutritional records where filter is met
+   * @param {JSON} filter json object in format: https://loopback.io/doc/en/lb3/Querying-data.html#using-stringified-json-in-rest-queries
+   * @returns {JSON} raw data coming back from request, must use .data to get actual data
+   */
   async getNutrDef(filter) {
-    let query = `${API_BASE_URL}/api/NutrDefs`;
+    let query = `${API_BASE_URL}/api/NutrDefs/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {

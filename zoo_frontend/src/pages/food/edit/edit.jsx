@@ -22,7 +22,7 @@ import ThirdStateCheck from '@material-ui/icons/Remove';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
 // custom zoo components
-import { SingleSelect, ConfirmationDialog } from '../../../components';
+import { SingleSelect, ConfirmationDialog, Notifications } from '../../../components';
 
 // api
 import {
@@ -34,6 +34,8 @@ import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json'
 // access control
 import { hasAccess } from '../../PageAccess';
 import Roles from '../../../static/Roles';
+
+import FoodForm from './foodForm';
 
 const col = [
   {
@@ -244,8 +246,13 @@ export default class extends Component {
             }
           });
           console.log(localRow.dataId, localRow);
-          const res = this.clientNutDataAPI.updateNutData(localRow.dataId, localRow);
-          console.log(res);
+          try {
+            this.clientNutDataAPI.updateNutData(localRow.dataId, localRow);
+            this.notificationBar.showNotification('info', 'Successfully edited!');
+          } catch (error) {
+            this.notificationBar.showNotification('error', error.message);
+            console.error(error);
+          }
         });
       }
       // if fail present error from api to user
@@ -289,8 +296,6 @@ export default class extends Component {
         const newRow = { ...data };
         newRow.addModDate = new Date().toISOString(); // update the modified date
         newRow.foodId = this.state.food[0].foodId;
-        console.log(newRow);
-        debugger
         const res = await this.clientNutDataAPI.createNutData(newRow);
         this.setState((prevState) => ({
           newDialogOpen: false, nutritionData: [...prevState.nutritionData, res.data], dialgoRow: {}, dirty: false,
@@ -461,7 +466,10 @@ export default class extends Component {
         }
 
         <div className={this.props.classes.foodBox}>
-          <Paper>
+          <Paper style={{ padding: '8px' }}>
+            <FoodForm
+              {...this.state.food[0]}
+            />
             <Typography variant="h2">
               {this.state.food[0].food}
             </Typography>
@@ -533,6 +541,9 @@ export default class extends Component {
           open={this.state.deleteDialogOpen}
           onClose={(close) => this.handleDelete(close)}
           title="Are you sure you want to delete this nutrient record?"
+        />
+        <Notifications
+          ref={(ref) => { this.notificationBar = ref; }}
         />
       </div>
 

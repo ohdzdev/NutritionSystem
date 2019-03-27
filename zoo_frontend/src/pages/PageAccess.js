@@ -5,7 +5,7 @@ import Roles from '../static/Roles';
  * @param {String} userRole user's role
  * @param {Array<String>} pageRoles from local import to related to this file send in the roles of a page that you want checked to see if a user has access to this page
  */
-const hasAccess = 
+const hasAccess =
 (userRole, pageRoles) => pageRoles.indexOf(userRole) !== -1;
 
 export { hasAccess };

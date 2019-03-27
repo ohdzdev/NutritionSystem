@@ -94,7 +94,7 @@ class Food {
 
     const uri = `${API_BASE_URL}/api/NutData/${id}?access_token=${this.token}`;
 
-    const res = await axios.put(uri, updates).catch((err) => Promise.reject(err));
+    const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
   }
 
@@ -122,7 +122,7 @@ class Food {
     }
     const uri = `${API_BASE_URL}/api/NutData/?access_token=${this.token}`;
     if (createBlank && !params) {
-      const res = await axios.delete(uri).catch((err) => Promise.reject(err));
+      const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;
     }
     // if params and createBlank, ignore and send in params

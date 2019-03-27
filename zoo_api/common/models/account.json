@@ -1,10 +1,18 @@
 {
+  "--note--": "IF CHANGING THIS FILE YOU MUST FIX THE DATABASE",
   "name": "account",
   "plural": "accounts",
   "base": "User",
   "idInjection": true,
   "options": {
-    "validateUpsert": true
+    "validateUpsert": true,
+    "relations": {
+      "accountLocation": {
+        "model": "Locations",
+        "type": "belongsTo",
+        "foreignKey": "locationId"
+      }
+    }
   },
   "properties": {
     "firstName": {
@@ -14,16 +22,34 @@
     "lastName": {
       "type": "string",
       "required": true
+    },
+    "locationId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "accountLocation": {
+      "model": "Locations",
+      "type": "belongsTo",
+      "foreignKey": ""
+    }
+  },
   "acls": [
     {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$unauthenticated",
       "permission": "DENY"
+    }, {
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "accessType": "*"
     }
   ],
   "methods": {}

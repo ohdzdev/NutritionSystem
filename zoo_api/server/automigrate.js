@@ -6,7 +6,7 @@
 const server = require('./server');
 
 const ds = server.dataSources.zoo_mysql;
-const lbTables = ['account', 'ACL', 'RoleMapping', 'Role', 'AccessToken'];
+const lbTables = ['account']; // , 'ACL', 'RoleMapping', 'Role', 'AccessToken'];
 ds.automigrate(lbTables, (er) => {
   if (er) throw er;
   console.log(`Loopback tables [${

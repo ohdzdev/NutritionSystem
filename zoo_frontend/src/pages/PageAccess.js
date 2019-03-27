@@ -3,26 +3,23 @@ import Roles from '../static/Roles';
 /**
  * helper function for determining wether or not user has access to a page from a pageAccess role list
  * @param {String} userRole user's role
- * @param {String} pageRoles from local import to related to this file send in the roles of a page that you want checked to see if a user has access to this page
+ * @param {Array<String>} pageRoles from local import to related to this file send in the roles of a page that you want checked to see if a user has access to this page
  */
-const hasAccess = (userRole, pageRoles) => pageRoles.indexOf(userRole) !== -1;
+const hasAccess =
+(userRole, pageRoles) => pageRoles.indexOf(userRole) !== -1;
 
 export { hasAccess };
 
 export const Admin = {
   link: '/admin',
   roles: [Roles.ADMIN],
+  deliveryContainers: {
+    link: '/admin/delivery-containers',
+    roles: [Roles.ADMIN],
+  },
   department: {
     link: '/admin/department',
     roles: [Roles.ADMIN],
-    edit: {
-      link: '/admin/department/edit',
-      roles: [Roles.ADMIN],
-    },
-    new: {
-      link: '/admin/department/new',
-      roles: [Roles.ADMIN],
-    },
   },
   species: {
     link: '/admin/species',
@@ -39,18 +36,6 @@ export const Admin = {
   user: {
     link: '/admin/user',
     roles: [Roles.ADMIN],
-    edit: {
-      link: '/admin/user/edit',
-      roles: [Roles.ADMIN],
-    },
-    new: {
-      link: '/admin/user/new',
-      roles: [Roles.ADMIN],
-    },
-    'pw-reset': {
-      link: '/admin/user/pw-reset',
-      roles: [Roles.ADMIN, Roles.NUTRITIONIST],
-    },
   },
 };
 
@@ -82,9 +67,22 @@ export const Food = {
     link: '/food/nicknames',
     roles: [Roles.ADMIN, Roles.KITCHEN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
+  dataSrc: {
+    link: '/food/dataSrc',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST],
+  },
+  nutrDef: {
+    link: '/food/nutrDef',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST],
+  },
 };
 
 export const Home = {
   link: '/',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR, Roles.KEEPER],
+};
+
+export const Profile = {
+  link: '/profile',
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR, Roles.KEEPER],
 };

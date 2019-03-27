@@ -20,17 +20,20 @@
   "AccessToken": {
     "dataSource": "zoo_mysql",
     "public": true,
-    "acls": [{
-      "principalType": "ROLE",
-      "principalId": "$unauthenticated",
-      "permission": "DENY",
-      "property": "*"
-    },{
-      "principalType": "ROLE",
-      "principalId": "$everyone",
-      "permission": "ALLOW",
-      "property": "validate"
-    }]
+    "acls": [
+      {
+        "principalType": "ROLE",
+        "principalId": "$unauthenticated",
+        "permission": "DENY",
+        "property": "*"
+      },
+      {
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "ALLOW",
+        "property": "validate"
+      }
+    ]
   },
   "ACL": {
     "dataSource": "zoo_mysql",
@@ -38,14 +41,42 @@
   },
   "RoleMapping": {
     "dataSource": "zoo_mysql",
-    "public": false,
+    "public": true,
     "options": {
       "strictObjectIDCoercion": true
-    }
+    },
+    "acls": [
+      {
+        "principalType": "ROLE",
+        "principalId": "$unauthenticated",
+        "permission": "DENY",
+        "property": "*"
+      },
+      {
+        "principalType": "ROLE",
+        "principalId": "admin",
+        "permission": "ALLOW",
+        "property": "*"
+      }
+    ]
   },
   "Role": {
     "dataSource": "zoo_mysql",
-    "public": false
+    "public": true,
+    "acls": [
+      {
+        "principalType": "ROLE",
+        "principalId": "$unauthenticated",
+        "permission": "DENY",
+        "property": "*"
+      },
+      {
+        "principalType": "ROLE",
+        "principalId": "admin",
+        "permission": "ALLOW",
+        "property": "*"
+      }
+    ]
   },
   "Animals": {
     "dataSource": "zoo_mysql",
@@ -111,10 +142,6 @@
     "dataSource": "zoo_mysql",
     "public": true
   },
-  "Logons": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
   "NutrDef": {
     "dataSource": "zoo_mysql",
     "public": true
@@ -140,22 +167,6 @@
     "public": true
   },
   "Subenclosures": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "TodayDiet": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "TodayDietSub": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "TomorrowDiet": {
-    "dataSource": "zoo_mysql",
-    "public": true
-  },
-  "TomorrowDietSub": {
     "dataSource": "zoo_mysql",
     "public": true
   },

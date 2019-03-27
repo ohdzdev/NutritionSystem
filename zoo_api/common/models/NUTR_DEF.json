@@ -10,18 +10,19 @@
   },
   "properties": {
     "nutrNo": {
-      "type": "String",
+      "type": "Number",
       "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "id": 1,
       "mysql": {
         "columnName": "nutr_no",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "N"
       }
     },
     "units": {
@@ -112,22 +113,6 @@
         "dataPrecision": null,
         "dataScale": null,
         "nullable": "Y"
-      }
-    },
-    "nutrDefId": {
-      "type": "Number",
-      "id": 1,
-      "required": true,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "nutr_def_id",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "N"
       }
     }
   },

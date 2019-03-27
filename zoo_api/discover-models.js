@@ -8,7 +8,7 @@ const readFile = promisify(fs.readFile);
 const mkdirp = promisify(require('mkdirp'));
 
 const DATASOURCE_NAME = 'zoo_mysql';
-const dataSourceConfig = require('./server/datasources.json');
+const dataSourceConfig = require('./server/datasources.production');
 
 const db = new loopback.DataSource(dataSourceConfig[DATASOURCE_NAME]);
 async function discover() {

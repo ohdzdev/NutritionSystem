@@ -22,7 +22,7 @@ class DataSrc {
     const res = await axios.get(query);
     return res;
   }
-  
+
   async getDataSrc(filter) {
     let query = `${API_BASE_URL}/api/DataSrcs`;
     if (filter) {

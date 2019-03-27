@@ -177,7 +177,8 @@ class Home extends Component {
               { title: 'Tag Name', field: 'tagname' },
               { title: 'Description', field: 'nutrDesc' },
               { title: 'Units', field: 'units' },
-              { title: 'Num Desc', field: 'numDec', lookup: { 0: 0, 1: 1, 2: 2, 3: 3 }},
+              // eslint-disable-next-line object-curly-newline
+              { title: 'Num Desc', field: 'numDec', lookup: { 0: 0, 1: 1, 2: 2, 3: 3 } },
               { title: 'SR Order', field: 'srOrder' },
               { title: 'Bgt. Name', field: 'bgtName' },
 

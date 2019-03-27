@@ -26,7 +26,12 @@ import { SingleSelect, ConfirmationDialog, Notifications } from '../../../compon
 
 // api
 import {
-  Food as FoodAPI, NutData as NutDataAPI, NutrDef as NutrDefAPI, DataSrc as DataSrcAPI,
+  Food as FoodAPI,
+  NutData as NutDataAPI,
+  NutrDef as NutrDefAPI,
+  DataSrc as DataSrcAPI,
+  FoodCategories as FoodCategoryAPI,
+  BudgetIds as BudgetCodeAPI,
 } from '../../../api';
 // actual API repo
 import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
@@ -76,11 +81,17 @@ export default class extends Component {
     if (!query.id) {
       // show error and return to view foods
     } else {
+      // init server side related record APIS
       const serverFoodAPI = new FoodAPI(authToken);
       const serverNutDataAPI = new NutDataAPI(authToken);
       const serverNutrDataAPI = new NutrDefAPI(authToken);
       const serverDataSrcAPI = new DataSrcAPI(authToken);
+      const categoryAPI = new FoodCategoryAPI(authToken);
+      const budgetAPI = new BudgetCodeAPI(authToken);
 
+      // grab all related records on server
+      const foodCategories = await categoryAPI.getCategories().catch(() => {});
+      const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => {});
       const food = await serverFoodAPI.getFood({ where: { foodId: query.id } });
       const category = await serverFoodAPI.getRelatedCategory(query.id);
       const budgetCode = await serverFoodAPI.getRelatedBudgetCode(query.id);
@@ -147,6 +158,8 @@ export default class extends Component {
         nutDataSourcedFrom,
         allNutrients: allNutrients.data,
         allSources: allSources.data,
+        foodCategories: foodCategories.data,
+        budgetCodes: budgetCodes.data,
       };
     }
     return {};
@@ -155,10 +168,12 @@ export default class extends Component {
   constructor(props) {
     super(props);
     const {
-      api, account, router, pageContext, classes, ...rest // eslint-disable-line react/prop-types
+      api, account, router, pageContext, classes, budgetCodes, foodCategories, ...rest // eslint-disable-line react/prop-types
     } = props;
     this.state = {
       ...rest,
+      budgetCodes: budgetCodes.map((item) => ({ label: item.budgetCode, value: item.budgetId })),
+      foodCategories: foodCategories.map((item) => ({ label: item.foodCategory, value: item.categoryId })),
       dialogOpen: false, // dialog open?
       deleteDialogOpen: false,
       newDialogOpen: false,
@@ -469,15 +484,12 @@ export default class extends Component {
           <Paper style={{ padding: '8px' }}>
             <FoodForm
               {...this.state.food[0]}
+              foodCategories={this.state.foodCategories}
+              budgetCodes={this.state.budgetCodes}
             />
             <Typography variant="h2">
               {this.state.food[0].food}
             </Typography>
-            <div>
-              <pre>
-                {JSON.stringify(this.state.food, null, 2)}
-              </pre>
-            </div>
           </Paper>
         </div>
 

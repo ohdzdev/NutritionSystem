@@ -226,12 +226,16 @@ const components = {
 
 const IntegrationReactSelect = (props) => {
   const {
-    label, suggestions, onChange, defaultValue, classes, theme, // eslint-disable-line
+    label, suggestions, onChange, defaultValue, classes, theme, field, form,
   } = props;
   const [selected, setSelected] = useState(false);
 
   function handleChangeSingle(v) {
-    onChange(v || { value: null });
+    if (form) {
+      form.setFieldValue(field.name, v.value || null);
+    } else {
+      onChange(v || { value: null });
+    }
   }
 
   const selectStyles = {
@@ -255,11 +259,13 @@ const IntegrationReactSelect = (props) => {
         classes={classes}
         styles={selectStyles}
         options={suggestions}
+        name={field.name || ''}
         components={components}
         defaultValue={suggestions.find((item) => item.value == defaultValue) || ''} // eslint-disable-line eqeqeq
         onChange={handleChangeSingle}
         onFocus={() => setSelected(true)}
         onBlur={() => setSelected(false)}
+        id={props.id}
       />
     </NoSsr>
   );
@@ -273,12 +279,22 @@ IntegrationReactSelect.propTypes = {
   onChange: PropTypes.func,
   defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   label: PropTypes.string,
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  field: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+  form: PropTypes.object,
 };
 
 IntegrationReactSelect.defaultProps = {
   onChange: () => {},
   defaultValue: '',
   label: '',
+  id: Math.random(1000),
+  field: {},
+  form: undefined,
 };
 
 export default withTheme()(withStyles(styles, { withTheme: true })(IntegrationReactSelect));

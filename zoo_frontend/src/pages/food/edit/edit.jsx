@@ -23,8 +23,13 @@ import {
   Units as UnitsAPI,
   FooodWeights as FoodWeightsAPI,
 } from '../../../api';
+
+// table helpers
+import TableColumnHelper from '../../../util/TableColumnHelper';
+
 // actual API repo
 import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
+import foodWeightsAPIModel from '../../../../../zoo_api/common/models/FOOD_WEIGHTS.json';
 
 // access control
 import { hasAccess } from '../../PageAccess';
@@ -122,14 +127,34 @@ export default class extends Component {
   constructor(props) {
     super(props);
     const {
-      api, account, router, pageContext, classes, budgetCodes, foodCategories, ...rest // eslint-disable-line react/prop-types
+      api, account, router, pageContext, classes, budgetCodes, foodCategories, allUnits, ...rest // eslint-disable-line react/prop-types
     } = props;
+    const unitLookup = {};
+    allUnits.slice(0).reduce((acc, unit) => {
+      acc[unit.unitId] = unit.unit;
+      return acc;
+    }, unitLookup);
+
+    const keys = Object.keys(foodWeightsAPIModel.properties);
+    const foodWeightColumns = {};
+    keys.forEach((key) => { foodWeightColumns[key] = null; });
+    const ignoredFoodWeightColumns = ['weightId', 'foodId'];
+    const renamedFoodWeightColumns = {
+      weightAmount: 'Amount of Food',
+      unitIdNum: 'Unit',
+      gmWeight: 'Weight in Grams',
+    };
+
+    this.preppedFoodWeightColumns = TableColumnHelper([foodWeightColumns], ignoredFoodWeightColumns, renamedFoodWeightColumns);
+    this.preppedFoodWeightColumns[1].lookup = unitLookup;
+
     this.state = {
       ...rest,
       // react select options for budgets
       budgetCodeOptions: budgetCodes.map((item) => ({ label: item.budgetCode, value: item.budgetId })),
       // react select options for food categories
       foodCategoryOptions: foodCategories.map((item) => ({ label: item.foodCategory, value: item.categoryId })),
+      unitLookup,
       customNutEditDialogOpen: false,
       deleteNutDataDialogOpen: false,
       deleteFoodWeightDialogOpen: false,
@@ -137,8 +162,6 @@ export default class extends Component {
       dialogRow: {}, // row for which we are editing
       dirty: false, // was a field editing?
     };
-    console.log(this.state);
-    console.log(this.state.token);
 
     // related food records clientside updaters
     this.clientNutDataAPI = new NutDataAPI(this.state.token);
@@ -165,11 +188,11 @@ export default class extends Component {
           [fieldName]: newVal,
         },
         dirty: true,
-      }), () => { console.log(this.state.dialogRow); });
+      }));
     }
   }
 
-  handleNutrientSave() {
+  handleNutrientSave() { // eslint-disable-line
     if (this.state.dialogRow && this.state.dirty) {
       const row = { ...this.state.dialogRow };
       const tableRow = row.meta.index;
@@ -207,18 +230,14 @@ export default class extends Component {
           };
         }, () => {
           // update api here
-          console.log(this.state.nutritionData[tableRow]);
           const localRow = { ...this.state.nutritionData[tableRow] };
           const APIColumns = Object.keys(nutDataAPIModel.properties);
-          console.log(localRow);
-          console.log(APIColumns);
           // clean all nonAPI colums out of localrow
           Object.keys(localRow).forEach((key) => {
             if (APIColumns.indexOf(key) === -1) {
               delete localRow[key];
             }
           });
-          console.log(localRow.dataId, localRow);
           try {
             this.clientNutDataAPI.updateNutData(localRow.dataId, localRow);
             this.notificationBar.showNotification('info', 'Successfully edited!');
@@ -240,7 +259,6 @@ export default class extends Component {
 
   async handleNutDataDelete(shouldDelete) {
     if (shouldDelete) {
-      console.log(this.state);
       if (this.state.dialogRow && this.state.dialogRow.meta && this.state.dialogRow.meta.relatedIds.dataId) {
         const { dataId } = this.state.dialogRow.meta.relatedIds;
         try {
@@ -288,7 +306,6 @@ export default class extends Component {
   handleFoodUpdate(payload) {
     const prom = new Promise((r, rej) => {
       this.clientFoodAPI.updateFood(this.state.food[0].foodId, { ...payload, foodId: this.state.food[0].foodId }).then((res) => {
-        console.log('from API', res);
         this.setState({ food: [{ ...res.data }] }, () => {
           r();
         });
@@ -299,6 +316,74 @@ export default class extends Component {
     });
     return prom;
   }
+
+  onFoodWeightAdd = (row) => new Promise(async (res, rej) => {
+    if (!row.weightAmount || !row.unitIdNum || !row.gmWeight) {
+      this.notificationBar.showNotification('error', 'Please fill out all fields in table in order to submit a new entry.');
+      rej();
+    }
+    try {
+      const preppedRow = { ...row, foodId: this.state.food[0].foodId };
+      const r = await this.clientFoodWeightsAPI.addFoodWeight(preppedRow);
+      if (r.data) {
+        this.setState((prevState) => ({ foodWeights: [...prevState.foodWeights, r.data] }));
+      }
+
+      res();
+    } catch (error) {
+      console.error(error);
+      this.notificationBar.showNotification('error', 'Submitting new Food Weight failed!');
+      rej();
+    }
+  })
+
+  onFoodWeightUdpate = (rowUpdated, prevRow) => new Promise(async (res, rej) => { // eslint-disable-line
+    const updatedCopy = { ...rowUpdated };
+    let fieldUpdated = false;
+    const updatedFields = Object.entries(updatedCopy).filter((column) => prevRow[column[0]] !== column[1]).map((entry) => entry[0]);
+    if (updatedFields && updatedFields.length > 0) {
+      fieldUpdated = true;
+    }
+    if (fieldUpdated) {
+      try {
+        const updatedFieldsToServer = {};
+        updatedFields.forEach((fieldToKeep) => { updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep]; });
+        await this.clientFoodWeightsAPI.updateFoodWeight(updatedCopy.weightId, updatedFieldsToServer);
+        this.setState((prevState) => {
+          const newFoodWeights = [...prevState.foodWeights.map((item) => {
+            if (item.weightId !== rowUpdated.weightId) {
+              return item;
+            }
+            const updatedRow = item;
+            Object.assign(updatedRow, updatedFieldsToServer);
+            return updatedRow;
+          })];
+          return { foodWeights: newFoodWeights };
+        });
+        res();
+      } catch (error) {
+        console.log(error);
+        rej();
+      }
+    }
+    res();
+  })
+
+  onFoodWeightDelete = (row) => new Promise(async (res, rej) => {
+    try {
+      if (row.weightId) {
+        await this.clientFoodWeightsAPI.deleteFoodWeight(row.weightId);
+        this.setState((prevState) => ({ foodWeights: [...prevState.foodWeights.filter((item) => item.weightId !== row.weightId)] }));
+        res();
+      } else {
+        this.notificationBar.showNotification('error', 'Error Deleting weight on server. Please contact server admin');
+        rej();
+      }
+    } catch (error) {
+      console.error(error);
+      rej();
+    }
+  })
 
   render() {
     const composedData = this.state.nutritionData.map((val, index) => {
@@ -464,7 +549,18 @@ export default class extends Component {
             />
           </Paper>
         </div>
-
+        <br />
+        <MaterialTable
+          title="Food Weights"
+          columns={this.preppedFoodWeightColumns}
+          data={this.state.foodWeights}
+          editable={{
+            onRowAdd: this.onFoodWeightAdd,
+            onRowUpdate: this.onFoodWeightUdpate,
+            onRowDelete: this.onFoodWeightDelete,
+          }}
+        />
+        <br />
         <Button
           color="primary"
           variant="contained"
@@ -490,7 +586,6 @@ export default class extends Component {
               disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
               icon: () => <Delete />,
               onClick: (evt, row) => {
-                console.log(row);
                 this.setState({ deleteNutDataDialogOpen: true, dialogRow: row });
               },
               tooltip: 'Delete Nutrient',
@@ -498,7 +593,7 @@ export default class extends Component {
           ]
           }
           options={{
-            pageSize: 20,
+            pageSize: 10,
             pageSizeOptions: [10, 30, this.state.nutritionData.length],
             exportButton: true,
           }}

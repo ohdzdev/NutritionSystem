@@ -1,8 +1,15 @@
 export { default as BudgetIds } from './BudgetIds';
 export { default as DataSrc } from './DataSrc';
+export { default as DeliveryContainers } from './DeliveryContainers';
+export { default as Department } from './Departments';
 export { default as Food } from './Food';
+export { default as FooodWeights } from './FoodWeights';
 export { default as FoodCategories } from './FoodCategories';
 export { default as NutData } from './NutData';
 export { default as NutrDef } from './NutrDef';
+export { default as RoleMapping } from './RoleMappings';
+export { default as Roles } from './Roles';
+export { default as Species } from './Species';
+export { default as Units } from './Units';
 export { default as Users } from './Users';
 export { default as Api } from './Api';

@@ -6,20 +6,8 @@ import {
 import MaterialTable from 'material-table';
 
 // icons
-import Search from '@material-ui/icons/Search';
-import NextPage from '@material-ui/icons/ChevronRight';
-import PreviousPage from '@material-ui/icons/ChevronLeft';
-import Add from '@material-ui/icons/Add';
-import Check from '@material-ui/icons/Check';
-import Clear from '@material-ui/icons/Clear';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
-import Export from '@material-ui/icons/SaveAlt';
-import Filter from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import ThirdStateCheck from '@material-ui/icons/Remove';
-import ViewColumn from '@material-ui/icons/ViewColumn';
 
 // custom zoo components
 import { SingleSelect, ConfirmationDialog, Notifications } from '../../../components';
@@ -32,6 +20,8 @@ import {
   DataSrc as DataSrcAPI,
   FoodCategories as FoodCategoryAPI,
   BudgetIds as BudgetCodeAPI,
+  Units as UnitsAPI,
+  FooodWeights as FoodWeightsAPI,
 } from '../../../api';
 // actual API repo
 import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
@@ -42,6 +32,7 @@ import Roles from '../../../static/Roles';
 
 import FoodForm from '../foodForm';
 
+// define what columns we want on our main nutrient table
 const col = [
   {
     title: 'Nutrient',
@@ -81,13 +72,14 @@ export default class extends Component {
     if (!query.id) {
       // show error and return to view foods
     } else {
-      // init server side related record APIS
       const serverFoodAPI = new FoodAPI(authToken);
       const serverNutDataAPI = new NutDataAPI(authToken);
       const serverNutrDataAPI = new NutrDefAPI(authToken);
       const serverDataSrcAPI = new DataSrcAPI(authToken);
       const categoryAPI = new FoodCategoryAPI(authToken);
       const budgetAPI = new BudgetCodeAPI(authToken);
+      const serverUnitsAPI = new UnitsAPI(authToken);
+      const serverFoodWeightsAPI = new FoodWeightsAPI(authToken);
 
       // grab all related records on server
       const foodCategories = await categoryAPI.getCategories().catch(() => {});
@@ -97,53 +89,16 @@ export default class extends Component {
       const budgetCode = await serverFoodAPI.getRelatedBudgetCode(query.id);
 
       const nutData = await serverNutDataAPI.getNutData({ where: { foodId: query.id } });
-      // loop over nutData results and grab their respective nutrition sources
-      const nutDataSourcePromises = nutData.data.map((nut) => new Promise((resolve, reject) => {
-        const nutId = nut.dataId;
-        serverNutDataAPI.getRelatedNutritonSource(nutId).then((res) => {
-          resolve({ ...res.data, dataId: nutId });
-        }, (rej) => {
-          reject(rej);
-        });
-      }));
-
-      const nutDataDataSources = await Promise.all(nutDataSourcePromises).catch((err) => {
-        console.error(err);
-      });
-
-      // loop over nutData results and grab their respective nutrition sources
-      const nutDataNutrDefPromises = nutData.data.map((nut) => new Promise((resolve, reject) => {
-        const nutId = nut.dataId;
-        serverNutDataAPI.getRelatedNutrDef(nutId).then((res) => {
-          resolve({ ...res.data, dataId: nutId });
-        }, (rej) => {
-          reject(rej);
-        });
-      }));
-
-      const nutDataNutrDefs = await Promise.all(nutDataNutrDefPromises).catch((err) => {
-        console.error(err);
-      });
-
-
-      // loop over nutData results and grab their respective nutrition sources
-      const nutDataSourcedFromPromises = nutData.data.map((nut) => new Promise((resolve, reject) => {
-        const nutId = nut.dataId;
-        serverNutDataAPI.getRelatedSourceCd(nutId).then((res) => {
-          resolve({ ...res.data, dataId: nutId });
-        }, (rej) => {
-          reject(rej);
-        });
-      }));
-
-      const nutDataSourcedFrom = await Promise.all(nutDataSourcedFromPromises).catch((err) => {
-        console.error(err);
-      });
+      const foodWeights = await serverFoodWeightsAPI.getFoodWeight({ where: { foodId: query.id } });
 
       const allNutrients = await serverNutrDataAPI.getNutrDef().catch((err) => {
         console.error(err);
       });
       const allSources = await serverDataSrcAPI.getSources().catch((err) => {
+        console.error(err);
+      });
+
+      const allUnits = await serverUnitsAPI.getUnits().catch((err) => {
         console.error(err);
       });
 
@@ -153,13 +108,12 @@ export default class extends Component {
         category: category.data,
         budgetCode: budgetCode.data,
         nutritionData: nutData.data,
-        nutDataSources: nutDataDataSources,
-        nutDataNutrDefs,
-        nutDataSourcedFrom,
         allNutrients: allNutrients.data,
         allSources: allSources.data,
         foodCategories: foodCategories.data,
         budgetCodes: budgetCodes.data,
+        allUnits: allUnits.data,
+        foodWeights: foodWeights.data,
       };
     }
     return {};
@@ -172,21 +126,29 @@ export default class extends Component {
     } = props;
     this.state = {
       ...rest,
-      budgetCodes: budgetCodes.map((item) => ({ label: item.budgetCode, value: item.budgetId })),
-      foodCategories: foodCategories.map((item) => ({ label: item.foodCategory, value: item.categoryId })),
-      dialogOpen: false, // dialog open?
-      deleteDialogOpen: false,
-      newDialogOpen: false,
+      // react select options for budgets
+      budgetCodeOptions: budgetCodes.map((item) => ({ label: item.budgetCode, value: item.budgetId })),
+      // react select options for food categories
+      foodCategoryOptions: foodCategories.map((item) => ({ label: item.foodCategory, value: item.categoryId })),
+      customNutEditDialogOpen: false,
+      deleteNutDataDialogOpen: false,
+      deleteFoodWeightDialogOpen: false,
+      newNutDataDialogOpen: false,
       dialogRow: {}, // row for which we are editing
       dirty: false, // was a field editing?
     };
     console.log(this.state);
     console.log(this.state.token);
+
+    // related food records clientside updaters
     this.clientNutDataAPI = new NutDataAPI(this.state.token);
+    this.clientFoodWeightsAPI = new FoodWeightsAPI(this.state.token);
+
+    // food record clientside updater
     this.clientFoodAPI = new FoodAPI(this.state.token);
   }
 
-  handleChange = fieldName => evt => {
+  handleNutrientFormChange = fieldName => evt => {
     let newVal = null;
     if (typeof evt === 'object' && 'target' in evt && 'value' in evt.target) {
       newVal = evt.target.value;
@@ -207,13 +169,8 @@ export default class extends Component {
     }
   }
 
-  handleSave() {
+  handleNutrientSave() {
     if (this.state.dialogRow && this.state.dirty) {
-      // update row on backend
-
-
-      // if success then update state for re-render table
-      // update original state data
       const row = { ...this.state.dialogRow };
       const tableRow = row.meta.index;
       row.addModDate = new Date().toISOString(); // update the modified date
@@ -244,7 +201,7 @@ export default class extends Component {
           })];
           return {
             nutritionData: newNutritionData,
-            dialogOpen: false,
+            customNutEditDialogOpen: false,
             dialogRow: {},
             dirty: false,
           };
@@ -273,40 +230,40 @@ export default class extends Component {
       }
       // if fail present error from api to user
     } else { // no edits
-      this.setState({ dialogOpen: false, dialogRow: {}, dirty: false });
+      this.setState({ customNutEditDialogOpen: false, dialogRow: {}, dirty: false });
     }
   }
 
   handleCancelDialogue() {
-    this.setState({ dialogOpen: false, dialogRow: {}, dirty: false });
+    this.setState({ customNutEditDialogOpen: false, dialogRow: {}, dirty: false });
   }
 
-  async handleDelete(shouldDelete) {
+  async handleNutDataDelete(shouldDelete) {
     if (shouldDelete) {
       console.log(this.state);
       if (this.state.dialogRow && this.state.dialogRow.meta && this.state.dialogRow.meta.relatedIds.dataId) {
         const { dataId } = this.state.dialogRow.meta.relatedIds;
         try {
           await this.clientNutDataAPI.deleteNutData(dataId);
-          this.setState((prevState) => ({ deleteDialogOpen: false, nutritionData: prevState.nutritionData.filter((item) => item.dataId !== dataId) }));
+          this.setState((prevState) => ({ deleteNutDataDialogOpen: false, nutritionData: prevState.nutritionData.filter((item) => item.dataId !== dataId) }));
         } catch (error) {
-          // clear incorrect state
-          this.setState({ deleteDialogOpen: false, dialogRow: {} });
+          this.setState({ deleteNutDataDialogOpen: false, dialogRow: {} });
         }
       } else {
-        // clear incorrect state
-        this.setState({ deleteDialogOpen: false, dialogRow: {} });
+        this.setState({ deleteNutDataDialogOpen: false, dialogRow: {} });
       }
+    } else {
+      this.setState({ deleteNutDataDialogOpen: false, dialogRow: {} });
     }
   }
 
   handleNewNutrient() {
-    this.setState({ newDialogOpen: true });
+    this.setState({ newNutDataDialogOpen: true });
   }
 
   async handleNewNutrientDialogClose(cancelled, data) {
     if (cancelled || !data) {
-      this.setState({ newDialogOpen: false });
+      this.setState({ newNutDataDialogOpen: false });
     } else {
       try {
         const newRow = { ...data };
@@ -314,11 +271,11 @@ export default class extends Component {
         newRow.foodId = this.state.food[0].foodId;
         const res = await this.clientNutDataAPI.createNutData(newRow);
         this.setState((prevState) => ({
-          newDialogOpen: false, nutritionData: [...prevState.nutritionData, res.data], dialgoRow: {}, dirty: false,
+          newNutDataDialogOpen: false, nutritionData: [...prevState.nutritionData, res.data], dialgoRow: {}, dirty: false,
         }));
       } catch (error) {
         this.setState({
-          newDialogOpen: false,
+          newNutDataDialogOpen: false,
           dialogRow: {},
           dirty: false,
         });
@@ -380,10 +337,10 @@ export default class extends Component {
 
     return (
       <div>
-        {this.state.dialogOpen &&
+        {this.state.customNutEditDialogOpen &&
           <Dialog
             key="editDialog"
-            open={this.state.dialogOpen}
+            open={this.state.customNutEditDialogOpen}
             onClose={this.handleClose}
             aria-labelledby="form-dialog-title"
             classes={{ paperScrollPaper: this.props.classes.dialogContent }}
@@ -403,7 +360,7 @@ export default class extends Component {
                       id={`${item[0]} edit`}
                       label={field.title}
                       value={item[1] || ''}
-                      onChange={this.handleChange(item[0])}
+                      onChange={this.handleNutrientFormChange(item[0])}
                       margin="normal"
                       fullWidth
                     />
@@ -426,7 +383,7 @@ export default class extends Component {
                           value: val[fieldType.valueKey],
                         }))]}
                         defaultValue={this.state.dialogRow[fieldType.valueKey]}
-                        onChange={(val) => this.handleChange(stateUpdateField)(val)}
+                        onChange={(val) => this.handleNutrientFormChange(stateUpdateField)(val)}
                       />
                     </FormControl>
                   );
@@ -438,16 +395,16 @@ export default class extends Component {
               <Button onClick={() => this.handleCancelDialogue()} color="primary">
               Cancel
               </Button>
-              <Button onClick={() => this.handleSave()} color="primary">
+              <Button onClick={() => this.handleNutrientSave()} color="primary">
               Save
               </Button>
             </DialogActions>
           </Dialog>
         }
-        {this.state.newDialogOpen &&
+        {this.state.newNutDataDialogOpen &&
           <Dialog
             key="newDialog"
-            open={this.state.newDialogOpen}
+            open={this.state.newNutDataDialogOpen}
             onClose={() => this.handleNewNutrientDialogClose(true)}
             aria-labelledby="form-dialog-title"
             classes={{ paperScrollPaper: this.props.classes.dialogContent }}
@@ -462,14 +419,14 @@ export default class extends Component {
                     label: val.nutrDesc,
                     value: val.nutrNo,
                   }))]}
-                  onChange={(val) => this.handleChange('nutrNo')(val)}
+                  onChange={(val) => this.handleNutrientFormChange('nutrNo')(val)}
                 />
               </FormControl>
               <TextField
                 id="nutrVal-new"
                 label="Nutr Val"
                 value={this.state.dialogRow ? this.state.dialogRow.nutrVal : ''}
-                onChange={this.handleChange('nutrVal')}
+                onChange={this.handleNutrientFormChange('nutrVal')}
                 margin="normal"
                 fullWidth
               />
@@ -481,7 +438,7 @@ export default class extends Component {
                     label: val.shortForm,
                     value: val.dataSrcId,
                   }))]}
-                  onChange={(val) => this.handleChange('dataSrcId')(val)}
+                  onChange={(val) => this.handleNutrientFormChange('dataSrcId')(val)}
                 />
               </FormControl>
             </DialogContent>
@@ -500,8 +457,8 @@ export default class extends Component {
           <Paper style={{ padding: '8px' }}>
             <FoodForm
               {...this.state.food[0]}
-              foodCategories={this.state.foodCategories}
-              budgetCodes={this.state.budgetCodes}
+              foodCategories={this.state.foodCategoryOptions}
+              budgetCodes={this.state.budgetCodeOptions}
               submitForm={(payload) => this.handleFoodUpdate(payload)}
               submitButtonText="Submit Edit"
             />
@@ -525,7 +482,7 @@ export default class extends Component {
               disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
               icon: () => <Edit />,
               onClick: (evt, row) => {
-                this.setState({ dialogOpen: true, dialogRow: row });
+                this.setState({ customNutEditDialogOpen: true, dialogRow: row });
               },
               tooltip: 'Nutrient Form',
             },
@@ -534,7 +491,7 @@ export default class extends Component {
               icon: () => <Delete />,
               onClick: (evt, row) => {
                 console.log(row);
-                this.setState({ deleteDialogOpen: true, dialogRow: row });
+                this.setState({ deleteNutDataDialogOpen: true, dialogRow: row });
               },
               tooltip: 'Delete Nutrient',
             },
@@ -542,32 +499,21 @@ export default class extends Component {
           }
           options={{
             pageSize: 20,
-            pageSizeOptions: [20, 50, this.state.nutDataSources.length],
+            pageSizeOptions: [10, 30, this.state.nutritionData.length],
             exportButton: true,
-          }}
-          icons={{
-            Add,
-            Check,
-            Clear,
-            Delete,
-            DetailPanel: NextPage,
-            Edit,
-            Export,
-            Filter,
-            FirstPage,
-            LastPage,
-            NextPage,
-            PreviousPage,
-            ResetSearch: Clear,
-            Search,
-            ThirdStateCheck,
-            ViewColumn,
           }}
         />
         <ConfirmationDialog
-          open={this.state.deleteDialogOpen}
-          onClose={(close) => this.handleDelete(close)}
+          id="deleteNutData"
+          open={this.state.deleteNutDataDialogOpen}
+          onClose={(close) => this.handleNutDataDelete(close)}
           title="Are you sure you want to delete this nutrient record?"
+        />
+        <ConfirmationDialog
+          id="deleteFoodWeight"
+          open={this.state.deleteFoodWeightDialogOpen}
+          onClose={(close) => this.handleFoodWeightDelete(close)}
+          title="Are you sure you want to delete this food weight record?"
         />
         <Notifications
           ref={(ref) => { this.notificationBar = ref; }}

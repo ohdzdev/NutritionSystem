@@ -25,6 +25,12 @@ import BookIcon from '@material-ui/icons/Book';
 import AssIcon from '@material-ui/icons/Assignment';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeliveryContainersIcon from '@material-ui/icons/ShoppingCart';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faRulerCombined,
+} from '@fortawesome/free-solid-svg-icons';
+
 import Link from 'next/link';
 
 import { AuthContext } from '../util/AuthProvider';
@@ -97,7 +103,7 @@ const SidebarDrawer = (props) => {
                   </ListItem>
                 </Link>
               }
-              {hasAccess(role, Admin.roles) &&
+              {hasAccess(role, Food.roles) &&
                 <Fragment>
                   <ListItem
                     button
@@ -118,7 +124,7 @@ const SidebarDrawer = (props) => {
                           </ListItem>
                         </Link>
                       }
-                      {hasAccess(role, Food.roles) &&
+                      {hasAccess(role, Food.nutrDef.roles) &&
                         <Link href={Food.nutrDef.link}>
                           <ListItem button className={classes.nested}>
                             <ListItemIcon><AssIcon /></ListItemIcon>
@@ -126,11 +132,19 @@ const SidebarDrawer = (props) => {
                           </ListItem>
                         </Link>
                       }
-                      {hasAccess(role, Food.roles) &&
+                      {hasAccess(role, Food.dataSrc.roles) &&
                         <Link href={Food.dataSrc.link}>
                           <ListItem button className={classes.nested}>
                             <ListItemIcon><BookIcon /></ListItemIcon>
                             <ListItemText inset primary="References" />
+                          </ListItem>
+                        </Link>
+                      }
+                      {hasAccess(role, Food.units.roles) &&
+                        <Link href={Food.units.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon style={{ paddingLeft: '6px' }}><FontAwesomeIcon icon={faRulerCombined} /></ListItemIcon>
+                            <ListItemText inset primary="Units" />
                           </ListItem>
                         </Link>
                       }

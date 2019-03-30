@@ -321,6 +321,7 @@ export default class extends Component {
     if (!row.weightAmount || !row.unitIdNum || !row.gmWeight) {
       this.notificationBar.showNotification('error', 'Please fill out all fields in table in order to submit a new entry.');
       rej();
+      return;
     }
     try {
       const preppedRow = { ...row, foodId: this.state.food[0].foodId };
@@ -330,6 +331,7 @@ export default class extends Component {
       }
 
       res();
+      return;
     } catch (error) {
       console.error(error);
       this.notificationBar.showNotification('error', 'Submitting new Food Weight failed!');
@@ -338,6 +340,11 @@ export default class extends Component {
   })
 
   onFoodWeightUdpate = (rowUpdated, prevRow) => new Promise(async (res, rej) => { // eslint-disable-line
+    if (!rowUpdated.weightAmount || !rowUpdated.unitIdNum || !rowUpdated.gmWeight) {
+      this.notificationBar.showNotification('error', 'All fields required, please fill out all fields.');
+      rej();
+      return;
+    }
     const updatedCopy = { ...rowUpdated };
     let fieldUpdated = false;
     const updatedFields = Object.entries(updatedCopy).filter((column) => prevRow[column[0]] !== column[1]).map((entry) => entry[0]);
@@ -378,6 +385,7 @@ export default class extends Component {
       } else {
         this.notificationBar.showNotification('error', 'Error Deleting weight on server. Please contact server admin');
         rej();
+        return;
       }
     } catch (error) {
       console.error(error);

@@ -25,6 +25,7 @@ import BookIcon from '@material-ui/icons/Book';
 import AssIcon from '@material-ui/icons/Assignment';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeliveryContainersIcon from '@material-ui/icons/ShoppingCart';
+import Chat from '@material-ui/icons/Chat';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -145,6 +146,14 @@ const SidebarDrawer = (props) => {
                           <ListItem button className={classes.nested}>
                             <ListItemIcon style={{ paddingLeft: '6px' }}><FontAwesomeIcon icon={faRulerCombined} /></ListItemIcon>
                             <ListItemText inset primary="Units" />
+                          </ListItem>
+                        </Link>
+                      }
+                      {hasAccess(role, Food.nicknames.roles) &&
+                        <Link href={Food.nicknames.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon><Chat /></ListItemIcon>
+                            <ListItemText inset primary="Food Nicknames" />
                           </ListItem>
                         </Link>
                       }

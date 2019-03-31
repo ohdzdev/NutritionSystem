@@ -23,7 +23,7 @@ import NextPage from '@material-ui/icons/ChevronRight';
 import PreviousPage from '@material-ui/icons/ChevronLeft';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faInfo, faCheck, faTimes, faSignature, faEdit,
+  faInfo, faCheck, faTimes, faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 
 // API helpers
@@ -142,14 +142,6 @@ class FoodPage extends Component {
                   <Button className={this.props.classes.button} color="secondary" variant="contained">
                     <FontAwesomeIcon icon={faEdit} className={this.props.classes.faIcon} />
                       View / Edit
-                  </Button>
-                </Link>
-              }
-              {hasAccess(this.props.account.role, Food.nicknames.roles) &&
-                <Link href={`${Food.nicknames.link}?id=${rowData.foodId}`}>
-                  <Button className={this.props.classes.button} color="secondary" variant="contained" disabled={rowData.active !== 1}>
-                    <FontAwesomeIcon icon={faSignature} className={this.props.classes.faIcon} />
-                    Edit Nickname
                   </Button>
                 </Link>
               }
@@ -278,17 +270,6 @@ class FoodPage extends Component {
                   });
                 },
               },
-              rowData => ({
-                icon: () => (<FontAwesomeIcon icon={faSignature} />),
-                tooltip: 'Edit Nickname',
-                disabled: (rowData.active !== 1 && hasAccess(role, Food.nicknames.roles)),
-                onClick: (e, data) => {
-                  Router.push({
-                    pathname: Food.nicknames.link,
-                    query: { id: data.foodId },
-                  });
-                },
-              }),
               {
                 disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
                 icon: () => <Delete />,

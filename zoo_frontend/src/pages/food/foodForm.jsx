@@ -32,20 +32,14 @@ const formikEnhancer = withFormik({
     manufacturerName: Yup.string().nullable(),
     ohdzName: Yup.string().nullable(),
     costG: Yup.number().nullable(),
-    budgetId: Yup.array().of(Yup.object().shape({
-      label: Yup.string().required(),
-      value: Yup.number().required(),
-    })).required(),
-    category: Yup.array().of(Yup.object().shape({
-      label: Yup.string().required(),
-      value: Yup.number().required(),
-    })).required(),
+    budgetId: Yup.string().required('Budget ID is required'),
+    category: Yup.string().required('Food Category is required'),
     usdaFoodGroupDesc: Yup.number().nullable(),
-    dry: Yup.bool().required(),
-    meat: Yup.bool().required(),
-    preChop: Yup.bool().required(),
-    preBag: Yup.bool().required(),
-    active: Yup.bool().required(),
+    dry: Yup.bool(),
+    meat: Yup.bool(),
+    preChop: Yup.bool(),
+    preBag: Yup.bool(),
+    active: Yup.bool(),
   }),
   mapPropsToValues: props => ({
     food: props.food ? props.food : '',
@@ -123,6 +117,7 @@ const Form = props => {
             onChange={change.bind(null, 'food')}
             variant="outlined"
             fullWidth
+            onFocus={change.bind(null, 'food')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -136,6 +131,7 @@ const Form = props => {
             onChange={change.bind(null, 'sciName')}
             fullWidth
             variant="outlined"
+            onFocus={change.bind(null, 'sciName')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -149,6 +145,7 @@ const Form = props => {
             variant="outlined"
             value={manufacturerName}
             onChange={change.bind(null, 'manufacturerName')}
+            onFocus={change.bind(null, 'manufacturerName')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -162,6 +159,7 @@ const Form = props => {
             variant="outlined"
             value={ohdzName}
             onChange={change.bind(null, 'ohdzName')}
+            onFocus={change.bind(null, 'ohdzName')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -173,6 +171,7 @@ const Form = props => {
             label="Cost Per Gram"
             value={costG}
             onChange={change.bind(null, 'costG')}
+            onFocus={change.bind(null, 'costG')}
             variant="outlined"
             fullWidth
           />
@@ -208,6 +207,7 @@ const Form = props => {
             label="USDA Food Group Description"
             value={usdaFoodGroupDesc}
             onChange={change.bind(null, 'usdaFoodGroupDesc')}
+            onFocus={change.bind(null, 'usdaFoodGroupDesc')}
             variant="outlined"
             fullWidth
           />
@@ -313,7 +313,7 @@ const Form = props => {
           {props.submitButtonText}
         </Button>
       </Grid>
-      {/* <DisplayFormikState {...props} /> */}
+      <DisplayFormikState {...props} />
     </form>
   );
 };

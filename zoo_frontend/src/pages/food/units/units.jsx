@@ -28,16 +28,11 @@ export default class units extends Component {
   }
   static propTypes = {
     token: PropTypes.string,
-    classes: PropTypes.object.isRequired,
     allUnits: PropTypes.arrayOf(PropTypes.object).isRequired,
-    error: PropTypes.bool,
-    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
     token: '',
-    error: false,
-    errorMessage: '',
   }
 
   constructor(props) {

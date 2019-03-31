@@ -82,7 +82,7 @@ export default class units extends Component {
     }
   })
 
-  onRowUpdate = (rowUpdated, prevRow) => new Promise(async (res, rej) => { // eslint-disable-line
+  onRowUpdate = (rowUpdated, prevRow) => new Promise(async (res, rej) => {
     // required rows check
     if (!rowUpdated.unit || !rowUpdated.unitType) {
       this.notificationBar.showNotification('error', 'Fields "Unit" and "Unit Type" are required, please fill them out.');

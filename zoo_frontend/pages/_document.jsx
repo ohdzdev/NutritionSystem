@@ -62,7 +62,7 @@ MyDocument.getInitialProps = (ctx) => {
   let pageContext;
   const page = ctx.renderPage((Component) => {
     const WrappedComponent = (props) => {
-      pageContext = props.pageContext; // eslint-disable-line 
+      pageContext = props.pageContext; // eslint-disable-line prefer-destructuring
       return <Component {...props} />;
     };
 

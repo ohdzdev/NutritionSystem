@@ -24,18 +24,16 @@ import {
   FooodWeights as FoodWeightsAPI,
 } from '../../../api';
 
-// table helpers
-import TableColumnHelper from '../../../util/TableColumnHelper';
-
 // actual API repo
 import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
-import foodWeightsAPIModel from '../../../../../zoo_api/common/models/FOOD_WEIGHTS.json';
 
 // access control
 import { hasAccess } from '../../PageAccess';
 import Roles from '../../../static/Roles';
 
 import FoodForm from '../foodForm';
+
+import FoodWeightTable from './FoodWeightTable';
 
 // define what columns we want on our main nutrient table
 const col = [
@@ -67,6 +65,8 @@ export default class extends Component {
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
+    foodWeights: PropTypes.arrayOf(PropTypes.object).isRequired,
+    allUnits: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
   static defaultProps = {
@@ -87,24 +87,30 @@ export default class extends Component {
       const serverFoodWeightsAPI = new FoodWeightsAPI(authToken);
 
       // grab all related records on server
-      const foodCategories = await categoryAPI.getCategories().catch(() => {});
-      const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => {});
-      const food = await serverFoodAPI.getFood({ where: { foodId: query.id } });
-      const category = await serverFoodAPI.getRelatedCategory(query.id);
-      const budgetCode = await serverFoodAPI.getRelatedBudgetCode(query.id);
+      const foodCategories = await categoryAPI.getCategories().catch(() => []);
+      const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => []);
+      const food = await serverFoodAPI.getFood({ where: { foodId: query.id } }).catch(() => []);
+      const category = await serverFoodAPI.getRelatedCategory(query.id).catch(() => []);
+      const budgetCode = await serverFoodAPI.getRelatedBudgetCode(query.id).catch(() => []);
 
       const nutData = await serverNutDataAPI.getNutData({ where: { foodId: query.id } });
-      const foodWeights = await serverFoodWeightsAPI.getFoodWeight({ where: { foodId: query.id } });
+      const foodWeights = await serverFoodWeightsAPI.getFoodWeight({ where: { foodId: query.id } }).catch((err) => {
+        console.error(err);
+        return [];
+      });
 
       const allNutrients = await serverNutrDataAPI.getNutrDef().catch((err) => {
         console.error(err);
+        return [];
       });
       const allSources = await serverDataSrcAPI.getSources().catch((err) => {
         console.error(err);
+        return [];
       });
 
       const allUnits = await serverUnitsAPI.getUnits().catch((err) => {
         console.error(err);
+        return [];
       });
 
       return {
@@ -127,26 +133,9 @@ export default class extends Component {
   constructor(props) {
     super(props);
     const {
+      // remove things we don't want passed to state here
       api, account, router, pageContext, classes, budgetCodes, foodCategories, allUnits, ...rest // eslint-disable-line react/prop-types
     } = props;
-    const unitLookup = {};
-    allUnits.slice(0).reduce((acc, unit) => {
-      acc[unit.unitId] = unit.unit;
-      return acc;
-    }, unitLookup);
-
-    const keys = Object.keys(foodWeightsAPIModel.properties);
-    const foodWeightColumns = {};
-    keys.forEach((key) => { foodWeightColumns[key] = null; });
-    const ignoredFoodWeightColumns = ['weightId', 'foodId'];
-    const renamedFoodWeightColumns = {
-      weightAmount: 'Amount of Food',
-      unitIdNum: 'Unit',
-      gmWeight: 'Weight in Grams',
-    };
-
-    this.preppedFoodWeightColumns = TableColumnHelper([foodWeightColumns], ignoredFoodWeightColumns, renamedFoodWeightColumns);
-    this.preppedFoodWeightColumns[1].lookup = unitLookup;
 
     this.state = {
       ...rest,
@@ -154,18 +143,15 @@ export default class extends Component {
       budgetCodeOptions: budgetCodes.map((item) => ({ label: item.budgetCode, value: item.budgetId })),
       // react select options for food categories
       foodCategoryOptions: foodCategories.map((item) => ({ label: item.foodCategory, value: item.categoryId })),
-      unitLookup,
       customNutEditDialogOpen: false,
       deleteNutDataDialogOpen: false,
-      deleteFoodWeightDialogOpen: false,
       newNutDataDialogOpen: false,
-      dialogRow: {}, // row for which we are editing
-      dirty: false, // was a field editing?
+      dialogRow: {},
+      dirty: false,
     };
 
     // related food records clientside updaters
     this.clientNutDataAPI = new NutDataAPI(this.state.token);
-    this.clientFoodWeightsAPI = new FoodWeightsAPI(this.state.token);
 
     // food record clientside updater
     this.clientFoodAPI = new FoodAPI(this.state.token);
@@ -192,7 +178,7 @@ export default class extends Component {
     }
   }
 
-  handleNutrientSave() { // eslint-disable-line
+  handleNutrientSave() {
     if (this.state.dialogRow && this.state.dirty) {
       const row = { ...this.state.dialogRow };
       const tableRow = row.meta.index;
@@ -316,82 +302,6 @@ export default class extends Component {
     });
     return prom;
   }
-
-  onFoodWeightAdd = (row) => new Promise(async (res, rej) => {
-    if (!row.weightAmount || !row.unitIdNum || !row.gmWeight) {
-      this.notificationBar.showNotification('error', 'Please fill out all fields in table in order to submit a new entry.');
-      rej();
-      return;
-    }
-    try {
-      const preppedRow = { ...row, foodId: this.state.food[0].foodId };
-      const r = await this.clientFoodWeightsAPI.addFoodWeight(preppedRow);
-      if (r.data) {
-        this.setState((prevState) => ({ foodWeights: [...prevState.foodWeights, r.data] }));
-      }
-
-      res();
-      return;
-    } catch (error) {
-      console.error(error);
-      this.notificationBar.showNotification('error', 'Submitting new Food Weight failed!');
-      rej();
-    }
-  })
-
-  onFoodWeightUdpate = (rowUpdated, prevRow) => new Promise(async (res, rej) => { // eslint-disable-line
-    if (!rowUpdated.weightAmount || !rowUpdated.unitIdNum || !rowUpdated.gmWeight) {
-      this.notificationBar.showNotification('error', 'All fields required, please fill out all fields.');
-      rej();
-      return;
-    }
-    const updatedCopy = { ...rowUpdated };
-    let fieldUpdated = false;
-    const updatedFields = Object.entries(updatedCopy).filter((column) => prevRow[column[0]] !== column[1]).map((entry) => entry[0]);
-    if (updatedFields && updatedFields.length > 0) {
-      fieldUpdated = true;
-    }
-    if (fieldUpdated) {
-      try {
-        const updatedFieldsToServer = {};
-        updatedFields.forEach((fieldToKeep) => { updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep]; });
-        await this.clientFoodWeightsAPI.updateFoodWeight(updatedCopy.weightId, updatedFieldsToServer);
-        this.setState((prevState) => {
-          const newFoodWeights = [...prevState.foodWeights.map((item) => {
-            if (item.weightId !== rowUpdated.weightId) {
-              return item;
-            }
-            const updatedRow = item;
-            Object.assign(updatedRow, updatedFieldsToServer);
-            return updatedRow;
-          })];
-          return { foodWeights: newFoodWeights };
-        });
-        res();
-      } catch (error) {
-        console.log(error);
-        rej();
-      }
-    }
-    res();
-  })
-
-  onFoodWeightDelete = (row) => new Promise(async (res, rej) => {
-    try {
-      if (row.weightId) {
-        await this.clientFoodWeightsAPI.deleteFoodWeight(row.weightId);
-        this.setState((prevState) => ({ foodWeights: [...prevState.foodWeights.filter((item) => item.weightId !== row.weightId)] }));
-        res();
-      } else {
-        this.notificationBar.showNotification('error', 'Error Deleting weight on server. Please contact server admin');
-        rej();
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-      rej();
-    }
-  })
 
   render() {
     const composedData = this.state.nutritionData.map((val, index) => {
@@ -558,15 +468,11 @@ export default class extends Component {
           </Paper>
         </div>
         <br />
-        <MaterialTable
-          title="Food Weights"
-          columns={this.preppedFoodWeightColumns}
-          data={this.state.foodWeights}
-          editable={{
-            onRowAdd: this.onFoodWeightAdd,
-            onRowUpdate: this.onFoodWeightUdpate,
-            onRowDelete: this.onFoodWeightDelete,
-          }}
+        <FoodWeightTable
+          foodWeights={this.props.foodWeights}
+          token={this.props.token}
+          allUnits={this.props.allUnits}
+          currentFoodId={this.state.food[0].foodId}
         />
         <br />
         <Button
@@ -611,12 +517,6 @@ export default class extends Component {
           open={this.state.deleteNutDataDialogOpen}
           onClose={(close) => this.handleNutDataDelete(close)}
           title="Are you sure you want to delete this nutrient record?"
-        />
-        <ConfirmationDialog
-          id="deleteFoodWeight"
-          open={this.state.deleteFoodWeightDialogOpen}
-          onClose={(close) => this.handleFoodWeightDelete(close)}
-          title="Are you sure you want to delete this food weight record?"
         />
         <Notifications
           ref={(ref) => { this.notificationBar = ref; }}

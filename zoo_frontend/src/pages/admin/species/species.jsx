@@ -42,7 +42,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: props.token, // eslint-disable-line react/no-unused-state
+      token: props.token,
       species: props.species,
     };
     this.notificationsRef = React.createRef();

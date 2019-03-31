@@ -313,7 +313,7 @@ const Form = props => {
           {props.submitButtonText}
         </Button>
       </Grid>
-      <DisplayFormikState {...props} />
+      {/* <DisplayFormikState {...props} /> */}
     </form>
   );
 };
@@ -324,7 +324,7 @@ Form.propTypes = {
     manufacturerName: PropTypes.string,
     ohdzName: PropTypes.string,
     food: PropTypes.string.isRequired,
-    costG: PropTypes.number,
+    costG: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     budgetId: PropTypes.number,
     category: PropTypes.number,
     usdaFoodGroupDesc: PropTypes.string,
@@ -358,7 +358,7 @@ Form.defaultProps = {
     manufacturerName: '',
     ohdzName: '',
     food: '',
-    costG: 0,
+    costG: '',
     budgetId: 0,
     category: 0,
     usdaFoodGroupDesc: '',

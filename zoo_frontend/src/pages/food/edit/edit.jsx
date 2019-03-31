@@ -151,10 +151,10 @@ export default class extends Component {
     };
 
     // related food records clientside updaters
-    this.clientNutDataAPI = new NutDataAPI(this.state.token);
+    this.clientNutDataAPI = new NutDataAPI(this.props.token);
 
     // food record clientside updater
-    this.clientFoodAPI = new FoodAPI(this.state.token);
+    this.clientFoodAPI = new FoodAPI(this.props.token);
   }
 
   handleNutrientFormChange = fieldName => evt => {

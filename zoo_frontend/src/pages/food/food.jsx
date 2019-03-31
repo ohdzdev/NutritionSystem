@@ -68,6 +68,7 @@ class FoodPage extends Component {
     foodItems: PropTypes.array.isRequired,
     foodCategories: PropTypes.array.isRequired,
     budgetCodes: PropTypes.array.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -83,7 +84,7 @@ class FoodPage extends Component {
       dialogRow: {},
     };
 
-    this.clientFoodAPI = new FoodAPI(this.state.token);
+    this.clientFoodAPI = new FoodAPI(this.props.token);
   }
 
   /**

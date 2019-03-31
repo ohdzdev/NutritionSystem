@@ -53,11 +53,10 @@ export default class units extends Component {
     };
 
     this.state = {
-      token: props.token,
       allUnits: props.allUnits,
     };
 
-    this.clientUnitAPI = new UnitsAPI(this.state.token);
+    this.clientUnitAPI = new UnitsAPI(this.props.token);
   }
 
   onRowAdd = (row) => new Promise(async (res, rej) => {

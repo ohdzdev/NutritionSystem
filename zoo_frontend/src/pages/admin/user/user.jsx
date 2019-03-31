@@ -130,7 +130,6 @@ class User extends Component {
     super(props);
 
     this.state = {
-      token: props.token,
       ...generateStateData(this.props.users, this.props.locations, this.props.roles, this.props.roleMappings),
       locations: this.props.locations,
       roles: this.props.roles,
@@ -163,8 +162,8 @@ class User extends Component {
 
     const password = await this.getPassword('Please enter a password for the new user:');
     if (password) {
-      const usersApi = new UsersAPI(this.state.token);
-      const roleMappingApi = new RoleMappingsAPI(this.state.token);
+      const usersApi = new UsersAPI(this.props.token);
+      const roleMappingApi = new RoleMappingsAPI(this.props.token);
 
       // Find the selected location
       let location = this.state.locations.find((l) => l.location === newData.locationName);
@@ -231,8 +230,8 @@ class User extends Component {
   })
 
   onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const usersApi = new UsersAPI(this.state.token);
-    const roleMappingApi = new RoleMappingsAPI(this.state.token);
+    const usersApi = new UsersAPI(this.props.token);
+    const roleMappingApi = new RoleMappingsAPI(this.props.token);
 
     // Determine if we need to update and what to update
     let fieldUpdated = false;
@@ -315,8 +314,8 @@ class User extends Component {
   })
 
   onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const usersApi = new UsersAPI(this.state.token);
-    const roleMappingApi = new RoleMappingsAPI(this.state.token);
+    const usersApi = new UsersAPI(this.props.token);
+    const roleMappingApi = new RoleMappingsAPI(this.props.token);
 
     try {
       // Delete the user
@@ -453,7 +452,7 @@ class User extends Component {
                 icon: 'settings_backup_restore',
                 tooltip: 'Reset User Password',
                 onClick: async (event, rowData) => {
-                  const usersApi = new UsersAPI(this.state.token);
+                  const usersApi = new UsersAPI(this.props.token);
                   const password = await this.getPassword('Please enter the users new temporary password:');
                   if (password) {
                     try {

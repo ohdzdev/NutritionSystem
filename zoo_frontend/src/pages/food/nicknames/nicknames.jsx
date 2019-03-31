@@ -43,7 +43,6 @@ export default class extends Component {
     super(props);
 
     this.state = {
-      token: props.token,
       allFood: props.allFood,
       editDialogOpen: false,
       dialogRow: false,
@@ -62,7 +61,7 @@ export default class extends Component {
 
     this.preppedFoodColumns = TableColumnHelper([FoodColumns], ignoredFoodWeightColumns, renamedFoodWeightColumns);
 
-    this.clientFoodAPI = new FoodAPI(this.state.token);
+    this.clientFoodAPI = new FoodAPI(this.props.token);
   }
 
   handleNickNameChange = (rowData) => {

@@ -7,7 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 
-const styles = theme => ({ // eslint-disable-line no-unused-vars
+const styles = theme => ({
   root: {
     display: 'flex',
   },

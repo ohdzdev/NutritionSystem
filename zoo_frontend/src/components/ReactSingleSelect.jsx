@@ -263,7 +263,12 @@ const IntegrationReactSelect = (props) => {
         components={components}
         defaultValue={suggestions.find((item) => item.value == defaultValue) || ''} // eslint-disable-line eqeqeq
         onChange={handleChangeSingle}
-        onFocus={() => setSelected(true)}
+        onFocus={() => {
+          setSelected(true);
+          if (form) {
+            form.setFieldTouched(field.name, true, true);
+          }
+        }}
         onBlur={() => setSelected(false)}
         id={props.id}
       />

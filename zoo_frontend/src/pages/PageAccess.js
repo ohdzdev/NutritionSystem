@@ -75,6 +75,10 @@ export const Food = {
     link: '/food/nutrDef',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST],
   },
+  units: {
+    link: '/food/units',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST],
+  },
 };
 
 export const Home = {

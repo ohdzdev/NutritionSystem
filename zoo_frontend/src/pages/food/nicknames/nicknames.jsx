@@ -62,6 +62,7 @@ export default class extends Component {
     this.preppedFoodColumns = TableColumnHelper([FoodColumns], ignoredFoodWeightColumns, renamedFoodWeightColumns);
 
     this.clientFoodAPI = new FoodAPI(this.props.token);
+    this.notificationBar = React.createRef();
   }
 
   handleNickNameChange = (rowData) => {
@@ -151,7 +152,7 @@ export default class extends Component {
           ]}
         />
         <Notifications
-          ref={(ref) => { this.notificationBar = ref; }}
+          ref={this.notificationBar}
         />
       </div>
     );

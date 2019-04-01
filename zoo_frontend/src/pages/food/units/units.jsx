@@ -57,6 +57,7 @@ export default class units extends Component {
     };
 
     this.clientUnitAPI = new UnitsAPI(this.props.token);
+    this.notificationBar = React.createRef();
   }
 
   onRowAdd = (row) => new Promise(async (res, rej) => {
@@ -158,7 +159,7 @@ export default class units extends Component {
           }}
         />
         <Notifications
-          ref={(ref) => { this.notificationBar = ref; }}
+          ref={this.notificationBar}
         />
       </div>
     );

@@ -155,6 +155,8 @@ export default class extends Component {
 
     // food record clientside updater
     this.clientFoodAPI = new FoodAPI(this.props.token);
+
+    this.notificationBar = React.createRef();
   }
 
   handleNutrientFormChange = fieldName => evt => {
@@ -519,7 +521,7 @@ export default class extends Component {
           title="Are you sure you want to delete this nutrient record?"
         />
         <Notifications
-          ref={(ref) => { this.notificationBar = ref; }}
+          ref={this.notificationBar}
         />
       </div>
 

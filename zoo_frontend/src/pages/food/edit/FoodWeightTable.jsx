@@ -40,7 +40,9 @@ class FoodWeightTable extends Component {
     this.preppedFoodWeightColumns[1].lookup = unitLookup;
 
     this.clientFoodWeightsAPI = new FoodWeights(props.token);
+    this.notificationBar = React.createRef();
   }
+
   onFoodWeightAdd = (row) => new Promise(async (res, rej) => {
     if (!row.weightAmount || !row.unitIdNum || !row.gmWeight) {
       this.notificationBar.showNotification('error', 'Please fill out all fields in table in order to submit a new entry.');
@@ -131,7 +133,7 @@ class FoodWeightTable extends Component {
           }}
         />
         <Notifications
-          ref={(ref) => { this.notificationBar = ref; }}
+          ref={this.notificationBar}
         />
       </div>
     );

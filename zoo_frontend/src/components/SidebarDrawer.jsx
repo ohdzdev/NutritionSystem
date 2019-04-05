@@ -26,6 +26,7 @@ import AssIcon from '@material-ui/icons/Assignment';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeliveryContainersIcon from '@material-ui/icons/ShoppingCart';
 import Chat from '@material-ui/icons/Chat';
+import KitchenIcon from '@material-ui/icons/Kitchen';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -43,6 +44,7 @@ import {
   Diet,
   Admin,
   Profile,
+  Kitchen,
 } from '../pages/PageAccess';
 
 const drawerWidth = 240;
@@ -104,6 +106,22 @@ const SidebarDrawer = (props) => {
                   </ListItem>
                 </Link>
               }
+              {hasAccess(role, Diet.roles) &&
+                <Link href={Diet.link}>
+                  <ListItem button key="diet" divider>
+                    <ListItemIcon><DietIcon /></ListItemIcon>
+                    <ListItemText primary="Diets" />
+                  </ListItem>
+                </Link>
+              }
+              {hasAccess(role, Kitchen.roles) &&
+                <Link href={Kitchen.link}>
+                  <ListItem button key="kitchen" divider>
+                    <ListItemIcon><KitchenIcon /></ListItemIcon>
+                    <ListItemText primary="Kitchen" />
+                  </ListItem>
+                </Link>
+              }
               {hasAccess(role, Food.roles) &&
                 <Fragment>
                   <ListItem
@@ -162,22 +180,6 @@ const SidebarDrawer = (props) => {
                   <Divider />
                 </Fragment>
               }
-              {hasAccess(role, Diet.roles) &&
-                <Link href={Diet.link}>
-                  <ListItem button key="diet" divider>
-                    <ListItemIcon><DietIcon /></ListItemIcon>
-                    <ListItemText primary="Diets" />
-                  </ListItem>
-                </Link>
-              }
-              {hasAccess(role, Profile.roles) &&
-                <Link href={Profile.link}>
-                  <ListItem button key="profile" divider>
-                    <ListItemIcon><ProfileIcon /></ListItemIcon>
-                    <ListItemText primary="My Profile" />
-                  </ListItem>
-                </Link>
-              }
               {hasAccess(role, Admin.roles) &&
                 <Fragment>
                   <ListItem
@@ -227,6 +229,14 @@ const SidebarDrawer = (props) => {
                   </Collapse>
                   <Divider />
                 </Fragment>
+              }
+              {hasAccess(role, Profile.roles) &&
+                <Link href={Profile.link}>
+                  <ListItem button key="profile" divider>
+                    <ListItemIcon><ProfileIcon /></ListItemIcon>
+                    <ListItemText primary="My Profile" />
+                  </ListItem>
+                </Link>
               }
             </List>
           </Drawer>

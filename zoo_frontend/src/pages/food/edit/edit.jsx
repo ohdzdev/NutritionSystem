@@ -21,7 +21,7 @@ import {
   FoodCategories as FoodCategoryAPI,
   BudgetIds as BudgetCodeAPI,
   Units as UnitsAPI,
-  FooodWeights as FoodWeightsAPI,
+  FoodWeights as FoodWeightsAPI,
 } from '../../../api';
 
 // actual API repo

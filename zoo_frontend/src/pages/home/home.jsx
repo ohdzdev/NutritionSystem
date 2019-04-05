@@ -8,47 +8,13 @@ import IconButton from '@material-ui/core/IconButton';
 import { ListItemIcon } from '@material-ui/core';
 import { Print, RemoveRedEye, Star } from '@material-ui/icons';
 import Link from 'next/link';
-import VirtualTable from '../../components/VirtualTable';
+import { AgGridReact } from 'ag-grid-react';
+
+// import ag-grid css files
+import 'ag-grid/dist/styles/ag-grid.css';
+import 'ag-grid/dist/styles/ag-theme-material.css';
 
 import { hasAccess, Diet, Food } from '../PageAccess';
-
-const columns = [
-  {
-    width: 200,
-    flexGrow: 1.0,
-    label: 'Food Item',
-    dataKey: 'food',
-  },
-  {
-    width: 120,
-    label: 'Amount',
-    dataKey: 'amount',
-  },
-  {
-    width: 120,
-    label: 'Animal',
-    dataKey: 'animal',
-  },
-  {
-    width: 120,
-    label: 'Animal Id',
-    dataKey: 'animalId',
-  },
-  {
-    width: 120,
-    label: 'Location',
-    dataKey: 'location',
-  },
-];
-
-const data = [
-  {
-    id: 1, food: 'Cucumber', amount: '1500g', animal: 'Sea Turtle', animalId: 899, location: 'Aquarium',
-  },
-  {
-    id: 2, food: 'Apples', amount: '2000g', animal: 'Gorilla', animalId: 765, location: 'Jungle',
-  },
-];
 
 export default class extends Component {
   static propTypes = {
@@ -59,6 +25,16 @@ export default class extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      columnDefs: [
+        { headerName: 'Make', field: 'make' },
+        { headerName: 'Model', field: 'model' },
+        { headerName: 'Price', field: 'price' },
+      ],
+      rowData: [
+        { make: 'Toyota', model: 'Celica', price: 35000 },
+        { make: 'Ford', model: 'Mondeo', price: 32000 },
+        { make: 'Porsche', model: 'Boxter', price: 72000 },
+      ],
       anchorEl: null,
     };
   }
@@ -148,11 +124,18 @@ export default class extends Component {
                 </Link>
               }
             </div>
-            <VirtualTable
-              cols={columns}
-              height={500}
-              rows={data}
-            />
+            <div
+              className="ag-theme-material"
+              style={{
+                height: '500px',
+                width: '600px',
+              }}
+            >
+              <AgGridReact
+                columnDefs={this.state.columnDefs}
+                rowData={this.state.rowData}
+              />
+            </div>
           </div>
         </div>
       </div>

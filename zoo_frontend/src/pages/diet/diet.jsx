@@ -5,22 +5,29 @@ import PropTypes from 'prop-types';
 
 // import { hasAccess, Home, Diet } from '../PageAccess';
 
+import { SingleSelect } from '../../components';
+
 import {
   Animals, CaseNotes, DeliveryContainers, DietChanges, DietHistory, DietPlans, Diets, FoodPrepTables, LifeStages, PrepNotes, Species,
 } from '../../api';
+
+import DietSelect from './DietSelectDialog';
 
 export default class extends Component {
   static propTypes = {
     // account: PropTypes.object.isRequired,
     token: PropTypes.string,
     // classes: PropTypes.object.isRequired,
+    Diets: PropTypes.arrayOf(PropTypes.object).isRequired,
+    DeliveryContainers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    Species: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
   static defaultProps = {
     token: '',
   }
 
-  static async getInitialProps({ authToken }) {
+  static async getInitialProps({ query, authToken }) {
     // api helpers on server side
     const serverAnimalAPI = new Animals(authToken);
     const serverCaseNotesAPI = new CaseNotes(authToken);
@@ -34,52 +41,87 @@ export default class extends Component {
     const serverPrepNotesAPI = new PrepNotes(authToken);
     const serverSpeciesAPI = new Species(authToken);
 
+    // get base data that we know we will need to load
     const [
       AllAnimals,
-      AllCaseNotes,
+      // AllCaseNotes,
       AllDeliveryContainers,
-      AllDietChanges,
-      AllDietHistory,
-      AllDietPlans,
+      // AllDietChanges,
+      // AllDietHistory,
+      // AllDietPlans,
       AllDiets,
       AllFoodPrepTables,
       AllLifeStages,
-      AllPrepNotes,
+      // AllPrepNotes,
       AllSpecies,
     ] = await Promise.all([
       serverAnimalAPI.getAnimals(),
-      serverCaseNotesAPI.getCaseNotes(),
+      // serverCaseNotesAPI.getCaseNotes(),
       serverDeliverContainersAPI.getDeliveryContainers(),
-      serverDietChangesAPI.getDietChanges(),
-      serverDietHistoryAPI.getDietHistories(),
-      serverDietPlansAPI.getDietPlans(),
+      // serverDietChangesAPI.getDietChanges(),
+      // serverDietHistoryAPI.getDietHistories(),
+      // serverDietPlansAPI.getDietPlans(),
       serverDietsAPI.getDiets(),
       serverFoodPrepTablesAPI.getFoodPrepTables(),
       serverLifeStagesAPI.getLifeStages(),
-      serverPrepNotesAPI.getPrepNotes(),
+      // serverPrepNotesAPI.getPrepNotes(),
       serverSpeciesAPI.getSpecies(),
     ]);
 
+    // if the id of a diet is present, then load its necessary information
+    if (query.id) {
+      const dietId = parseInt(query.id, 10);
+      const matchedDiet = AllDiets.data.find((findDiet) => findDiet.dietId === dietId);
 
+      const serverMatchedDietQuery = { where: { dietId } };
+      console.log('matched diet', matchedDiet);
+      console.log(serverMatchedDietQuery);
+
+      const [
+        matchedCaseNotes,
+        matchedDietChanges,
+        matchedDietHistory,
+        matchedDietPlans,
+        matchedPrepNotes,
+      ] = await Promise.all([
+        serverCaseNotesAPI.getCaseNotes(serverMatchedDietQuery),
+        serverDietChangesAPI.getDietChanges(serverMatchedDietQuery),
+        serverDietHistoryAPI.getDietHistories(serverMatchedDietQuery),
+        serverDietPlansAPI.getDietPlans(serverMatchedDietQuery),
+        serverPrepNotesAPI.getPrepNotes(serverMatchedDietQuery),
+      ]);
+
+      return {
+        Animals: AllAnimals.data,
+        CaseNotes: matchedCaseNotes.data,
+        DeliveryContainers: AllDeliveryContainers.data,
+        DietChanges: matchedDietChanges.data,
+        DietHistory: matchedDietHistory.data,
+        DietPlans: matchedDietPlans.data,
+        Diets: AllDiets.data,
+        FoodPrepTables: AllFoodPrepTables.data,
+        LifeStages: AllLifeStages.data,
+        PrepNotes: matchedPrepNotes.data,
+        Species: AllSpecies.data,
+      };
+    }
     return {
       Animals: AllAnimals.data,
-      CaseNotes: AllCaseNotes.data,
       DeliveryContainers: AllDeliveryContainers.data,
-      DietChanges: AllDietChanges.data,
-      DietHistory: AllDietHistory.data,
-      DietPlans: AllDietPlans.data,
       Diets: AllDiets.data,
       FoodPrepTables: AllFoodPrepTables.data,
       LifeStages: AllLifeStages.data,
-      PrepNotes: AllPrepNotes.data,
       Species: AllSpecies.data,
     };
   }
 
   constructor(props) {
     super(props);
+
+    const allDietSuggestions = props.Diets.map((diet) => ({ label: diet.noteId, value: diet.dietId }));
     this.state = {
       asdf: props.token, // eslint-disable-line react/no-unused-state
+      allDietSuggestions,
     };
   }
 
@@ -94,6 +136,16 @@ export default class extends Component {
           justifyContent: 'center',
         }}
       >
+        <SingleSelect
+          label="Diet"
+          suggestions={this.state.allDietSuggestions}
+        />
+        <DietSelect
+          open
+          diets={this.props.Diets}
+          deliveryContainers={this.props.DeliveryContainers}
+          species={this.props.Species}
+        />
         <div style={{
           justifyContent: 'space-around', alignItems: 'center', display: 'flex',
         }}

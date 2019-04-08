@@ -732,7 +732,7 @@
     humps "^2.0.1"
     prop-types "^15.5.10"
 
-"@material-ui/core@^3.9.2", "@material-ui/core@^3.9.3":
+"@material-ui/core@^3.9.3":
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.9.3.tgz#d378c1f4beb18df9a534ca7258c2c33fb8e0e51f"
   integrity sha512-REIj62+zEvTgI/C//YL4fZxrCVIySygmpZglsu/Nl5jPqy3CDjZv1F9ubBYorHqmRgeVPh64EghMMWqk4egmfg==
@@ -4419,13 +4419,13 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-material-table@1.28.1:
-  version "1.28.1"
-  resolved "https://registry.yarnpkg.com/material-table/-/material-table-1.28.1.tgz#4dba303f1097aa75a0fa09926d77f0d9363d5aae"
-  integrity sha512-MnMnBCZmAMnF+HW14FJPdDz1TCFbeuVLHB2Tm7ns8fdHOP6qaMdcSMUnAFYRGwQiFQsPaAoVti1PhkbFKMSbcw==
+material-table@^1.30.0:
+  version "1.30.0"
+  resolved "https://registry.yarnpkg.com/material-table/-/material-table-1.30.0.tgz#e9cce017d82c40bfa0367a9b72b43f5bcb2e366c"
+  integrity sha512-7oy5J6gjXagCwFYa9z+XCFFGDvvVfjkP5ixJ34agbo9nm1ZxMf8nrfyrD8p2SDdnM9hxvw32/10G0mCvCU/2VQ==
   dependencies:
     "@date-io/date-fns" "^1.1.0"
-    "@material-ui/core" "^3.9.2"
+    "@material-ui/core" "^3.9.3"
     classnames "^2.2.6"
     date-fns "^2.0.0-alpha.27"
     debounce "^1.2.0"

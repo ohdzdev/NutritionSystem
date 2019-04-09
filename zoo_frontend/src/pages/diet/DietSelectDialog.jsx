@@ -1,15 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import propTypes from 'prop-types';
 
 import {
-  Dialog, DialogContent, DialogActions, DialogTitle,
+  Dialog, DialogContent, DialogActions, DialogTitle, Button, withTheme,
 } from '@material-ui/core';
 
 import MaterialTable from 'material-table';
 
 import TableColumnHelper from '../../util/TableColumnHelper';
 
+const applyCellHighlightIfSelected = (data, selected, rowSelected, selectedStyles) => {
+  if (rowSelected) {
+    if (data.find((item) => (item.dietId === selected && item.dietId === rowSelected.dietId))) {
+      return selectedStyles;
+    }
+  }
+  return null;
+};
+
 const DietSelectDialog = (props) => {
+  // state
+  const [selected, setSelected] = useState(props.defaultDiet);
+
+  const handleDialogEvent = (cancelled) => {
+    if (cancelled) {
+      props.onCancel();
+    } else {
+      props.onSave(selected);
+    }
+  };
+
   const speciesLookup = {};
   props.species.slice(0).reduce((acc, species) => {
     acc[species.speciesId] = species.species;
@@ -37,30 +57,43 @@ const DietSelectDialog = (props) => {
   preppedColumns[2].lookup = speciesLookup;
   preppedColumns[3].lookup = deliveryContainerLookup;
 
+  preppedColumns[0].cellStyle = (rowData) => applyCellHighlightIfSelected(props.diets, rowData, selected, { backgroundColor: props.theme.palette.primary.light });
+
   return (
     <div>
       {props.open &&
       <Dialog
         open={props.open}
         maxWidth={false}
+        onClose={() => handleDialogEvent(true)}
       >
         <DialogTitle>
           Select Diet
         </DialogTitle>
         <DialogContent>
-          <div style={{ width: '80vw' }}>
+          <div style={{ width: '85vw' }}>
             <MaterialTable
+              title=""
               data={props.diets}
               columns={preppedColumns}
               options={{
-                maxBodyHeight: 500,
-                pageSize: props.diets.length,
+                pageSize: 7,
+              }}
+              onRowClick={(evt, rowData) => {
+                setSelected({ ...rowData });
               }}
             />
           </div>
 
         </DialogContent>
-        <DialogActions />
+        <DialogActions>
+          <Button onClick={() => handleDialogEvent(true)} color="primary">
+              Cancel
+          </Button>
+          <Button onClick={() => handleDialogEvent(false)} color="primary" disabled={selected === null || (props.defaultDiet && selected && props.defaultDiet.dietId === selected.dietId)}>
+              Save
+          </Button>
+        </DialogActions>
       </Dialog>
     }
     </div>
@@ -72,7 +105,14 @@ DietSelectDialog.propTypes = {
   diets: propTypes.arrayOf(propTypes.object).isRequired,
   deliveryContainers: propTypes.arrayOf(propTypes.object).isRequired,
   species: propTypes.arrayOf(propTypes.object).isRequired,
-
+  defaultDiet: propTypes.object,
+  onCancel: propTypes.func.isRequired,
+  onSave: propTypes.func.isRequired,
+  theme: propTypes.object.isRequired,
 };
 
-export default DietSelectDialog;
+DietSelectDialog.defaultProps = {
+  defaultDiet: null,
+};
+
+export default withTheme()(DietSelectDialog);

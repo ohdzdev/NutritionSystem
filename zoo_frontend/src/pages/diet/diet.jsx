@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import Link from 'next/link';
-// import { Button } from '@material-ui/core';
-
-// import { hasAccess, Home, Diet } from '../PageAccess';
-
-import { SingleSelect } from '../../components';
 
 import {
   Animals, CaseNotes, DeliveryContainers, DietChanges, DietHistory, DietPlans, Diets, FoodPrepTables, LifeStages, PrepNotes, Species,
@@ -16,15 +10,17 @@ import DietSelect from './DietSelectDialog';
 export default class extends Component {
   static propTypes = {
     // account: PropTypes.object.isRequired,
-    token: PropTypes.string,
+    // token: PropTypes.string,
     // classes: PropTypes.object.isRequired,
     Diets: PropTypes.arrayOf(PropTypes.object).isRequired,
     DeliveryContainers: PropTypes.arrayOf(PropTypes.object).isRequired,
     Species: PropTypes.arrayOf(PropTypes.object).isRequired,
+    selectedDiet: PropTypes.object,
   };
 
   static defaultProps = {
-    token: '',
+    // token: '',
+    selectedDiet: null,
   }
 
   static async getInitialProps({ query, authToken }) {
@@ -44,27 +40,17 @@ export default class extends Component {
     // get base data that we know we will need to load
     const [
       AllAnimals,
-      // AllCaseNotes,
       AllDeliveryContainers,
-      // AllDietChanges,
-      // AllDietHistory,
-      // AllDietPlans,
       AllDiets,
       AllFoodPrepTables,
       AllLifeStages,
-      // AllPrepNotes,
       AllSpecies,
     ] = await Promise.all([
       serverAnimalAPI.getAnimals(),
-      // serverCaseNotesAPI.getCaseNotes(),
       serverDeliverContainersAPI.getDeliveryContainers(),
-      // serverDietChangesAPI.getDietChanges(),
-      // serverDietHistoryAPI.getDietHistories(),
-      // serverDietPlansAPI.getDietPlans(),
       serverDietsAPI.getDiets(),
       serverFoodPrepTablesAPI.getFoodPrepTables(),
       serverLifeStagesAPI.getLifeStages(),
-      // serverPrepNotesAPI.getPrepNotes(),
       serverSpeciesAPI.getSpecies(),
     ]);
 
@@ -103,6 +89,7 @@ export default class extends Component {
         LifeStages: AllLifeStages.data,
         PrepNotes: matchedPrepNotes.data,
         Species: AllSpecies.data,
+        selectedDiet: matchedDiet,
       };
     }
     return {
@@ -118,10 +105,9 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
-    const allDietSuggestions = props.Diets.map((diet) => ({ label: diet.noteId, value: diet.dietId }));
     this.state = {
-      asdf: props.token, // eslint-disable-line react/no-unused-state
-      allDietSuggestions,
+      dietSelectDialogOpen: true,
+      selectedDiet: props.selectedDiet,
     };
   }
 
@@ -136,24 +122,18 @@ export default class extends Component {
           justifyContent: 'center',
         }}
       >
-        <SingleSelect
-          label="Diet"
-          suggestions={this.state.allDietSuggestions}
-        />
+
         <DietSelect
-          open
+          open={this.state.dietSelectDialogOpen}
           diets={this.props.Diets}
           deliveryContainers={this.props.DeliveryContainers}
           species={this.props.Species}
+          onCancel={() => this.setState({ dietSelectDialogOpen: false })}
+          onSave={(diet) => this.setState({ selectedDiet: diet, dietSelectDialogOpen: false })}
         />
-        <div style={{
-          justifyContent: 'space-around', alignItems: 'center', display: 'flex',
-        }}
-        >
-          <pre>
-            {/* {JSON.stringify(this.props, null, 2)} */}
-          </pre>
-        </div>
+        <pre>
+          {JSON.stringify(this.state.selectedDiet, null, 2)}
+        </pre>
       </div>
     );
   }

@@ -35,9 +35,7 @@ class KitchenView extends Component {
     super(props);
 
     this.state = {
-      totalPages: 0,
-      currentPage: 0, // index of the data the user is on
-      data: [],
+      currentIndex: 0, // index of the data the user is on
     };
   }
 
@@ -50,16 +48,21 @@ class KitchenView extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, diets } = this.props;
+
+    console.log('Total pages: ', this.state.totalPages);
+    console.log('Current Page: ', this.state.currentPage);
+    console.log(diets);
+
     return (
       <div>
         <div className={classes.pageText}>
-          <Typography> Page 1/23</Typography>
+          <Typography> Page {this.state.currentIndex + 1}/{diets && diets.length}</Typography>
         </div>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <div style={{ flex: 1 }}>
             <Typography style={{ fontSize: 30 }}>Procupine, Indian Crested</Typography>
-            <Typography style={{ fontSize: 22 }}>Abigail</Typography>
+            <Typography style={{ fontSize: 22 }}>{diets[this.state.currentIndex].noteId}</Typography>
             <Typography style={{ fontSize: 20, marginTop: 20 }}>Prep Notes</Typography>
             <div>
               <Typography>
@@ -100,6 +103,7 @@ class KitchenView extends Component {
 
 KitchenView.propTypes = {
   classes: PropTypes.object.isRequired,
+  diets: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles)(KitchenView);

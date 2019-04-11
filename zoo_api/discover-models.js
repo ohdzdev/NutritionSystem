@@ -1,4 +1,4 @@
-// STEPS TO UPDATE LOOPBACK MODEL SCHEMA
+
 /**
  * STEPS TO UPDATE LOOPBACK MODEL SCHEMA
  * 1. in cmd set node environment to 'production'

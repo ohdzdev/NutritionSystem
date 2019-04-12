@@ -21,6 +21,7 @@ export default (theme) => ({
   card: {
     padding: theme.spacing.unit * 2,
     margin: theme.spacing.unit,
+    overflow: 'visible',
   },
   newDietButton: {
     marginLeft: theme.spacing.unit * 2,

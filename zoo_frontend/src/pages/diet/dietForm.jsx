@@ -35,21 +35,19 @@ const formikEnhancer = withFormik({
     label: Yup.bool(),
     dcId: Yup.string().required('Delivery Container is required'),
     ncPrepares: Yup.bool(),
-    groupId: Yup.string(),
+    groupId: Yup.string().required('Group Diet is required, if no group diet. set to "NONE"'),
     analyzed: Yup.bool(),
-    numAnimals: Yup.string().required('Number of animals is required'),
   }),
   mapPropsToValues: props => ({
     speciesId: props.speciesId ? String(props.speciesId) : '',
-    current: props.current === 1,
+    current: props.current ? props.current === 1 : true, // default true
     tableId: props.tableId ? String(props.tableId) : '',
     noteId: props.noteId ? props.noteId : '',
-    label: props.label === 1,
+    label: props.label ? props.label === 1 : true, // default true
     dcId: props.dcId ? String(props.dcId) : '',
-    ncPrepares: props.ncPrepares === 1,
-    groupId: props.groupId ? String(props.groupId) : '',
+    ncPrepares: props.ncPrepares ? props.ncPrepares === 1 : true, // default true
+    groupId: props.groupId ? String(props.groupId) : '1',
     analyzed: props.analyzed === 1,
-    numAnimals: props.numAnimals ? String(props.numAnimals) : '',
     submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
@@ -85,7 +83,6 @@ const Form = props => {
       ncPrepares,
       groupId,
       analyzed,
-      // numAnimals,
     },
     errors,
     touched,
@@ -100,6 +97,10 @@ const Form = props => {
     handleChange(e);
     setFieldTouched(name, true, false);
   };
+
+  // const { // DEBUG FORMIK STATE
+  //   groupDietCodes, deliveryContainerCodes, tableCodes, speciesCodes, ...debug
+  // } = props;
   return (
     <form
       onSubmit={(e) => {
@@ -255,7 +256,7 @@ const Form = props => {
           {props.submitButtonText}
         </Button>
       </Grid>
-      {/* <DisplayFormikState {...props.values} /> */}
+      {/* <DisplayFormikState {...debug} /> */}
     </form>
   );
 };
@@ -264,14 +265,13 @@ Form.propTypes = {
   values: PropTypes.shape({
     speciesId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     current: PropTypes.bool.isRequired,
-    tableId: PropTypes.string.isRequired,
+    tableId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     noteId: PropTypes.string,
     label: PropTypes.bool.isRequired,
-    dcId: PropTypes.string.isRequired,
+    dcId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     ncPrepares: PropTypes.bool.isRequired,
     groupId: PropTypes.string.isRequired,
     analyzed: PropTypes.bool.isRequired,
-    numAnimals: PropTypes.string.isRequired,
   }),
   errors: PropTypes.object.isRequired,
   touched: PropTypes.object.isRequired,
@@ -308,9 +308,8 @@ Form.defaultProps = {
     label: true,
     dcId: '',
     ncPrepares: true,
-    groupId: '',
+    groupId: '1',
     analyzed: false,
-    numAnimals: '1',
   },
   isSubmitting: false,
   submitButtonText: 'Submit',

@@ -63,14 +63,14 @@ class KitchenView extends Component {
           <div style={{ flex: 1 }}>
             <Typography style={{ fontSize: 30 }}>Procupine, Indian Crested</Typography>
             <Typography style={{ fontSize: 22 }}>{diets[this.state.currentIndex].noteId}</Typography>
-            <Typography style={{ fontSize: 20, marginTop: 20 }}>Prep Notes</Typography>
+            <Typography style={{ fontSize: 20, marginTop: 30 }}>Prep Notes</Typography>
             <div>
               <Typography>
                   No shredded carrot.
               </Typography>
             </div>
             <div>
-              <Typography style={{ fontSize: 20, marginTop: 20 }}>History</Typography>
+              <Typography style={{ fontSize: 20, marginTop: 30 }}>History</Typography>
               <div>
                 <Typography>
                   date: changes
@@ -83,7 +83,7 @@ class KitchenView extends Component {
               <Typography style={{ fontSize: 22 }}>Jungle</Typography>
               <Typography style={{ fontSize: 22 }}>GIBBON</Typography>
             </div>
-            <Table style={{ marginTop: 20 }}>
+            <Table style={{ marginTop: 30 }}>
               <TableBody>
                 {rows.map(row => (
                   <TableRow key={row.id}>

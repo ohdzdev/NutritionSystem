@@ -40,12 +40,27 @@ export default class extends Component {
     Subenclosures: PropTypes.arrayOf(PropTypes.object).isRequired,
     selectedDiet: PropTypes.object,
     new: PropTypes.bool,
+
+    CaseNotes: PropTypes.arrayOf(PropTypes.object),
+    DietChanges: PropTypes.arrayOf(PropTypes.object),
+    DietHistory: PropTypes.arrayOf(PropTypes.object),
+    DietPlans: PropTypes.arrayOf(PropTypes.object),
+    PrepNotes: PropTypes.arrayOf(PropTypes.object),
+
+    serverError: PropTypes.string,
   };
 
   static defaultProps = {
     token: '',
     selectedDiet: null,
     new: false,
+    CaseNotes: [],
+    DietChanges: [],
+    DietHistory: [],
+    DietPlans: [],
+    PrepNotes: [],
+
+    serverError: '',
   };
 
   static async getInitialProps({ query, authToken }) {
@@ -83,6 +98,18 @@ export default class extends Component {
         const dietId = parseInt(query.id, 10);
         const matchedDiet = AllDiets.data.find((findDiet) => findDiet.dietId === dietId);
 
+        if (!matchedDiet) {
+          return {
+            Animals: AllAnimals.data,
+            DeliveryContainers: AllDeliveryContainers.data,
+            Diets: AllDiets.data,
+            FoodPrepTables: AllFoodPrepTables.data,
+            LifeStages: AllLifeStages.data,
+            Species: AllSpecies.data,
+            Subenclosures: AllSubenclosures.data,
+            serverError: 'Diet in URL could not be found.',
+          };
+        }
         const serverMatchedDietQuery = { where: { dietId } };
 
         const [matchedCaseNotes, matchedDietChanges, matchedDietHistory, matchedDietPlans, matchedPrepNotes] = await Promise.all([
@@ -135,10 +162,19 @@ export default class extends Component {
     super(props);
 
     this.state = {
-      newDietOpen: props.new,
+      newDietOpen: props.new, // auto open up new form if from the url
       dietSelectDialogOpen: !props.new && !props.selectedDiet,
-      Diets: props.Diets,
-      selectedDiet: props.selectedDiet,
+      Diets: props.Diets, // load Diets into the state to allow us to add a new diet in if created via page
+      selectedDiet: props.selectedDiet || null, // if a user has a selected diet from the URL load it here
+
+      // if diet specific stuff is gathered from URL load it into state so we can change dependent tables etc accordingly
+      CaseNotes: props.CaseNotes || [],
+      DietChanges: props.DietChanges || [],
+      DietHistory: props.DietHistory || [],
+      DietPlans: props.DietPlans || [],
+      PrepNotes: props.PrepNotes || [],
+
+      // dropdown selection codes
       speciesCodeOptions: props.Species.map((item) => ({ label: item.species ? item.species : '', value: item.speciesId })),
       deliveryContainerCodeOptions: props.DeliveryContainers.map((item) => ({ label: item.dc ? item.dc : '', value: item.dcId })),
       groupDietCodeOptions: props.Subenclosures.map((item) => ({ label: item.subenclosure ? item.subenclosure : '', value: item.seId })),
@@ -147,6 +183,41 @@ export default class extends Component {
     this.clientDietAPI = new Diets(props.token);
 
     this.notificationBar = React.createRef();
+
+    this.clientCaseNotesAPI = new CaseNotes(props.token);
+    this.clientDietChangesAPI = new DietChanges(props.token);
+    this.clientDietHistoryAPI = new DietHistory(props.token);
+    this.clientDietPlansAPI = new DietPlans(props.token);
+    this.clientPrepNotesAPI = new PrepNotes(props.token);
+  }
+
+  componentDidMount() {
+    if (this.props.serverError) {
+      this.notificationBar.current.showNotification('error', `Error from server: ${this.props.serverError}`);
+    }
+  }
+
+  grabDietRelatedRecords = async (selected) => {
+    if (selected) {
+      const { dietId } = selected;
+      const serverMatchedDietQuery = { where: { dietId } };
+
+      const [matchedCaseNotes, matchedDietChanges, matchedDietHistory, matchedDietPlans, matchedPrepNotes] = await Promise.all([
+        this.clientCaseNotesAPI.getCaseNotes(serverMatchedDietQuery),
+        this.clientDietChangesAPI.getDietChanges(serverMatchedDietQuery),
+        this.clientDietHistoryAPI.getDietHistories(serverMatchedDietQuery),
+        this.clientDietPlansAPI.getDietPlans(serverMatchedDietQuery),
+        this.clientPrepNotesAPI.getPrepNotes(serverMatchedDietQuery),
+      ]);
+      return Promise.resolve({
+        matchedCaseNotes: matchedCaseNotes.data,
+        matchedDietChanges: matchedDietChanges.data,
+        matchedDietHistory: matchedDietHistory.data,
+        matchedDietPlans: matchedDietPlans.data,
+        matchedPrepNotes: matchedPrepNotes.data,
+      });
+    }
+    return Promise.reject(new Error('selected diet is blank'));
   }
 
   handleDietUpdate(payload) {
@@ -205,7 +276,7 @@ export default class extends Component {
       this.clientDietAPI.createDiets(localPayload).then(
         (result) => {
           this.setState(
-            (prevState) => ({ Diets: [...prevState.Diets, result.data], newDietOpen: false }),
+            (prevState) => ({ Diets: [...prevState.Diets, result.data], newDietOpen: false, selectedDiet: result.data }),
             () => {
               res(); // once state updated, and successfull network call remove loader
             },
@@ -247,7 +318,10 @@ export default class extends Component {
               </Button>
               <Button
                 onClick={() => {
-                  this.setState({ newDietOpen: true, selectedDiet: null }, () => {
+                  this.setState({
+                    newDietOpen: true,
+                    selectedDiet: null,
+                  }, () => {
                     const href = '/diet?id=new';
                     Router.push(href, href, { shallow: true });
                   });
@@ -304,11 +378,29 @@ export default class extends Component {
           onSave={(diet) => this.setState({ selectedDiet: diet, dietSelectDialogOpen: false }, () => {
             const href = `/diet?id=${diet.dietId}`;
             Router.push(href, href, { shallow: true });
+
+            // set loading to true, and load all dependent info from API
+            this.setState({ loading: true }, () => {
+              this.grabDietRelatedRecords(diet).then((results) => {
+                this.setState({
+                  loading: false,
+                  CaseNotes: results.matchedCaseNotes,
+                  DietChanges: results.matchedDietChanges,
+                  DietHistory: results.matchedDietHistory,
+                  DietPlans: results.matchedDietPlans,
+                  PrepNotes: results.matchedPrepNotes,
+                });
+              }, (reason) => {
+                console.error(reason);
+                this.setState({ loading: false });
+              });
+            });
           })
           }
         />
-        <pre>{JSON.stringify(this.state.selectedDiet, null, 2)}</pre>
         <Notifications ref={this.notificationBar} />
+        <div>{this.state.loading}</div>
+        <pre>{JSON.stringify(this.state.DietPlans, null, 2)}</pre>
       </div>
     );
   }

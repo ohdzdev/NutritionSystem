@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import FileDownload from 'js-file-download';
+
 const API_BASE_URL = process.env.BACKEND_URL;
 
 class Diet {
@@ -128,6 +130,16 @@ class Diet {
     // if params and createBlank, ignore and send in params
     const res = await axios.post(uri, params).catch((err) => Promise.reject(err));
     return res;
+  }
+
+  /**
+   * download the diet analysis excel file
+   * @param {integer} dietId diet id for analysis
+   */
+  async downloadDietAnalysis(dietId) {
+    const uri = `${API_BASE_URL}/api/Diets/${dietId}/export-diet-analysis?access_token=${this.token}`;
+    const res = await axios.get(uri);
+    FileDownload(res.data, 'DietAnalysis.xlsm');
   }
 }
 

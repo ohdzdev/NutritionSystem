@@ -90,6 +90,7 @@ const Form = props => {
     handleChange,
     isValid,
     setFieldTouched,
+    setFieldValue,
     isSubmitting,
   } = props;
 
@@ -97,6 +98,16 @@ const Form = props => {
     e.persist();
     handleChange(e);
     setFieldTouched(name, true, false);
+  };
+
+  const handleBlur = (name, e) => {
+    const { value } = e.target;
+    if (name === 'food' && ohdzName === '') {
+      if (value) {
+        setFieldValue('ohdzName', value, false);
+        setFieldTouched('ohdzName', true, false);
+      }
+    }
   };
   return (
     <form
@@ -118,6 +129,7 @@ const Form = props => {
             variant="outlined"
             fullWidth
             onFocus={change.bind(null, 'food')}
+            onBlur={handleBlur.bind(null, 'food')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -339,6 +351,7 @@ Form.propTypes = {
   handleChange: PropTypes.func.isRequired,
   isValid: PropTypes.bool.isRequired,
   setFieldTouched: PropTypes.func.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   budgetCodes: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string,

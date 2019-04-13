@@ -1,0 +1,12 @@
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\appsettings.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\ExcelApp.deps.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\ExcelApp.runtimeconfig.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\ExcelApp.runtimeconfig.dev.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\ExcelApp.dll
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\ExcelApp.pdb
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\ExcelApp.csprojAssemblyReference.cache
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\ExcelApp.csproj.CoreCompileInputs.cache
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\ExcelApp.AssemblyInfoInputs.cache
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\ExcelApp.AssemblyInfo.cs
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\ExcelApp.dll
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\ExcelApp.pdb

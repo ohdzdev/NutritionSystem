@@ -9,13 +9,16 @@ module.exports = function(Diets) {
       if (err || !diet) {
         cb(Util.createError('Diet not found'));
       } else {
-        // make a normal workbook to temporarily
+        // make a temporary file for the workbook
         tmp.file({ postfix: '.xlsm' }, (err3, tmpWorkbook) => {
           if (err3) {
             cb(Util.createError('Error making shared temp file'));
           } else {
-            const processResult = spawnSync('python', ['./server/copyExcelData.py', `${diet.dietId}`, tmpWorkbook]);
+            const processResult = spawnSync('./ExcelApp', [`${diet.dietId}`, tmpWorkbook], {
+              cwd: './lib/DietAnalysisExport/bin'
+            });
             if (!processResult || processResult.status !== 0) {
+              console.log(processResult);
               cb(Util.createError('Error running export process'));
             } else {
               res.download(tmpWorkbook, 'DietDataAnalysis.xlsm');

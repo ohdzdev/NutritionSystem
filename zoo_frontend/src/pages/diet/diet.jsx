@@ -332,6 +332,24 @@ export default class extends Component {
               >
                 New Diet
               </Button>
+              {this.state.selectedDiet &&
+                <Button
+                  onClick={async () => {
+                    // TODO show some sort of processing or something
+                    try {
+                      await this.clientDietAPI.downloadDietAnalysis(this.state.selectedDiet.dietId);
+                    } catch (err) {
+                      console.log(err);
+                      this.notificationBar.current.showNotification('error', 'Error downloading diet analysis.');
+                    }
+                  }}
+                  color="secondary"
+                  variant="outlined"
+                  className={classes.exportDietButton}
+                >
+                  Open Analysis in Excel
+                </Button>
+              }
             </span>
             <span
               style={{

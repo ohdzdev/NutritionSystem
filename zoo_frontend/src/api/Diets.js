@@ -129,6 +129,17 @@ class Diet {
     const res = await axios.post(uri, params).catch((err) => Promise.reject(err));
     return res;
   }
+
+  /**
+   * download the diet analysis excel file
+   * @param {integer} dietId diet id for analysis
+   */
+  async downloadDietAnalysis(dietId) {
+    const uri = `${API_BASE_URL}/api/Diets/${dietId}/export-diet-analysis?access_token=${this.token}`;
+    // Directing the window location to the file download makes the file download correctly
+    // this makes it difficult to know if the call succeeded
+    window.location = uri;
+  }
 }
 
 export default Diet;

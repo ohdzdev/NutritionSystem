@@ -26,6 +26,9 @@ export default (theme) => ({
   newDietButton: {
     marginLeft: theme.spacing.unit * 2,
   },
+  exportDietButton: {
+    marginLeft: theme.spacing.unit * 2,
+  },
   deleteDietButton: {
     color: 'white',
     backgroundColor: '#b71c1c',

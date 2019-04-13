@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-import FileDownload from 'js-file-download';
-
 const API_BASE_URL = process.env.BACKEND_URL;
 
 class Diet {
@@ -138,8 +136,9 @@ class Diet {
    */
   async downloadDietAnalysis(dietId) {
     const uri = `${API_BASE_URL}/api/Diets/${dietId}/export-diet-analysis?access_token=${this.token}`;
-    const res = await axios.get(uri);
-    FileDownload(res.data, 'DietAnalysis.xlsm');
+    // Directing the window location to the file download makes the file download correctly
+    // this makes it difficult to know if the call succeeded
+    window.location = uri;
   }
 }
 

@@ -1,0 +1,8 @@
+About: This application controls the generation of the .xlsm file that is triggered off of the diet page. It takes an input dietId and an output file string as its input params, and generates the appropriate excel file at the location requested via a template file that needs to be stored on the server.
+
+Dev Instructions: App was developed using .NET Core 2.1 in Visual Studio 2017. App creates temp data tables which are loaded via stored procedures in the MySQL database. 
+Connection string to database is determined via the appsettings.json file under the DBConnection property. This must contain a string in the format of "server=[xxx.xxx.xxx.xxx];user id=[xxxx];password=[xxx];port=3306;database=[dbName];" Omit square brackets
+Program then fills tables with appropriate data from DB, formats data (including performing a pivot on "Feed Data" table), and puts all the data into the appropriate places on a copy of the template file. The filled file is then output at the location specified via the input command line argument.
+To edit any source code, please open the .sln file in the /src directory using visual studio 2017+
+
+Deployment: pre-compiled files are all contained in the bin folder. Place files in appropriate place on destination server. Update appsettings.json file with DB connection string. Run application via either web interface, or stand alone with 2 args, separated by a single blank space. Arg 1 is the DietId of the diet being exported. Arg 2 is the location and filename you want for the output file.

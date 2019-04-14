@@ -398,6 +398,10 @@ export default class extends Component {
                   CaseNotes: results.matchedCaseNotes,
                   DietChanges: results.matchedDietChanges,
                   DietHistory: results.matchedDietHistory,
+                  DietHistoryOptions: results.matchedDietHistory.filter((item, index) => results.matchedDietHistory.findIndex((el) => el.startId === item.startId) >= index).map((el) => ({
+                    text: moment(new Date(el.startId)).format('MM-DD-YYYY h:mm A'),
+                    id: el.startId,
+                  })).reverse(),
                   DietPlans: results.matchedDietPlans,
                   PrepNotes: results.matchedPrepNotes,
                 });
@@ -412,7 +416,7 @@ export default class extends Component {
         {this.state.loading &&
         <LinearProgress />
         }
-        { (this.state.DietPlans.length > 0 || this.state.DietHistory.length > 0) &&
+        { this.state.selectedDiet && !this.state.loading &&
         <Card className={classes.card}>
           <Grid container>
             <Grid item xs={12} sm={2}>
@@ -449,6 +453,7 @@ export default class extends Component {
           </Grid>
         </Card>
         }
+        {this.state.selectedDiet && !this.state.loading &&
         <Grid container>
           <Grid item xs={12} md={6}>
             <Card className={classes.card}>
@@ -461,9 +466,12 @@ export default class extends Component {
             </Card>
           </Grid>
         </Grid>
-        <Card className={classes.card}>
-          <pre>{JSON.stringify(this.state.DietChanges, null, 2)}</pre>
-        </Card>
+        }
+        {this.state.selectedDiet && !this.state.loading &&
+          <Card className={classes.card}>
+            <pre>{JSON.stringify(this.state.DietChanges, null, 2)}</pre>
+          </Card>
+        }
         <Notifications ref={this.notificationBar} />
       </div>
     );

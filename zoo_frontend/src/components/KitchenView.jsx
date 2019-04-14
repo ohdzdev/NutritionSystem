@@ -26,6 +26,21 @@ const styles = theme => ({
     textAlign: 'right',
     marginBottom: theme.spacing.unit,
   },
+  topMargin: {
+    marginTop: theme.spacing.unit * 7,
+    marginBottom: theme.spacing.unit,
+  },
+  bottomMargin: {
+    marginBottom: theme.spacing.unit,
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  leftContainer: {
+    flex: 1,
+    paddingRight: theme.spacing.unit * 3,
+  },
 });
 
 const KitchenView = ({
@@ -35,19 +50,19 @@ const KitchenView = ({
     <div className={classes.pageText}>
       <Typography> Page {currentPage}/{pageLength}</Typography>
     </div>
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <div style={{ flex: 1 }}>
-        <Typography style={{ fontSize: 30 }}>{species}</Typography>
-        <Typography style={{ fontSize: 22 }}>{noteId}
+    <div className={classes.container}>
+      <div className={classes.leftContainer}>
+        <Typography variant="h1" style={{ fontSize: 30 }} className={classes.bottomMargin}>{species}</Typography>
+        <Typography variant="h2" style={{ fontSize: 22 }}>{noteId}
         </Typography>
-        <Typography style={{ fontSize: 20, marginTop: 30 }}>Prep Notes</Typography>
+        <Typography className={classes.topMargin} variant="h3" style={{ fontSize: 22, color: 'grey' }}>Prep Notes</Typography>
         <div>
-          {prepNotes.map(txt => <Typography>{txt.prepNote}</Typography>)}
+          {prepNotes.map(txt => <Typography style={{ fontSize: 18 }}>{txt.prepNote}</Typography>)}
         </div>
         <div>
-          <Typography style={{ fontSize: 20, marginTop: 30 }}>History</Typography>
+          <Typography variant="h3" style={{ fontSize: 22, marginTop: 30, color: 'grey' }}>History</Typography>
           <div>
-            <Typography>
+            <Typography style={{ fontSize: 18 }}>
                   date: changes
             </Typography>
           </div>
@@ -55,10 +70,10 @@ const KitchenView = ({
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ textAlign: 'right' }}>
-          <Typography style={{ fontSize: 22 }}>Jungle</Typography>
-          <Typography style={{ fontSize: 22 }}>GIBBON</Typography>
+          <Typography variant="h2" style={{ fontSize: 22 }} className={classes.bottomMargin}>Jungle</Typography>
+          <Typography variant="h2" style={{ fontSize: 22 }}>GIBBON</Typography>
         </div>
-        <Table style={{ marginTop: 30 }}>
+        <Table className={classes.topMargin}>
           <TableBody>
             {rows.map(row => (
               <TableRow key={row.id}>
@@ -88,7 +103,7 @@ KitchenView.defaultProps = {
   pageLength: 0,
   noteId: '',
   species: '',
-  prepNotes: ['none'],
+  prepNotes: [],
 };
 
 

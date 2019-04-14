@@ -36,7 +36,7 @@ TabContainer.propTypes = {
 
 export default class extends Component {
   static propTypes = {
-    account: PropTypes.object.isRequired,
+    // account: PropTypes.object.isRequired,
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
     FoodPrepTables: PropTypes.array.isRequired,
@@ -78,7 +78,7 @@ export default class extends Component {
       diets: [],
       currentIndex: 0,
       species: '',
-      prepNotes: ['none'],
+      prepNotes: ['none', 'newline?'],
     };
 
     /* API */
@@ -163,6 +163,7 @@ export default class extends Component {
             aria-label="Previous"
             className={this.props.classes.fab}
             onClick={() => this.handlePrev()}
+            disabled={this.state.currentIndex === 0}
           >
             <PrevIcon className={this.props.classes.extendedIcon} />Prev
           </Fab>
@@ -189,6 +190,7 @@ export default class extends Component {
             aria-label="Next"
             className={this.props.classes.fab}
             onClick={() => this.handleNext()}
+            disabled={this.state.currentIndex + 1 >= this.state.diets.length}
 
           >
             Next<NextIcon className={this.props.classes.extendedIcon} />

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import Router from 'next/router';
 
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 
-import { Typography, Card } from '@material-ui/core';
+import {
+  Typography, Card, Grid, LinearProgress,
+} from '@material-ui/core';
 import {
   Animals,
   CaseNotes,
@@ -26,6 +29,7 @@ import { Notifications } from '../../components';
 
 import DietSelect from './DietSelectDialog';
 
+import DietHistoryList from './dietHistoryList';
 import DietForm from './dietForm';
 
 export default class extends Component {
@@ -160,7 +164,6 @@ export default class extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       newDietOpen: props.new, // auto open up new form if from the url
       dietSelectDialogOpen: !props.new && !props.selectedDiet,
@@ -179,6 +182,15 @@ export default class extends Component {
       deliveryContainerCodeOptions: props.DeliveryContainers.map((item) => ({ label: item.dc ? item.dc : '', value: item.dcId })),
       groupDietCodeOptions: props.Subenclosures.map((item) => ({ label: item.subenclosure ? item.subenclosure : '', value: item.seId })),
       tableCodeOptions: props.FoodPrepTables.map((item) => ({ label: item.description ? item.description : '', value: item.tableId })),
+
+      // dietHistory selections
+      DietHistoryOptions: props.DietHistory.filter((item, index) => props.DietHistory.findIndex((el) => el.startId === item.startId) >= index).map((el) => ({
+        text: moment(new Date(el.startId)).format('MM-DD-YYYY h:mm A'), // add moment here to clean it up
+        id: el.startId,
+      })).reverse(),
+
+      viewCurrentDietPlan: true,
+      selectedDietHistories: [],
     };
     this.clientDietAPI = new Diets(props.token);
 
@@ -292,7 +304,6 @@ export default class extends Component {
   }
 
   render() {
-    console.log(this.props); // TODO remove once page is finished
     const { classes } = this.props;
 
     return (
@@ -332,24 +343,6 @@ export default class extends Component {
               >
                 New Diet
               </Button>
-              {this.state.selectedDiet &&
-                <Button
-                  onClick={async () => {
-                    // TODO show some sort of processing or something
-                    try {
-                      await this.clientDietAPI.downloadDietAnalysis(this.state.selectedDiet.dietId);
-                    } catch (err) {
-                      console.log(err);
-                      this.notificationBar.current.showNotification('error', 'Error downloading diet analysis.');
-                    }
-                  }}
-                  color="secondary"
-                  variant="outlined"
-                  className={classes.exportDietButton}
-                >
-                  Open Analysis in Excel
-                </Button>
-              }
             </span>
             <span
               style={{
@@ -416,9 +409,62 @@ export default class extends Component {
           })
           }
         />
+        {this.state.loading &&
+        <LinearProgress />
+        }
+        { (this.state.DietPlans.length > 0 || this.state.DietHistory.length > 0) &&
+        <Card className={classes.card}>
+          <Grid container>
+            <Grid item xs={12} sm={2}>
+              <DietHistoryList
+                currentClick={() => {
+                  this.setState({ viewCurrentDietPlan: true, currentHistory: null });
+                }}
+                historyClick={(id) => {
+                  this.setState((prevState) => ({
+                    viewCurrentDietPlan: false,
+                    currentHistory: id,
+                    selectedDietHistories: prevState.DietHistory.filter((historyRecord) => {
+                      if (historyRecord.startId !== id) return false;
+                      return true;
+                    }),
+                  }));
+                }}
+                history={this.state.DietHistoryOptions}
+                currentSelected={this.state.viewCurrentDietPlan}
+                selectedHistory={this.state.currentHistory}
+              />
+            </Grid>
+            <Grid item xs={12} sm={10}>
+              {this.state.viewCurrentDietPlan &&
+              <pre>{JSON.stringify(this.state.DietPlans, null, 2)}</pre>
+            }
+              {!this.state.viewCurrentDietPlan &&
+              <div>
+                {this.state.currentHistory}
+                <pre>{JSON.stringify(this.state.selectedDietHistories, null, 2)}</pre>
+              </div>
+            }
+            </Grid>
+          </Grid>
+        </Card>
+        }
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            <Card className={classes.card}>
+              <pre>{JSON.stringify(this.state.CaseNotes, null, 2)}</pre>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Card className={classes.card}>
+              <pre>{JSON.stringify(this.state.PrepNotes, null, 2)}</pre>
+            </Card>
+          </Grid>
+        </Grid>
+        <Card className={classes.card}>
+          <pre>{JSON.stringify(this.state.DietChanges, null, 2)}</pre>
+        </Card>
         <Notifications ref={this.notificationBar} />
-        <div>{this.state.loading}</div>
-        <pre>{JSON.stringify(this.state.DietPlans, null, 2)}</pre>
       </div>
     );
   }

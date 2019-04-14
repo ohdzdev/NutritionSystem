@@ -8,7 +8,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 
-
 let id = 0;
 function createData(unit, food) {
   id += 1;
@@ -29,81 +28,68 @@ const styles = theme => ({
   },
 });
 
-
-class KitchenView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentIndex: 0, // index of the data the user is on
-    };
-  }
-
-  handleNext = () => {
-
-  }
-
-  handlePrev = () => {
-
-  }
-
-  render() {
-    const { classes, diets } = this.props;
-
-    console.log('Total pages: ', this.state.totalPages);
-    console.log('Current Page: ', this.state.currentPage);
-    console.log(diets);
-
-    return (
-      <div>
-        <div className={classes.pageText}>
-          <Typography> Page {this.state.currentIndex + 1}/{diets && diets.length}</Typography>
+const KitchenView = ({
+  classes, currentPage, pageLength, noteId, species, prepNotes,
+}) => (
+  <div>
+    <div className={classes.pageText}>
+      <Typography> Page {currentPage}/{pageLength}</Typography>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div style={{ flex: 1 }}>
+        <Typography style={{ fontSize: 30 }}>{species}</Typography>
+        <Typography style={{ fontSize: 22 }}>{noteId}
+        </Typography>
+        <Typography style={{ fontSize: 20, marginTop: 30 }}>Prep Notes</Typography>
+        <div>
+          {prepNotes.map(txt => <Typography>{txt.prepNote}</Typography>)}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <div style={{ flex: 1 }}>
-            <Typography style={{ fontSize: 30 }}>Procupine, Indian Crested</Typography>
-            <Typography style={{ fontSize: 22 }}>{diets[this.state.currentIndex].noteId}</Typography>
-            <Typography style={{ fontSize: 20, marginTop: 30 }}>Prep Notes</Typography>
-            <div>
-              <Typography>
-                  No shredded carrot.
-              </Typography>
-            </div>
-            <div>
-              <Typography style={{ fontSize: 20, marginTop: 30 }}>History</Typography>
-              <div>
-                <Typography>
+        <div>
+          <Typography style={{ fontSize: 20, marginTop: 30 }}>History</Typography>
+          <div>
+            <Typography>
                   date: changes
-                </Typography>
-              </div>
-            </div>
+            </Typography>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ textAlign: 'right' }}>
-              <Typography style={{ fontSize: 22 }}>Jungle</Typography>
-              <Typography style={{ fontSize: 22 }}>GIBBON</Typography>
-            </div>
-            <Table style={{ marginTop: 30 }}>
-              <TableBody>
-                {rows.map(row => (
-                  <TableRow key={row.id}>
-                    <TableCell align="left">{row.unit}</TableCell>
-                    <TableCell align="left">{row.food}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
         </div>
       </div>
-    );
-  }
-}
+      <div style={{ flex: 1 }}>
+        <div style={{ textAlign: 'right' }}>
+          <Typography style={{ fontSize: 22 }}>Jungle</Typography>
+          <Typography style={{ fontSize: 22 }}>GIBBON</Typography>
+        </div>
+        <Table style={{ marginTop: 30 }}>
+          <TableBody>
+            {rows.map(row => (
+              <TableRow key={row.id}>
+                <TableCell align="left">{row.unit}</TableCell>
+                <TableCell align="left">{row.food}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+    </div>
+  </div>
+);
 
 KitchenView.propTypes = {
   classes: PropTypes.object.isRequired,
-  diets: PropTypes.array.isRequired,
+  currentPage: PropTypes.number,
+  pageLength: PropTypes.number,
+  noteId: PropTypes.string,
+  species: PropTypes.string,
+  prepNotes: PropTypes.array,
 };
+
+KitchenView.defaultProps = {
+  currentPage: 0,
+  pageLength: 0,
+  noteId: '',
+  species: '',
+  prepNotes: ['none'],
+};
+
 
 export default withStyles(styles)(KitchenView);

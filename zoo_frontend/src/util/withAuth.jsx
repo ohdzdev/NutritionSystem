@@ -51,9 +51,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
 
       const api = new Api(c.authToken);
       try {
-        await api.validateToken().then(async () => {
-          // console.log('pass validation');
-        });
+        await api.validateToken();
 
         if (WrappedComponent.getInitialProps) {
           ctx.authToken = c.authToken;

@@ -76,7 +76,6 @@ class Login extends Component {
       }
       return;
     } catch (err) {
-      console.log(err.message);
       if (err.message === 'Role not found') {
         setTimeout(() => {
           this.notificationsRef.current.showNotification('error', 'This user has no role, please contact the system admin to add a user type to your account');

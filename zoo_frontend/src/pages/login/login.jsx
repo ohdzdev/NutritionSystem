@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 
 import LocalStorage from '../../static/LocalStorage';
 
+import Notifications from '../../components/Notifications';
+
 class Login extends Component {
   static propTypes = {
     api: PropTypes.object.isRequired,
@@ -39,6 +41,8 @@ class Login extends Component {
       error: false,
       errorMessage: '',
     };
+
+    this.notificationsRef = React.createRef();
   }
 
   componentDidMount() {
@@ -60,8 +64,17 @@ class Login extends Component {
 
     try {
       await this.props.api.login(email, password);
-      Router.push('/');
+      if (process.browser) {
+        Router.events.on('routeChangeError', (err) => {
+          console.error(err);
+          this.notificationsRef.current.showNotification('error', 'Application redirection error, please close browser and re-open');
+        }); // leaving this in, let's us see if there are weird /login redirect issues
+
+        Router.push('/'); // previous block checks if this was successfull or not
+      }
+      return;
     } catch (err) {
+      console.error(err);
       this.setState({ error: true, errorMessage: 'Invalid username/password!' });
     }
   }
@@ -140,6 +153,7 @@ class Login extends Component {
             </Button>
           </form>
         </Paper>
+        <Notifications ref={this.notificationsRef} />
       </div>
     );
   }

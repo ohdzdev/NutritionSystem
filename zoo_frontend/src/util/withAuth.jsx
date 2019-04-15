@@ -45,7 +45,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
           // console.log('pass validation');
         }, () => {
           if (process.browser) {
-            document.cookie = 'authToken=;';
+            document.cookie = 'authToken=; path=/';
           }
           api.setToken('');
           redirectTo('/login', { res: ctx.res, status: 301 });
@@ -63,7 +63,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
           // ignore this error
         }
         if (process.browser) {
-          document.cookie = 'authToken=;';
+          document.cookie = 'authToken=; path=/';
         }
         redirectTo('/login', { res: ctx.res, status: 301 });
         return { ...pageProps };

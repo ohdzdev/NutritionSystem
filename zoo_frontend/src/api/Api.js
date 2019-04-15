@@ -39,7 +39,7 @@ class Api {
         LocalStorage.setLastName(data.lastName);
         LocalStorage.setRole(data.role);
         LocalStorage.setId(data.id);
-        document.cookie = `authToken=${res.data.token};`;
+        document.cookie = `authToken=${res.data.token}; path=/`;
         this.setToken(res.data.token);
       } else {
         throw new Error('Invalid login return');
@@ -68,7 +68,7 @@ class Api {
       }
     }
     this.token = '';
-    document.cookie = 'authToken=;';
+    document.cookie = 'authToken=; path=/';
   }
 }
 

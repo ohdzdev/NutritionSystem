@@ -351,7 +351,7 @@ class User extends Component {
     resolve();
   })
 
-  handlePasswordTextChange = (passwordText) => this.setState({ passwordText })
+  handlePasswordTextChange = (evt) => this.setState({ passwordText: evt.target.value })
 
   handlePasswordSubmit = (event) => {
     event.preventDefault();

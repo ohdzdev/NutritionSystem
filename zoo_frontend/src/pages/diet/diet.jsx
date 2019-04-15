@@ -8,8 +8,12 @@ import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 
 import {
-  Typography, Card, Grid, LinearProgress,
+  Typography, Card, Grid, LinearProgress, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Divider,
 } from '@material-ui/core';
+
+import Delete from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
+
 import {
   Animals,
   CaseNotes,
@@ -31,6 +35,7 @@ import DietSelect from './DietSelectDialog';
 
 import DietHistoryList from './dietHistoryList';
 import DietForm from './dietForm';
+import PrepNotesForm from './prepNotesForm';
 
 export default class extends Component {
   static propTypes = {
@@ -303,6 +308,71 @@ export default class extends Component {
     });
   }
 
+  handlePrepNotesCreate(payload) {
+    return new Promise((res, rej) => {
+      const localPayload = { ...payload };
+      localPayload.dietId = this.state.selectedDiet.dietId;
+
+      this.clientPrepNotesAPI.createPrepNotes(localPayload).then((result) => {
+        this.setState((prevState) => ({
+          PrepNotes: [...prevState.PrepNotes, result.data],
+        }), () => {
+          res();
+        });
+      }, (error) => {
+        console.error(error);
+        this.notificationBar.current.showNotification('error', 'Error creating prep note on server.');
+        rej();
+      });
+    });
+  }
+
+  handlePrepNoteChange(payload) {
+    return new Promise((res, rej) => {
+      const localPayload = { ...this.state.selectedPrepNote, ...payload };
+      console.log(localPayload);
+      if (!localPayload.prepNoteId) {
+        rej();
+        this.notificationBar.current.showNotification('error', 'Error updating prep note, id of prep note is missing');
+        return;
+      }
+      this.clientPrepNotesAPI.updatePrepNotes(localPayload.prepNoteId, localPayload).then((result) => {
+        this.setState((prevState) => ({
+          PrepNotes: prevState.PrepNotes.map((old) => {
+            if (old.prepNoteId === result.data.prepNoteId) {
+              return result.data;
+            }
+            return old;
+          }),
+          selectedPrepNote: null,
+        }), () => {
+          res();
+        });
+      }, (error) => {
+        console.error(error);
+        this.notificationBar.current.showNotification('error', 'Error updating prep note on server.');
+        rej();
+      });
+    });
+  }
+
+  async handlePrepNoteDelete(payload) {
+    if (payload.prepNoteId) {
+      await this.clientPrepNotesAPI.deletePrepNotes(payload.prepNoteId).then(() => {
+        this.setState((prevState) => ({
+          PrepNotes: prevState.PrepNotes.filter((note) => note.prepNoteId !== payload.prepNoteId),
+        }), () => {
+          this.notificationBar.current.showNotification('info', 'Delete prep note was successful!');
+        });
+      }, (err) => {
+        console.error(err);
+        this.notificationBar.current.showNotification('error', 'Error deleting prep note on server');
+      });
+    } else {
+      this.notificationBar.current.showNotification('error', 'Error deleting prep note. Missing id');
+    }
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -462,7 +532,61 @@ export default class extends Component {
           </Grid>
           <Grid item xs={12} md={6}>
             <Card className={classes.card}>
-              <pre>{JSON.stringify(this.state.PrepNotes, null, 2)}</pre>
+              <Typography
+                variant="h4"
+                color="textSecondary"
+              >Prep Notes
+              </Typography>
+              <PrepNotesForm
+                // don't send in value props in as this form is used only for new notes
+                {...this.state.selectedPrepNote}
+                submitForm={(payload) => {
+                  if (!this.state.selectedPrepNote) {
+                    return this.handlePrepNotesCreate(payload);
+                  }
+                  return this.handlePrepNoteChange(payload);
+                }}
+                submitButtonText={this.state.selectedPrepNote ? 'Submit Prep Note Change' : 'Submit New Prep Note'}
+              />
+              {this.state.selectedPrepNote &&
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                fullWidth
+                style={{ pading: '10px' }}
+                onClick={() => { this.setState({ selectedPrepNote: null }); }}
+              >
+                Cancel
+              </Button>
+              }
+
+              <List>
+                {this.state.PrepNotes.map(value => (
+                  <div key={value.prepNoteId}>
+                    <ListItem>
+                      <ListItemText>
+                        {value.prepNote}
+                      </ListItemText>
+                      <ListItemSecondaryAction>
+                        <IconButton onClick={() => {
+                          this.setState({ selectedPrepNote: { ...value } });
+                        }}
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => {
+                          this.handlePrepNoteDelete(value);
+                        }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <Divider light />
+                  </div>
+                ))}
+              </List>
             </Card>
           </Grid>
         </Grid>

@@ -26,9 +26,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
 
       const c = cookies(ctx);
 
-      console.log(c);
-
-      if (c.authToken == null || c.authToken === '') {
+      if (c.authToken == null || c.authToken === '' || c.authToken === undefined) {
         if (allowedRoles.includes('unauthenticated')) {
           if (WrappedComponent.getInitialProps) {
             pageProps = await WrappedComponent.getInitialProps(ctx);
@@ -41,17 +39,18 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
         return { ...pageProps };
       }
 
-      const api = new Api(c.authToken || '');
-
+      const api = new Api(c.authToken);
       try {
-        await api.validateToken().catch(() => {
+        await api.validateToken().then(async () => {
+          // console.log('pass validation');
+        }, () => {
           if (process.browser) {
-            document.cookie = 'authToken=; path=/';
+            document.cookie = 'authToken=;';
           }
           api.setToken('');
-          return {};
+          redirectTo('/login', { res: ctx.res, status: 301 });
+          return { ...pageProps };
         });
-
         if (WrappedComponent.getInitialProps) {
           ctx.authToken = c.authToken;
           pageProps = await WrappedComponent.getInitialProps(ctx);
@@ -64,11 +63,11 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
           // ignore this error
         }
         if (process.browser) {
-          document.cookie = 'authToken=; path=/';
+          document.cookie = 'authToken=;';
         }
         redirectTo('/login', { res: ctx.res, status: 301 });
+        return { ...pageProps };
       }
-      return { ...pageProps };
     }
 
     static propTypes = {

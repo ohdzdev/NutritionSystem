@@ -17,18 +17,13 @@ class Api {
   }
 
   validateToken = async () => {
-    try {
-      if (this.token === '' || this.token === 'undefined') {
-        throw new Error('Session Token Blank');
-      }
-      return await axios.post(`${API_BASE_URL}/api/AccessTokens/validate`, {
-        token: this.token,
-      });
-    } catch (err) {
-      document.cookie = 'authToken=; path=/';
-      this.token = '';
-      throw err;
+    if (this.token === '' || this.token === 'undefined') {
+      console.log('tried validating blank token in validateToken(), please verify this was intentional');
+      throw new Error('Session Token Blank');
     }
+    await axios.post(`${API_BASE_URL}/api/AccessTokens/validate`, {
+      token: this.token,
+    });
   }
 
   login = async (email, password) => {
@@ -44,7 +39,7 @@ class Api {
         LocalStorage.setLastName(data.lastName);
         LocalStorage.setRole(data.role);
         LocalStorage.setId(data.id);
-        document.cookie = `authToken=${res.data.token}; path=/`;
+        document.cookie = `authToken=${res.data.token};`;
         this.setToken(res.data.token);
       } else {
         throw new Error('Invalid login return');
@@ -73,7 +68,7 @@ class Api {
       }
     }
     this.token = '';
-    document.cookie = 'authToken=; path=/';
+    document.cookie = 'authToken=;';
   }
 }
 

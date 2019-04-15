@@ -19,6 +19,14 @@ const redirectTo = (destination, { res, status } = {}) => {
   }
 };
 
+Router.events.on('routeChangeError', (error) => {
+  console.error('route change status[❌]', error.message);
+});
+
+Router.events.on('routeChangeComplete', (evt) => {
+  console.log('route change status[✔] path:', evt);
+});
+
 export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
   class withAuth extends Component {
     static async getInitialProps(ctx) {
@@ -34,8 +42,10 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
           return { ...pageProps };
         }
 
+        console.log('redirect to login because user has no session token');
         // redirecting to login because current page does not support unauth users
         redirectTo('/login', { res: ctx.res, status: 301 });
+        console.log('success');
         return { ...pageProps };
       }
 
@@ -43,14 +53,8 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
       try {
         await api.validateToken().then(async () => {
           // console.log('pass validation');
-        }, () => {
-          if (process.browser) {
-            document.cookie = 'authToken=; path=/';
-          }
-          api.setToken('');
-          redirectTo('/login', { res: ctx.res, status: 301 });
-          return { ...pageProps };
         });
+
         if (WrappedComponent.getInitialProps) {
           ctx.authToken = c.authToken;
           pageProps = await WrappedComponent.getInitialProps(ctx);
@@ -65,6 +69,8 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
         if (process.browser) {
           document.cookie = 'authToken=; path=/';
         }
+        api.setToken('');
+        console.log('redirect to login because users key did not validate properly on server end');
         redirectTo('/login', { res: ctx.res, status: 301 });
         return { ...pageProps };
       }
@@ -102,6 +108,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
       };
 
       if (!allowedRoles.includes(account.role)) {
+        console.log('redirect user to login if not authenticated, or redirect to home page because no access');
         Router.push(account.role === 'unauthenticated' ? '/login' : '/');
         return;
       }

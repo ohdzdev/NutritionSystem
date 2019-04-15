@@ -27,11 +27,10 @@ class Api {
   }
 
   login = async (email, password) => {
-    try {
-      const res = await axios.post(`${API_BASE_URL}/api/accounts/login`, {
-        email,
-        password,
-      });
+    await axios.post(`${API_BASE_URL}/api/accounts/login`, {
+      email,
+      password,
+    }).then((res) => {
       const { data } = res;
       if (data) {
         LocalStorage.setEmail(data.email);
@@ -44,10 +43,13 @@ class Api {
       } else {
         throw new Error('Invalid login return');
       }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+    }, (err) => {
+      if (err.response && err.response.data && err.response.data.error) {
+        throw err.response.data.error;
+      } else {
+        throw err;
+      }
+    });
   }
 
   logout = async () => {

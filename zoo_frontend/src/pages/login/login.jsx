@@ -67,13 +67,21 @@ class Login extends Component {
       if (process.browser) {
         Router.events.on('routeChangeError', (err) => {
           console.error(err);
-          this.notificationsRef.current.showNotification('error', 'Application redirection error, please close browser and re-open');
+          if (this.notificationsRef && this.notificationsRef.current) {
+            this.notificationsRef.showNotification('error', 'Application redirection error, please close browser and re-open');
+          }
         }); // leaving this in, let's us see if there are weird /login redirect issues
 
         Router.push('/'); // previous block checks if this was successfull or not
       }
       return;
     } catch (err) {
+      console.log(err.message);
+      if (err.message === 'Role not found') {
+        setTimeout(() => {
+          this.notificationsRef.current.showNotification('error', 'This user has no role, please contact the system admin to add a user type to your account');
+        }, 500);
+      }
       console.error(err);
       this.setState({ error: true, errorMessage: 'Invalid username/password!' });
     }

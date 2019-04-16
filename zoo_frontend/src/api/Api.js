@@ -17,26 +17,20 @@ class Api {
   }
 
   validateToken = async () => {
-    try {
-      if (this.token === '' || this.token === 'undefined') {
-        throw new Error('Session Token Blank');
-      }
-      return await axios.post(`${API_BASE_URL}/api/AccessTokens/validate`, {
-        token: this.token,
-      });
-    } catch (err) {
-      document.cookie = 'authToken=; path=/';
-      this.token = '';
-      throw err;
+    if (this.token === '' || this.token === 'undefined') {
+      console.log('tried validating blank token in validateToken(), please verify this was intentional');
+      throw new Error('Session Token Blank');
     }
+    await axios.post(`${API_BASE_URL}/api/AccessTokens/validate`, {
+      token: this.token,
+    });
   }
 
   login = async (email, password) => {
-    try {
-      const res = await axios.post(`${API_BASE_URL}/api/accounts/login`, {
-        email,
-        password,
-      });
+    await axios.post(`${API_BASE_URL}/api/accounts/login`, {
+      email,
+      password,
+    }).then((res) => {
       const { data } = res;
       if (data) {
         LocalStorage.setEmail(data.email);
@@ -49,10 +43,13 @@ class Api {
       } else {
         throw new Error('Invalid login return');
       }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+    }, (err) => {
+      if (err.response && err.response.data && err.response.data.error) {
+        throw err.response.data.error;
+      } else {
+        throw err;
+      }
+    });
   }
 
   logout = async () => {

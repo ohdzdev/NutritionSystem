@@ -629,7 +629,7 @@ export default class extends Component {
                 {this.state.CaseNotes.map(value => (
                   <div key={value.caseNotesId}>
                     <ListItem>
-                      <ListItemText secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format(' MM-DD-YYYY')}`}>
+                      <ListItemText secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format('MM-DD-YYYY h:mm A')}`}>
                         {value.caseNote}
                       </ListItemText>
                       <ListItemSecondaryAction>

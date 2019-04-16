@@ -276,7 +276,22 @@ export default class extends Component {
 
       this.clientDietAPI.deleteDiets(dietToDelete).then(
         () => {
-          this.setState((prevState) => ({ selectedDiet: null, Diets: prevState.Diets.filter((diet) => diet.dietId !== dietToDelete) }));
+          // set window href
+          const href = '/diet';
+          Router.push(href, href, { shallow: true });
+
+          // clear state
+          this.setState((prevState) => ({
+            selectedDiet: null,
+            Diets: prevState.Diets.filter((diet) => diet.dietId !== dietToDelete),
+            // clear related record data since record is deleted.
+            CaseNotes: null,
+            DietChanges: null,
+            DietHistory: null,
+            DietHistoryOptions: null,
+            DietPlans: null,
+            PrepNotes: null,
+          }));
         },
         (reject) => {
           console.error(reject);
@@ -293,10 +308,27 @@ export default class extends Component {
       localPayload.userLogin = this.props.account.id;
       this.clientDietAPI.createDiets(localPayload).then(
         (result) => {
+          // set window href
+          const href = `/diet?id=${result.data.dietId}`;
+          Router.push(href, href, { shallow: true });
+
+          // update state
           this.setState(
-            (prevState) => ({ Diets: [...prevState.Diets, result.data], newDietOpen: false, selectedDiet: result.data }),
+            (prevState) => ({
+              Diets: [...prevState.Diets, result.data],
+              newDietOpen: false,
+              selectedDiet: result.data,
+              // all related record data should be null on a brand new entry
+              // this is just in case state wasn't cleared properly
+              CaseNotes: null,
+              DietChanges: null,
+              DietHistory: null,
+              DietHistoryOptions: null,
+              DietPlans: null,
+              PrepNotes: null,
+            }),
             () => {
-              res(); // once state updated, and successfull network call remove loader
+              res();
             },
           );
         },

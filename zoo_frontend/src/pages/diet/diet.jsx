@@ -36,6 +36,7 @@ import DietSelect from './DietSelectDialog';
 import DietHistoryList from './dietHistoryList';
 import DietForm from './dietForm';
 import PrepNotesForm from './prepNotesForm';
+import CaseNotesForm from './CaseNotesForm';
 
 export default class extends Component {
   static propTypes = {
@@ -373,6 +374,76 @@ export default class extends Component {
     }
   }
 
+  async handleCaseNoteCreate(payload) {
+    return new Promise((res, rej) => {
+      const localPayload = { ...payload };
+      localPayload.dietId = this.state.selectedDiet.dietId;
+      localPayload.caseDate = new Date().toISOString(); // set to now
+
+      this.clientCaseNotesAPI.createCaseNotes(localPayload).then((result) => {
+        this.setState((prevState) => ({
+          CaseNotes: [...prevState.CaseNotes, result.data],
+          selectedCaseNote: null,
+        }), () => {
+          res();
+          this.notificationBar.current.showNotification('info', 'case note created successfully');
+        });
+      }, (error) => {
+        console.error(error);
+        this.notificationBar.current.showNotification('error', 'Error creating case note on server.');
+        rej();
+      });
+    });
+  }
+
+  async handleCaseNoteChange(payload) {
+    return new Promise((res, rej) => {
+      const localPayload = { ...this.state.selectedCaseNote, ...payload };
+      // update the last touched time to now if description is changed
+      localPayload.caseDate = new Date().toISOString();
+      console.log(localPayload);
+      if (!localPayload.caseNotesId) {
+        rej();
+        this.notificationBar.current.showNotification('error', 'Error updating prep note, id of prep note is missing');
+        return;
+      }
+      this.clientCaseNotesAPI.updateCaseNotes(localPayload.caseNotesId, localPayload).then((result) => {
+        this.setState((prevState) => ({
+          CaseNotes: prevState.CaseNotes.map((old) => {
+            if (old.caseNotesId === result.data.caseNotesId) {
+              return result.data;
+            }
+            return old;
+          }),
+          selectedCaseNote: null,
+        }), () => {
+          res();
+        });
+      }, (error) => {
+        console.error(error);
+        this.notificationBar.current.showNotification('error', 'Error updating prep note on server.');
+        rej();
+      });
+    });
+  }
+
+  async handleCaseNoteDelete(payload) {
+    if (payload.caseNotesId) {
+      await this.clientCaseNotesAPI.deleteCaseNotes(payload.caseNotesId).then(() => {
+        this.setState((prevState) => ({
+          CaseNotes: prevState.CaseNotes.filter((note) => note.caseNotesId !== payload.caseNotesId),
+        }), () => {
+          this.notificationBar.current.showNotification('info', 'Delete case note was successful!');
+        });
+      }, (err) => {
+        console.error(err);
+        this.notificationBar.current.showNotification('error', 'Error deleting case note on server');
+      });
+    } else {
+      this.notificationBar.current.showNotification('error', 'Error deleting case note. Missing id');
+    }
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -527,7 +598,59 @@ export default class extends Component {
         <Grid container>
           <Grid item xs={12} md={6}>
             <Card className={classes.card}>
-              <pre>{JSON.stringify(this.state.CaseNotes, null, 2)}</pre>
+              <Typography
+                variant="h4"
+                color="textSecondary"
+              >Case Notes
+              </Typography>
+              <CaseNotesForm
+                {...this.state.selectedCaseNote}
+                submitForm={(payload) => {
+                  if (!this.state.selectedCaseNote) {
+                    return this.handleCaseNoteCreate(payload);
+                  }
+                  return this.handleCaseNoteChange(payload);
+                }}
+                submitButtonText={this.state.selectedCaseNote ? 'Submit Case Note Change' : 'Submit New Case Note'}
+              />
+              {this.state.selectedCaseNote &&
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                fullWidth
+                onClick={() => { this.setState({ selectedCaseNote: null }); }}
+              >
+                Cancel
+              </Button>
+              }
+
+              <List>
+                {this.state.CaseNotes.map(value => (
+                  <div key={value.caseNotesId}>
+                    <ListItem>
+                      <ListItemText secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format(' MM-DD-YYYY')}`}>
+                        {value.caseNote}
+                      </ListItemText>
+                      <ListItemSecondaryAction>
+                        <IconButton onClick={() => {
+                          this.setState({ selectedCaseNote: { ...value } });
+                        }}
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => {
+                          this.handleCaseNoteDelete(value);
+                        }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <Divider light />
+                  </div>
+                ))}
+              </List>
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -538,7 +661,6 @@ export default class extends Component {
               >Prep Notes
               </Typography>
               <PrepNotesForm
-                // don't send in value props in as this form is used only for new notes
                 {...this.state.selectedPrepNote}
                 submitForm={(payload) => {
                   if (!this.state.selectedPrepNote) {
@@ -554,7 +676,6 @@ export default class extends Component {
                 variant="contained"
                 color="secondary"
                 fullWidth
-                style={{ pading: '10px' }}
                 onClick={() => { this.setState({ selectedPrepNote: null }); }}
               >
                 Cancel

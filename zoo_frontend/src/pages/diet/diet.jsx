@@ -37,6 +37,7 @@ import DietHistoryList from './dietHistoryList';
 import DietForm from './dietForm';
 import PrepNotesForm from './prepNotesForm';
 import CaseNotesForm from './CaseNotesForm';
+import DietChangeCard from './DietChangeCard';
 
 export default class extends Component {
   static propTypes = {
@@ -745,9 +746,26 @@ export default class extends Component {
         </Grid>
         }
         {this.state.selectedDiet && !this.state.loading &&
-          <Card className={classes.card}>
-            <pre>{JSON.stringify(this.state.DietChanges, null, 2)}</pre>
-          </Card>
+          <Grid container>
+            <Grid item xs={12} md={6}>
+              <Card className={classes.card}>
+                <Typography
+                  variant="h4"
+                  color="textSecondary"
+                >Diet Changes
+                </Typography>
+                <List>
+                  {this.state.DietChanges.reverse().map(value => (
+                    <DietChangeCard
+                      key={value.dietChangeId}
+                      {...value}
+                    />
+                  ))}
+                </List>
+                <pre>{JSON.stringify(this.state.DietChanges, null, 2)}</pre>
+              </Card>
+            </Grid>
+          </Grid>
         }
         <Notifications ref={this.notificationBar} />
       </div>

@@ -621,6 +621,16 @@ export default class extends Component {
               <div>
                 {this.state.currentHistory}
                 <pre>{JSON.stringify(this.state.selectedDietHistories, null, 2)}</pre>
+                {
+                  this.state.DietChanges
+                    .reverse()
+                    .filter((dietChange) => this.state.currentHistory === dietChange.dietChangeDate)
+                    .map(value => (
+                      <DietChangeCard
+                        key={value.dietChangeId}
+                        {...value}
+                      />
+                    ))}
               </div>
             }
             </Grid>
@@ -658,7 +668,7 @@ export default class extends Component {
               </Button>
               }
 
-              <List>
+              <List className={classes.overflowList}>
                 {this.state.CaseNotes.map(value => (
                   <div key={value.caseNotesId}>
                     <ListItem>
@@ -715,7 +725,7 @@ export default class extends Component {
               </Button>
               }
 
-              <List>
+              <List className={classes.overflowList}>
                 {this.state.PrepNotes.map(value => (
                   <div key={value.prepNoteId}>
                     <ListItem>
@@ -754,7 +764,7 @@ export default class extends Component {
                   color="textSecondary"
                 >Diet Changes
                 </Typography>
-                <List>
+                <List className={classes.overflowList}>
                   {this.state.DietChanges.reverse().map(value => (
                     <DietChangeCard
                       key={value.dietChangeId}
@@ -762,7 +772,6 @@ export default class extends Component {
                     />
                   ))}
                 </List>
-                <pre>{JSON.stringify(this.state.DietChanges, null, 2)}</pre>
               </Card>
             </Grid>
           </Grid>

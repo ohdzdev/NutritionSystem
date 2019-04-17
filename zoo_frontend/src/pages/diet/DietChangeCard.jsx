@@ -11,6 +11,9 @@ import Person from '@material-ui/icons/Person';
 
 
 const styles = (theme) => ({
+  card: {
+    margin: theme.spacing.unit,
+  },
   reasonTitle: {
     color: theme.palette.primary.main,
   },
@@ -44,7 +47,7 @@ const DietChangeCard = (props) => {
   }
   return (
     <>
-      <Card>
+      <Card className={props.classes.card}>
         <CardContent>
           <Typography className={props.classes.title} color="textSecondary" gutterBottom>
             {moment(new Date(props.dietChangeDate)).format(' MM-DD-YYYY h:mm A')}
@@ -72,6 +75,7 @@ DietChangeCard.propTypes = {
   email: PropTypes.string,
   bgtUserId: PropTypes.string,
   classes: PropTypes.shape({
+    card: PropTypes.object.isRequired,
     reasonTitle: PropTypes.object.isRequired,
     changedByDiv: PropTypes.object.isRequired,
     title: PropTypes.object.isRequired,

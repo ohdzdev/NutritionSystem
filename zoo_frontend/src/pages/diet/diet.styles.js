@@ -37,4 +37,8 @@ export default (theme) => ({
     },
     alignContent: 'flex-end',
   },
+  overflowList: {
+    overflow: 'auto',
+    maxHeight: 400, // change this for height of list
+  },
 });

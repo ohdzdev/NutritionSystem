@@ -27,6 +27,8 @@ import {
   PrepNotes,
   Species,
   Subenclosures,
+  Food,
+  Units,
 } from '../../api';
 
 import { Notifications } from '../../components';
@@ -38,6 +40,7 @@ import DietForm from './dietForm';
 import PrepNotesForm from './prepNotesForm';
 import CaseNotesForm from './CaseNotesForm';
 import DietChangeCard from './DietChangeCard';
+import DietHistoryTable from './DietHistory';
 
 export default class extends Component {
   static propTypes = {
@@ -49,6 +52,8 @@ export default class extends Component {
     Species: PropTypes.arrayOf(PropTypes.object).isRequired,
     FoodPrepTables: PropTypes.arrayOf(PropTypes.object).isRequired,
     Subenclosures: PropTypes.arrayOf(PropTypes.object).isRequired,
+    Foods: PropTypes.arrayOf(PropTypes.object).isRequired,
+    Units: PropTypes.arrayOf(PropTypes.object).isRequired,
     selectedDiet: PropTypes.object,
     new: PropTypes.bool,
 
@@ -88,10 +93,12 @@ export default class extends Component {
     const serverPrepNotesAPI = new PrepNotes(authToken);
     const serverSpeciesAPI = new Species(authToken);
     const serverSubenclosuresAPI = new Subenclosures(authToken);
+    const serverFoodAPI = new Food(authToken);
+    const serverUnitsAPI = new Units(authToken);
 
     // get base data that we know we will need to load
 
-    const [AllAnimals, AllDeliveryContainers, AllDiets, AllFoodPrepTables, AllLifeStages, AllSpecies, AllSubenclosures] = await Promise.all(
+    const [AllAnimals, AllDeliveryContainers, AllDiets, AllFoodPrepTables, AllLifeStages, AllSpecies, AllSubenclosures, AllFoods, AllUnits] = await Promise.all(
       [
         serverAnimalAPI.getAnimals(),
         serverDeliverContainersAPI.getDeliveryContainers(),
@@ -100,6 +107,8 @@ export default class extends Component {
         serverLifeStagesAPI.getLifeStages(),
         serverSpeciesAPI.getSpecies(),
         serverSubenclosuresAPI.getSubenclosures(),
+        serverFoodAPI.getFood(),
+        serverUnitsAPI.getUnits(),
       ],
     );
 
@@ -118,6 +127,8 @@ export default class extends Component {
             LifeStages: AllLifeStages.data,
             Species: AllSpecies.data,
             Subenclosures: AllSubenclosures.data,
+            Foods: AllFoods.data,
+            Units: AllUnits.data,
             serverError: 'Diet in URL could not be found.',
           };
         }
@@ -144,6 +155,8 @@ export default class extends Component {
           PrepNotes: matchedPrepNotes.data,
           Species: AllSpecies.data,
           Subenclosures: AllSubenclosures.data,
+          Foods: AllFoods.data,
+          Units: AllUnits.data,
           selectedDiet: matchedDiet,
         };
       }
@@ -155,6 +168,8 @@ export default class extends Component {
         LifeStages: AllLifeStages.data,
         Species: AllSpecies.data,
         Subenclosures: AllSubenclosures.data,
+        Foods: AllFoods.data,
+        Units: AllUnits.data,
         new: true,
       };
     }
@@ -166,6 +181,8 @@ export default class extends Component {
       LifeStages: AllLifeStages.data,
       Species: AllSpecies.data,
       Subenclosures: AllSubenclosures.data,
+      Foods: AllFoods.data,
+      Units: AllUnits.data,
     };
   }
 
@@ -192,7 +209,7 @@ export default class extends Component {
 
       // dietHistory selections
       DietHistoryOptions: props.DietHistory.filter((item, index) => props.DietHistory.findIndex((el) => el.startId === item.startId) >= index).map((el) => ({
-        text: moment(new Date(el.startId)).format('MM-DD-YYYY h:mm A'), // add moment here to clean it up
+        text: moment(new Date(el.startId)).format('MM-DD-YYYY h:mm A'),
         id: el.startId,
       })).reverse(),
 
@@ -619,18 +636,23 @@ export default class extends Component {
             }
               {!this.state.viewCurrentDietPlan &&
               <div>
-                {this.state.currentHistory}
+                <DietHistoryTable
+                  dietHistory={this.state.selectedDietHistories}
+                  allFoods={this.props.Foods}
+                  allUnits={this.props.Units}
+                  currentHistoryTime={this.state.currentHistory}
+                />
+                {this.state.DietChanges
+                  .reverse()
+                  .filter((dietChange) => this.state.currentHistory === dietChange.dietChangeDate)
+                  .map(value => (
+                    <DietChangeCard
+                      key={value.dietChangeId}
+                      {...value}
+                    />
+                  ))}
+                  {this.state.currentHistory}
                 <pre>{JSON.stringify(this.state.selectedDietHistories, null, 2)}</pre>
-                {
-                  this.state.DietChanges
-                    .reverse()
-                    .filter((dietChange) => this.state.currentHistory === dietChange.dietChangeDate)
-                    .map(value => (
-                      <DietChangeCard
-                        key={value.dietChangeId}
-                        {...value}
-                      />
-                    ))}
               </div>
             }
             </Grid>
@@ -672,7 +694,11 @@ export default class extends Component {
                 {this.state.CaseNotes.map(value => (
                   <div key={value.caseNotesId}>
                     <ListItem>
-                      <ListItemText secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format('MM-DD-YYYY h:mm A')}`}>
+                      {/* add extra padding around the second action since it's not fully supported */}
+                      <ListItemText
+                        style={{ paddingRight: '32px' }}
+                        secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format('MM-DD-YYYY h:mm A')}`}
+                      >
                         {value.caseNote}
                       </ListItemText>
                       <ListItemSecondaryAction>
@@ -729,7 +755,8 @@ export default class extends Component {
                 {this.state.PrepNotes.map(value => (
                   <div key={value.prepNoteId}>
                     <ListItem>
-                      <ListItemText>
+                      {/* add extra padding around the second action since it's not fully supported */}
+                      <ListItemText style={{ paddingRight: '32px' }}>
                         {value.prepNote}
                       </ListItemText>
                       <ListItemSecondaryAction>

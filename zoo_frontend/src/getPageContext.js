@@ -50,3 +50,5 @@ export default function getPageContext() {
 
   return pageContext;
 }
+
+export { theme };

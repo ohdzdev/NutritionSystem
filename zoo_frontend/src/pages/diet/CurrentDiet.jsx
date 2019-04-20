@@ -18,11 +18,18 @@ class CurrentDiet extends Component {
 
   constructor(props) {
     super(props);
+
     const foodLookup = {};
     props.allFoods.slice(0).reduce((acc, food) => {
       acc[food.foodId] = food.food;
       return acc;
     }, foodLookup);
+
+    const foodSuggestions = props.allFoods.map((val) => ({
+      ...val,
+      label: val.food,
+      value: val.foodId,
+    }));
 
     const unitLookup = {};
     props.allUnits.slice(0).reduce((acc, unit) => {
@@ -31,10 +38,12 @@ class CurrentDiet extends Component {
     }, unitLookup);
 
     this.state = {
+      foodSuggestions,
       foodLookup,
       unitLookup,
       dietPlanLength: this.props.dietPlan.length,
     };
+    console.log(this.state.foodSuggestions);
   }
 
   render() {
@@ -64,9 +73,11 @@ class CurrentDiet extends Component {
                   console.log(props);
                   return (
                     <SingleSelect
-                      onChange={(v) => {
-                        console.log(v);
-                        props.onChange(v);
+                      suggestions={this.state.foodSuggestions}
+                      value={props.value || ''} // eslint-disable-line eqeqeq
+                      onChange={(val) => {
+                        console.log(val);
+                        props.onChange(val);
                       }}
                     />
                   );

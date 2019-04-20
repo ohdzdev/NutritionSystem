@@ -41,6 +41,7 @@ import PrepNotesForm from './prepNotesForm';
 import CaseNotesForm from './CaseNotesForm';
 import DietChangeCard from './DietChangeCard';
 import DietHistoryTable from './DietHistory';
+import CurrentDietTable from './CurrentDiet';
 
 export default class extends Component {
   static propTypes = {
@@ -632,7 +633,14 @@ export default class extends Component {
             </Grid>
             <Grid item xs={12} sm={10}>
               {this.state.viewCurrentDietPlan &&
-              <pre>{JSON.stringify(this.state.DietPlans, null, 2)}</pre>
+                <div>
+                  <CurrentDietTable
+                    allFoods={this.props.Foods}
+                    allUnits={this.props.Units}
+                    dietPlan={this.state.DietPlans}
+                  />
+                  <pre>{JSON.stringify(this.state.DietPlans, null, 2)}</pre>
+                </div>
             }
               {!this.state.viewCurrentDietPlan &&
               <div>

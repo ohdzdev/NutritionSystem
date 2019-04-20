@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -12,24 +12,29 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-const styles = theme => ({
+import { theme } from '../../getPageContext';
+
+const styles = t => ({
   root: {
     maxWidth: 200,
-    backgroundColor: theme.palette.background.paper,
-    borderColor: theme.palette.primary.main,
-    borderWidth: theme.spacing.unit / 2,
+    backgroundColor: t.palette.background.paper,
+    borderColor: t.palette.primary.main,
+    borderWidth: t.spacing.unit / 2,
     borderStyle: 'solid',
     overflow: 'auto',
     maxHeight: 400, // change this for height of list
+    borderRadius: `${t.spacing.unit / 2}px 0px 0px 0px`,
   },
   ListSubheader: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: t.palette.primary.main,
     color: '#FFF',
   },
   nested: {
-    paddingLeft: theme.spacing.unit * 4,
+    paddingLeft: t.spacing.unit * 2,
   },
 });
+
+
 class NestedList extends React.Component {
   state = {
     open: true,
@@ -43,48 +48,72 @@ class NestedList extends React.Component {
     const { classes } = this.props;
 
     return (
-      <List
-        subheader={<ListSubheader className={classes.ListSubheader} component="div">Diet History</ListSubheader>}
-        className={classes.root}
+      <MuiThemeProvider theme={{
+        ...theme,
+        overrides: {
+          MuiListItem: {
+            gutters: {
+              paddingLeft: theme.spacing.unit,
+              paddingRight: theme.spacing.unit / 2,
+            },
+          },
+          MuiListItemIcon: {
+            root: {
+              marginRight: '0px',
+            },
+          },
+          MuiListItemText: {
+            root: {
+              paddingLeft: theme.spacing.unit,
+              paddingRight: theme.spacing.unit,
+            },
+          },
+        },
+      }}
       >
-        <ListItem
-          button
-          onClick={this.props.currentClick}
-          selected={this.props.currentSelected}
+        <List
+          subheader={<ListSubheader className={classes.ListSubheader} component="div">Diet History</ListSubheader>}
+          className={classes.root}
         >
-          <ListItemIcon>
-            <PlayArrow />
-          </ListItemIcon>
-          <ListItemText>Current</ListItemText>
-        </ListItem>
-        <ListItem button onClick={this.handleClick}>
-          <ListItemIcon>
-            <History />
-          </ListItemIcon>
-          <ListItemText primary="History" />
-          {this.state.open ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        {this.props.history &&
-        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {this.props.history.map((entry) => (
-              <ListItem
-                key={String(entry.id)}
-                button
-                className={classes.nested}
-                onClick={() => {
-                  this.props.historyClick(entry.id);
-                }}
-                selected={entry.id === this.props.selectedHistory}
-              >
-                <ListItemText>{entry.text}</ListItemText>
-              </ListItem>
-            ))}
-          </List>
-        </Collapse>
+          <ListItem
+            button
+            onClick={this.props.currentClick}
+            selected={this.props.currentSelected}
+          >
+            <ListItemIcon>
+              <PlayArrow />
+            </ListItemIcon>
+            <ListItemText>Current</ListItemText>
+          </ListItem>
+          <ListItem button onClick={this.handleClick}>
+            <ListItemIcon>
+              <History />
+            </ListItemIcon>
+            <ListItemText primary="History" />
+            {this.state.open ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          {this.props.history &&
+          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {this.props.history.map((entry) => (
+                <ListItem
+                  key={String(entry.id)}
+                  button
+                  className={classes.nested}
+                  onClick={() => {
+                    this.props.historyClick(entry.id);
+                  }}
+                  selected={entry.id === this.props.selectedHistory}
+                >
+                  <ListItemText>{entry.text}</ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          </Collapse>
         }
 
-      </List>
+        </List>
+      </MuiThemeProvider>
     );
   }
 }

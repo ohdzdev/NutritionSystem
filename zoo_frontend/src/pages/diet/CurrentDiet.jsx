@@ -7,8 +7,6 @@ import PropTypes from 'prop-types';
 
 import { theme } from '../../getPageContext';
 
-import SingleSelect from '../../components/ReactSingleSelect';
-
 class CurrentDiet extends Component {
   static propTypes = {
     allFoods: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -55,7 +53,30 @@ class CurrentDiet extends Component {
             MuiTableCell: {
               root: {
                 textAlign: 'center',
-                padding: '4px 0px 4px 12px',
+                padding: '0px 4px 0px 4px',
+              },
+              paddingCheckbox: {
+                padding: '0px 2px 0px 2px',
+              },
+            },
+            MuiSelect: {
+              select: {
+                maxWidth: '100px',
+              },
+            },
+            MuiIconButton: {
+              root: {
+                padding: '5px 5px 5px 5px',
+              },
+            },
+            MuiTableSortLabel: {
+              icon: {
+                display: 'none',
+              },
+            },
+            MuiIcon: {
+              root: {
+                width: '1em !important',
               },
             },
           },
@@ -69,34 +90,25 @@ class CurrentDiet extends Component {
                 title: 'Food',
                 field: 'foodId',
                 lookup: this.state.foodLookup,
-                editComponent: (props) => {
-                  console.log(props);
-                  return (
-                    <SingleSelect
-                      suggestions={this.state.foodSuggestions}
-                      value={props.value || ''} // eslint-disable-line eqeqeq
-                      onChange={(val) => {
-                        console.log(val);
-                        props.onChange(val);
-                      }}
-                    />
-                  );
+                cellStyle: {
+                  width: '100px !important',
                 },
               },
               {
                 title: 'Ind',
                 field: 'indAmount',
-                type: 'numeric',
               },
               {
                 title: 'Total',
                 field: 'groupAmount',
-                type: 'numeric',
               },
               {
                 title: 'Unit',
                 field: 'unitId',
                 lookup: this.state.unitLookup,
+                cellStyle: {
+                  width: '30px',
+                },
               },
               {
                 title: 'SU',
@@ -136,23 +148,19 @@ class CurrentDiet extends Component {
               {
                 title: 'Sort',
                 field: 'sort',
-                type: 'numeric',
                 defaultSort: 'asc',
               },
               {
                 title: 'Bag',
                 field: 'tote',
-                type: 'numeric',
               },
               {
                 title: 'Cycle',
                 field: 'freqWeeks',
-                type: 'numeric',
               },
               {
                 title: 'Week',
                 field: 'freqRotation',
-                type: 'numeric',
               },
             ]}
             data={this.props.dietPlan}
@@ -160,6 +168,7 @@ class CurrentDiet extends Component {
               pageSize: this.state.dietPlanLength + 10,
               search: false,
               emptyRowsWhenPaging: false,
+              addRowPosition: 'first',
             }}
             editable={{
               onRowAdd: (newData) => {

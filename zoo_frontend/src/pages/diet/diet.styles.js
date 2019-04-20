@@ -23,6 +23,10 @@ export default (theme) => ({
     margin: theme.spacing.unit,
     overflow: 'visible',
   },
+  dietPlanCard: {
+    margin: theme.spacing.unit,
+    overflow: 'visible',
+  },
   newDietButton: {
     marginLeft: theme.spacing.unit * 2,
   },

@@ -609,7 +609,7 @@ export default class extends Component {
         <LinearProgress />
         }
         { this.state.selectedDiet && !this.state.loading &&
-        <Card className={classes.card}>
+        <Card className={classes.dietPlanCard}>
           <Grid container>
             <Grid item xs={12} sm={2}>
               <DietHistoryList
@@ -639,7 +639,6 @@ export default class extends Component {
                     allUnits={this.props.Units}
                     dietPlan={this.state.DietPlans}
                   />
-                  <pre>{JSON.stringify(this.state.DietPlans, null, 2)}</pre>
                 </div>
             }
               {!this.state.viewCurrentDietPlan &&

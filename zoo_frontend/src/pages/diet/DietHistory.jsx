@@ -48,7 +48,30 @@ class DietHistory extends Component {
             MuiTableCell: {
               root: {
                 textAlign: 'center',
-                padding: '4px 0px 4px 12px',
+                padding: '0px 4px 0px 4px',
+              },
+              paddingCheckbox: {
+                padding: '0px 2px 0px 2px',
+              },
+            },
+            MuiSelect: {
+              select: {
+                maxWidth: '100px',
+              },
+            },
+            MuiIconButton: {
+              root: {
+                padding: '5px 5px 5px 5px',
+              },
+            },
+            MuiTableSortLabel: {
+              icon: {
+                display: 'none',
+              },
+            },
+            MuiIcon: {
+              root: {
+                width: '1em !important',
               },
             },
           },

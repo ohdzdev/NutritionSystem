@@ -666,6 +666,13 @@
   dependencies:
     "@date-io/core" "^1.1.0"
 
+"@date-io/moment@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@date-io/moment/-/moment-1.1.0.tgz#993c71b77f52f078de6a28e61ddfae757d39dc64"
+  integrity sha512-U7Vrhk7nlrKMtlLuNs7DAWmMsMBTgWFAvgpKg6Z5Opo/U7ab5DvI8nLks5dqJbeEFQDSlO+KCmJWfsL9hVI3Jw==
+  dependencies:
+    "@date-io/core" "^1.1.0"
+
 "@emotion/babel-utils@^0.6.4":
   version "0.6.10"
   resolved "https://registry.yarnpkg.com/@emotion/babel-utils/-/babel-utils-0.6.10.tgz#83dbf3dfa933fae9fc566e54fbb45f14674c6ccc"
@@ -4435,7 +4442,7 @@ material-table@1.28.1:
     react-beautiful-dnd "10.0.4"
     react-double-scrollbar "0.0.15"
 
-material-ui-pickers@2.2.4:
+material-ui-pickers@2.2.4, material-ui-pickers@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/material-ui-pickers/-/material-ui-pickers-2.2.4.tgz#8b33cfc55cbc5b2d520db45abf4b3dc94090dd3c"
   integrity sha512-QCQh08Ylmnt+o4laW+rPs92QRAcESv3sPXl50YadLm++rAZAXAOh3K8lreGdynCMYFgZfdyu81Oz9xzTlAZNfw==
@@ -5756,6 +5763,14 @@ react-themeable@^1.1.0:
   dependencies:
     object-assign "^3.0.0"
 
+react-to-print@2.0.0-alpha-1:
+  version "2.0.0-alpha-1"
+  resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.0.0-alpha-1.tgz#e3bf1a6920a2fdca95824332393098de3bf66e37"
+  integrity sha512-ii0p1bU5nmUoTfbTXf4NRfErjeTX7zx/Pxi5zgLge5mNy/BVM9SGAIeOEAvwCfrJK2FvRzFKob8MqntUgC4wkg==
+  dependencies:
+    prop-types "^15.6.0"
+    react "^16.2.0"
+
 react-transition-group@^2.2.1, react-transition-group@^2.5.3:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.7.1.tgz#1fe6d54e811e8f9dfd329aa836b39d9cd16587cb"
@@ -5777,7 +5792,7 @@ react-virtualized@^9.21.0:
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
 
-react@16.8.6:
+react@16.8.6, react@^16.2.0:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
   integrity sha512-pC0uMkhLaHm11ZSJULfOBqV4tIZkx87ZLvbbQYunNixAAvjnC+snJCg0XQXn9VIsttVsbZP/H/ewzgsd5fxKXw==

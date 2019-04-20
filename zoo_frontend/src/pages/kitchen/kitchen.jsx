@@ -22,18 +22,6 @@ import {
   Animals, CaseNotes, DeliveryContainers, DietChanges, DietHistory, DietPlans, Diets, FoodPrepTables, LifeStages, PrepNotes, Species,
 } from '../../api';
 
-function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
-
-TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
 export default class extends Component {
   static propTypes = {
     // account: PropTypes.object.isRequired,
@@ -79,12 +67,14 @@ export default class extends Component {
       currentIndex: 0,
       species: '',
       prepNotes: ['none', 'newline?'],
+      dc: '',
     };
 
     /* API */
     this.serverDietsAPI = new Diets(this.props.token);
     this.serverSpeciesAPI = new Species(this.props.token);
     this.serverPrepNotesAPI = new PrepNotes(this.props.token);
+    this.serverDeliverContainersAPI = new DeliveryContainers(this.props.token);
   }
 
   async getDietsData(tableID) {
@@ -102,10 +92,12 @@ export default class extends Component {
     });
   }
 
-  async getKitchenData(speciesID, dietID) {
+  /* Data to send as props to KitchenView */
+  async getKitchenData(speciesID, dietID, dcID) {
     const [
       species,
       prepNotes,
+      dc,
     ] = await Promise.all([
       this.serverSpeciesAPI.getSpecies({
         where: {
@@ -117,34 +109,51 @@ export default class extends Component {
           dietId: dietID,
         },
       }),
+      this.serverDeliverContainersAPI.getDeliveryContainers({
+        where: {
+          dcId: dcID,
+        },
+      }),
     ]);
 
     this.setState({
+      loading: false,
       species: species.data[0].species,
       prepNotes: prepNotes.data,
+      dc: dc.data[0].dc,
     });
   }
 
 
   handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
-    this.setState({ diets: this.getDietsData(event.target.value) });
+    const e = event.target.value;
+    this.setState({ [name]: e });
+    this.getDietsData(e).then(() => {
+      this.updateState();
+    });
   };
 
   handleNext = () => {
     this.setState((prevState) => ({
       currentIndex: prevState.currentIndex + 1,
+      loading: true,
     }));
-    this.getKitchenData(
-      this.state.diets[this.state.currentIndex].speciesId, // speciesID
-      this.state.diets[this.state.currentIndex].dietId, // dietId
-    );
-    console.log(this.state.prepNotes);
+    this.updateState();
   }
 
   handlePrev = () => {
-
+    this.setState((prevState) => ({
+      currentIndex: prevState.currentIndex - 1,
+      loading: true,
+    }));
+    this.updateState();
   }
+
+  updateState = () => this.getKitchenData(
+    this.state.diets[this.state.currentIndex].speciesId, // speciesID
+    this.state.diets[this.state.currentIndex].dietId, // dietID
+    this.state.diets[this.state.currentIndex].dcId, // dcID
+  );
 
   render() {
     // const { role } = this.props.account;
@@ -170,7 +179,6 @@ export default class extends Component {
           <FormControl className={this.props.classes.formControl}>
             <InputLabel htmlFor="table-native-simple">Prep Table</InputLabel>
             <NativeSelect
-              value={this.state.age}
               onChange={this.handleChange('table')}
               input={<Input name="table" id="table-native-helper" />}
             >
@@ -198,7 +206,7 @@ export default class extends Component {
         </div>
         <Paper className={this.props.classes.paper}>
           {/* Send data based on this.state.table
-          1. Use API calls to create one singlular array with all objects with all fields needed
+          1. Use API calls to all fields needed
           2. Props: data object for every field needed
           3. Then KitchenView can just use the index of the array as the page state
 
@@ -211,13 +219,14 @@ export default class extends Component {
             foods: DIET_PLAN.dietId
             History: DIET_CHANGES.dietId, diet_change_reason
           */}
-          {this.state.table && this.state.diets && this.state.diets.length > 0 ?
+          {!this.state.loading && this.state.table && this.state.diets && this.state.diets.length > 0 ?
             <KitchenView
               pageLength={this.state.diets.length}
               currentPage={this.state.currentIndex + 1}
               species={this.state.species}
               noteId={this.state.diets[this.state.currentIndex].noteId}
               prepNotes={this.state.prepNotes}
+              dc={this.state.dc}
             />
             : null
           }

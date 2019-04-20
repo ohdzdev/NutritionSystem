@@ -41,10 +41,13 @@ const styles = theme => ({
     flex: 1,
     paddingRight: theme.spacing.unit * 3,
   },
+  table: {
+    marginTop: theme.spacing.unit * 9,
+  },
 });
 
 const KitchenView = ({
-  classes, currentPage, pageLength, noteId, species, prepNotes,
+  classes, currentPage, pageLength, noteId, species, prepNotes, dc,
 }) => (
   <div>
     <div className={classes.pageText}>
@@ -70,10 +73,9 @@ const KitchenView = ({
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ textAlign: 'right' }}>
-          <Typography variant="h2" style={{ fontSize: 22 }} className={classes.bottomMargin}>Jungle</Typography>
-          <Typography variant="h2" style={{ fontSize: 22 }}>GIBBON</Typography>
+          <Typography variant="h2" style={{ fontSize: 22 }}>{dc}</Typography>
         </div>
-        <Table className={classes.topMargin}>
+        <Table className={classes.table}>
           <TableBody>
             {rows.map(row => (
               <TableRow key={row.id}>
@@ -96,6 +98,7 @@ KitchenView.propTypes = {
   noteId: PropTypes.string,
   species: PropTypes.string,
   prepNotes: PropTypes.array,
+  dc: PropTypes.string,
 };
 
 KitchenView.defaultProps = {
@@ -104,6 +107,7 @@ KitchenView.defaultProps = {
   noteId: '',
   species: '',
   prepNotes: [],
+  dc: '',
 };
 
 

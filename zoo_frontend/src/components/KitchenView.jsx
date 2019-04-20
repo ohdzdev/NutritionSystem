@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -46,8 +47,13 @@ const styles = theme => ({
   },
 });
 
+const formatDate = (d) => {
+  const newD = moment(d);
+  return moment(newD).format('MM-DD-YYYY');
+};
+
 const KitchenView = ({
-  classes, currentPage, pageLength, noteId, species, prepNotes, dc,
+  classes, currentPage, pageLength, noteId, species, prepNotes, dc, dietChanges,
 }) => (
   <div>
     <div className={classes.pageText}>
@@ -59,15 +65,17 @@ const KitchenView = ({
         <Typography variant="h2" style={{ fontSize: 22 }}>{noteId}
         </Typography>
         <Typography className={classes.topMargin} variant="h3" style={{ fontSize: 22, color: 'grey' }}>Prep Notes</Typography>
-        <div>
+        <div style={{ marginTop: 10 }}>
           {prepNotes.map(txt => <Typography style={{ fontSize: 18 }}>{txt.prepNote}</Typography>)}
         </div>
         <div>
           <Typography variant="h3" style={{ fontSize: 22, marginTop: 30, color: 'grey' }}>History</Typography>
           <div>
-            <Typography style={{ fontSize: 18 }}>
-                  date: changes
-            </Typography>
+            {dietChanges.map(txt =>
+              <div style={{ marginTop: 10 }}>
+                <Typography variant="h4" style={{ fontSize: 14 }}>{formatDate(txt.dietChangeDate)}</Typography>
+                <Typography style={{ fontSize: 18 }}>{txt.dietChangeReason}</Typography>
+              </div>)}
           </div>
         </div>
       </div>
@@ -99,6 +107,7 @@ KitchenView.propTypes = {
   species: PropTypes.string,
   prepNotes: PropTypes.array,
   dc: PropTypes.string,
+  dietChanges: PropTypes.array,
 };
 
 KitchenView.defaultProps = {
@@ -108,6 +117,7 @@ KitchenView.defaultProps = {
   species: '',
   prepNotes: [],
   dc: '',
+  dietChanges: ['none'],
 };
 
 

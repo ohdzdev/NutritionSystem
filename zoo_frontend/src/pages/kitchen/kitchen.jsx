@@ -19,7 +19,7 @@ import KitchenView from '../../components/KitchenView';
 // import { hasAccess, Home, Diet } from '../PageAccess';
 
 import {
-  Animals, CaseNotes, DeliveryContainers, DietChanges, DietHistory, DietPlans, Diets, FoodPrepTables, LifeStages, PrepNotes, Species,
+  DeliveryContainers, DietChanges, Diets, FoodPrepTables, PrepNotes, Species,
 } from '../../api';
 
 export default class extends Component {
@@ -68,6 +68,7 @@ export default class extends Component {
       species: '',
       prepNotes: ['none', 'newline?'],
       dc: '',
+      dietChanges: ['none'],
     };
 
     /* API */
@@ -75,6 +76,8 @@ export default class extends Component {
     this.serverSpeciesAPI = new Species(this.props.token);
     this.serverPrepNotesAPI = new PrepNotes(this.props.token);
     this.serverDeliverContainersAPI = new DeliveryContainers(this.props.token);
+    this.serverDietChangesAPI = new DietChanges(this.props.token);
+    
   }
 
   async getDietsData(tableID) {
@@ -98,6 +101,7 @@ export default class extends Component {
       species,
       prepNotes,
       dc,
+      dietChanges,
     ] = await Promise.all([
       this.serverSpeciesAPI.getSpecies({
         where: {
@@ -114,6 +118,11 @@ export default class extends Component {
           dcId: dcID,
         },
       }),
+      this.serverDietChangesAPI.getDietChanges({
+        where: {
+          dietId: dietID,
+        },
+      }),
     ]);
 
     this.setState({
@@ -121,6 +130,7 @@ export default class extends Component {
       species: species.data[0].species,
       prepNotes: prepNotes.data,
       dc: dc.data[0].dc,
+      dietChanges: dietChanges.data.slice(0, 3),
     });
   }
 
@@ -227,6 +237,7 @@ export default class extends Component {
               noteId={this.state.diets[this.state.currentIndex].noteId}
               prepNotes={this.state.prepNotes}
               dc={this.state.dc}
+              dietChanges={this.state.dietChanges}
             />
             : null
           }

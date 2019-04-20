@@ -14,12 +14,15 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid/dist/styles/ag-grid.css';
 import 'ag-grid/dist/styles/ag-theme-material.css';
 
+import PrintPrepSheets from '../../components/PrintPrepSheets';
+
 import { hasAccess, Diet, Food } from '../PageAccess';
 
-export default class extends Component {
+class Home extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -48,7 +51,7 @@ export default class extends Component {
   };
 
   render() {
-    const { classes, account = {} } = this.props;
+    const { classes, account = {}, token } = this.props;
     const { role = '' } = account;
     const { anchorEl } = this.state;
 
@@ -136,9 +139,14 @@ export default class extends Component {
                 rowData={this.state.rowData}
               />
             </div>
+            <div>
+              <PrintPrepSheets token={token} />
+            </div>
           </div>
         </div>
       </div>
     );
   }
 }
+
+export default Home;

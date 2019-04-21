@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import moment from 'moment';
@@ -72,6 +72,7 @@ const KitchenView = ({
           <Typography variant="h3" style={{ fontSize: 22, marginTop: 30, color: 'grey' }}>History</Typography>
           <div>
             {dietChanges.map(txt =>
+              // eslint-disable-next-line implicit-arrow-linebreak
               <div style={{ marginTop: 10 }}>
                 <Typography variant="h4" style={{ fontSize: 14 }}>{formatDate(txt.dietChangeDate)}</Typography>
                 <Typography style={{ fontSize: 18 }}>{txt.dietChangeReason}</Typography>

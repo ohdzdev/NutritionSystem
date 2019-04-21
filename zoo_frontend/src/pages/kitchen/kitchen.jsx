@@ -77,7 +77,6 @@ export default class extends Component {
     this.serverPrepNotesAPI = new PrepNotes(this.props.token);
     this.serverDeliverContainersAPI = new DeliveryContainers(this.props.token);
     this.serverDietChangesAPI = new DietChanges(this.props.token);
-    
   }
 
   async getDietsData(tableID) {

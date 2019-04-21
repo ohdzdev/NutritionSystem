@@ -76,14 +76,14 @@ class PrepNotes {
 
   /**
    * delete diet plan via filters
-   * @param {string|number} filter required
+   * @param {string|number} dietId required
    */
-  async deletePrepNotesViaFilter(filter) {
-    if (!filter) {
-      return Promise.reject(new Error('must have filter to be able to delete'));
+  async deletePrepNotesByDietId(dietId) {
+    if (!dietId) {
+      return Promise.reject(new Error('must have dietId to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/PrepNotes/deleteAllViaFilter?access_token=${this.token}`;
-    const res = await axios.post(uri, { filter }).catch((err) => Promise.reject(err));
+    const uri = `${API_BASE_URL}/api/PrepNotes/deleteAllByDietId?access_token=${this.token}`;
+    const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
     return res;
   }
 }

@@ -117,15 +117,15 @@ class DietHistory {
   }
 
   /**
-   * delete diet plan via filters
-   * @param {string|number} filter required
+   * delete diet History by dietId
+   * @param {string|number} dietId required
    */
-  async deleteDietHistoryViaFilter(filter) {
-    if (!filter) {
-      return Promise.reject(new Error('must have filter to be able to delete'));
+  async deleteDietHistoryByDietId(dietId) {
+    if (!dietId) {
+      return Promise.reject(new Error('must have dietId to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/DietHistories/deleteAllViaFilter?access_token=${this.token}`;
-    const res = await axios.post(uri, { filter }).catch((err) => Promise.reject(err));
+    const uri = `${API_BASE_URL}/api/DietHistories/deleteAllByDietId?access_token=${this.token}`;
+    const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
     return res;
   }
 }

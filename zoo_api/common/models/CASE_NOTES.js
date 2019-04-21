@@ -1,48 +1,39 @@
 const Util = require('../../server/util');
 
 module.exports = function(CaseNotes) {
-  CaseNotes.deleteAllViaFilter = function(body, cb) {
-    console.log(body);
-    const { filter } = body;
-    let filterJSON = {};
-    if (filter) {
-      try {
-        filterJSON = JSON.parse(JSON.stringify(filter));
-      } catch (error) {
-        console.log(error);
-        cb(Util.createError('Filter is not valid JSON.', 400));
+  CaseNotes.deleteAllByDietId = function(body, cb) {
+    const { dietId } = body;
+    if (dietId) {
+      if (Number.isNaN(parseInt(dietId, 10))) {
+        cb(Util.createError('Please send in a valid dietId', 400));
         return;
       }
+      const checkedDietId = parseInt(dietId, 10);
 
-      if ('where' in filterJSON) {
-        cb(Util.createError('where syntax is not valid in deleteAll. https://loopback.io/doc/en/lb3/Where-filter.html please follow this syntax for deleteAll', 400));
-        return;
-      }
-
-      CaseNotes.destroyAll(filterJSON, (err, info) => {
+      CaseNotes.destroyAll({ dietId: checkedDietId }, (err, info) => {
         if (err) {
-          cb(Util.createError(`Error when deleting via filter: ${err}`, 500));
+          cb(Util.createError(`Error when deleting records related to (${checkedDietId}): ${err}`, 500));
         } else {
           cb(null, { data: info });
         }
       });
     } else {
-      cb(Util.createError('Filter missing from body of request', 400));
+      cb(Util.createError('dietId missing from body of request', 400));
     }
   };
   CaseNotes.remoteMethod(
-    'deleteAllViaFilter',
+    'deleteAllByDietId',
     {
       description: 'Delete records that match filter',
       accepts: [
         {
-          arg: 'filter', type: 'object', required: true, http: { source: 'body' },
+          arg: 'dietId', type: 'any', required: true, http: { source: 'body' },
         },
       ],
       returns: {
         arg: 'data', type: 'object', root: true,
       },
-      http: { verb: 'post', path: '/deleteAllViaFilter' },
+      http: { verb: 'post', path: '/deleteAllByDietId' },
     }
   );
 };

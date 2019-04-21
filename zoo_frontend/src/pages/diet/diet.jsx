@@ -310,11 +310,11 @@ export default class extends Component {
       if (dietToDelete) {
         try {
           await Promise.all([
-            this.clientDietHistoryAPI.deleteDietHistoryViaFilter({ dietId: dietToDelete }),
-            this.clientCaseNotesAPI.deleteCaseNotesViaFilter({ dietId: dietToDelete }),
-            this.clientDietPlansAPI.deleteDietPlanViaFilter({ dietId: dietToDelete }),
-            this.clientPrepNotesAPI.deletePrepNotesViaFilter({ dietId: dietToDelete }),
-            this.clientDietChangesAPI.deleteDietChangesViaFilter({ dietId: dietToDelete }),
+            this.clientDietHistoryAPI.deleteDietHistoryByDietId(dietToDelete),
+            this.clientCaseNotesAPI.deleteCaseNotesByDietId(dietToDelete),
+            this.clientDietPlansAPI.deleteDietPlanByDietId(dietToDelete),
+            this.clientPrepNotesAPI.deletePrepNotesByDietId(dietToDelete),
+            this.clientDietChangesAPI.deleteDietChangesByDietId(dietToDelete),
           ]);
         } catch (error) {
           console.error(error);

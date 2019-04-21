@@ -21,7 +21,7 @@ const mkdirp = promisify(require('mkdirp'));
 const DATASOURCE_NAME = 'zoo_mysql';
 const dataSourceConfig = require('./server/datasources.production');
 
-const MODELNAME = 'DIETS'; // CHANGE ME WHEN UPDATING MODEL SCHEMA
+const MODELNAME = 'DIET_HISTORY'; // CHANGE ME WHEN UPDATING MODEL SCHEMA
 
 const db = new loopback.DataSource(dataSourceConfig[DATASOURCE_NAME]);
 async function discover() {

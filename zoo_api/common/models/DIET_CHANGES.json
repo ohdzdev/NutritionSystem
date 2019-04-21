@@ -7,7 +7,12 @@
       "table": "DIET_CHANGES"
     },
     "relations": {
-      "dietChangesDiets": {
+      "dietChangeAccount": {
+        "model": "Account",
+        "type": "belongsTo",
+        "foreignKey": "userId"
+      },
+      "dietChangeDiet": {
         "model": "Diets",
         "type": "belongsTo",
         "foreignKey": "dietId"
@@ -103,6 +108,21 @@
         "dataLength": 255,
         "dataPrecision": null,
         "dataScale": null,
+        "nullable": "Y"
+      }
+    },
+    "userId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "user_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     }

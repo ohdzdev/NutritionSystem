@@ -304,12 +304,12 @@ export default class extends Component {
             selectedDiet: null,
             Diets: prevState.Diets.filter((diet) => diet.dietId !== dietToDelete),
             // clear related record data since record is deleted.
-            CaseNotes: null,
-            DietChanges: null,
-            DietHistory: null,
-            DietHistoryOptions: null,
-            DietPlans: null,
-            PrepNotes: null,
+            CaseNotes: [],
+            DietChanges: [],
+            DietHistory: [],
+            DietHistoryOptions: [],
+            DietPlans: [],
+            PrepNotes: [],
           }));
         },
         (reject) => {
@@ -323,8 +323,11 @@ export default class extends Component {
   handleDietCreate(payload) {
     return new Promise((res, rej) => {
       const localPayload = { ...payload };
+      // default values
       localPayload.date = new Date().toISOString();
       localPayload.userLogin = this.props.account.id;
+      localPayload.numAnimals = 1;
+
       this.clientDietAPI.createDiets(localPayload).then(
         (result) => {
           // set window href
@@ -339,12 +342,12 @@ export default class extends Component {
               selectedDiet: result.data,
               // all related record data should be null on a brand new entry
               // this is just in case state wasn't cleared properly
-              CaseNotes: null,
-              DietChanges: null,
-              DietHistory: null,
-              DietHistoryOptions: null,
-              DietPlans: null,
-              PrepNotes: null,
+              CaseNotes: [],
+              DietChanges: [],
+              DietHistory: [],
+              DietHistoryOptions: [],
+              DietPlans: [],
+              PrepNotes: [],
             }),
             () => {
               res();
@@ -495,6 +498,48 @@ export default class extends Component {
     }
   }
 
+  async handleDietPlanSave(newData, oldData, numAnimals, dietChangeReason) {
+    if (numAnimals !== this.state.selectedDiet.numAnimals) {
+      // update the diet
+      const localSelectedDiet = { ...this.state.selectedDiet };
+      Object.assign(localSelectedDiet, { numAnimals });
+
+      // add new date and add the current user to be the last one to edit diet.
+      localSelectedDiet.date = new Date().toISOString();
+      localSelectedDiet.userLogin = this.props.account.id;
+
+      await new Promise((res, rej) => {
+        this.clientDietAPI.updateDiets(localSelectedDiet.dietId, localSelectedDiet).then(
+          (result) => {
+            this.setState((prevState) => ({
+              selectedDiet: result.data,
+              Diets: prevState.Diets.map((old) => {
+                if (old.dietId === result.data.dietId) {
+                  return result.data;
+                }
+                return old;
+              }),
+            }), () => res());
+          },
+          (err) => {
+            console.error(err);
+            rej();
+          },
+        );
+      });
+
+      // priority for creating records is diet plan, diet history, diet changes
+
+      // to find out what to update
+      // figure out which dietPlan records were updated
+
+      // create diet history for all diet plan records after diet plan is updated
+
+      // create diet change with reason
+
+    }
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -587,16 +632,17 @@ export default class extends Component {
               this.grabDietRelatedRecords(diet).then((results) => {
                 this.setState({
                   loading: false,
-                  CaseNotes: results.matchedCaseNotes,
-                  DietChanges: results.matchedDietChanges,
-                  DietHistory: results.matchedDietHistory,
+                  CaseNotes: results.matchedCaseNotes || [],
+                  DietChanges: results.matchedDietChanges || [],
+                  DietHistory: results.matchedDietHistory || [],
                   DietHistoryOptions: results.matchedDietHistory.filter((item, index) => results.matchedDietHistory.findIndex((el) => el.startId === item.startId) >= index).map((el) => ({
                     text: moment(new Date(el.startId)).format('MM-DD-YYYY h:mm A'),
                     id: el.startId,
-                  })).reverse(),
-                  DietPlans: results.matchedDietPlans,
-                  PrepNotes: results.matchedPrepNotes,
+                  })).reverse() || [],
+                  DietPlans: results.matchedDietPlans || [],
+                  PrepNotes: results.matchedPrepNotes || [],
                 });
+                console.log('after grabRelatedDietRecords', this.state);
               }, (reason) => {
                 console.error(reason);
                 this.setState({ loading: false });
@@ -638,6 +684,12 @@ export default class extends Component {
                     allFoods={this.props.Foods}
                     allUnits={this.props.Units}
                     dietPlan={this.state.DietPlans}
+                    onSave={(newData, oldData, numAnimals) => new Promise((res, rej) => {
+                      console.log(newData, oldData, numAnimals);
+                      setTimeout(() => res(), 1000);
+                    })}
+                    showNotification={(type, message) => this.notificationBar.current.showNotification(type, message)}
+                    numAnimals={this.state.selectedDiet.numAnimals}
                   />
                 </div>
             }

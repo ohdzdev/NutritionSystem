@@ -5,13 +5,91 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
 
+import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { theme } from '../../getPageContext';
+
+const boolFields = ['sun', 'mon', 'tue', 'wed', 'thr', 'fri', 'sat'];
+
+
+/**
+ * This function helps check if required fields have been met for new and edits on records
+ */
+const dietPlanRequiredFieldCheck = (rowUpdated, showNotification) => {
+  if (!rowUpdated.foodId) {
+    showNotification('error', 'Food is a required field.');
+    return false;
+  }
+
+  if (!rowUpdated.indAmount) {
+    showNotification('error', 'Individual amount is a required field.');
+    return false;
+  }
+  if (Number.isNaN(parseInt(rowUpdated.indAmount, 10))) {
+    showNotification('error', 'Individual Amount is a number field. Please enter a number');
+    return false;
+  }
+
+  if (!rowUpdated.unitId) {
+    showNotification('error', 'Unit is a required field.');
+    return false;
+  }
+
+  if (!rowUpdated.sort) {
+    showNotification('error', 'Sort is a required field.');
+    return false;
+  }
+
+  if (Number.isNaN(parseInt(rowUpdated.sort, 10))) {
+    showNotification('error', 'Sort is a number field. Please enter a number.');
+    return false;
+  }
+
+  if (!rowUpdated.tote) {
+    showNotification('error', 'Bag is a required field.');
+    return false;
+  }
+
+  if (Number.isNaN(parseInt(rowUpdated.tote, 10))) {
+    showNotification('error', 'Bag is a number field. Please enter a number.');
+    return false;
+  }
+
+  if (!rowUpdated.freqRotation) {
+    showNotification('error', 'Cycle is a required field.');
+    return false;
+  }
+
+  if (Number.isNaN(parseInt(rowUpdated.freqRotation, 10))) {
+    showNotification('error', 'Cycle is a number field. Please enter a number.');
+    return false;
+  }
+
+  if (!rowUpdated.freqWeeks) {
+    showNotification('error', 'Week is a required field.');
+    return false;
+  }
+
+  if (Number.isNaN(parseInt(rowUpdated.freqWeeks, 10))) {
+    showNotification('error', 'Week is a number field. Please enter a number.');
+    return false;
+  }
+
+  return true;
+};
 
 class CurrentDiet extends Component {
   static propTypes = {
     allFoods: PropTypes.arrayOf(PropTypes.object).isRequired,
     allUnits: PropTypes.arrayOf(PropTypes.object).isRequired,
-    dietPlan: PropTypes.arrayOf(PropTypes.object).isRequired,
+    dietPlan: PropTypes.arrayOf(PropTypes.object),
+    onSave: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
+    numAnimals: PropTypes.number,
+  }
+
+  static defaultProps = {
+    numAnimals: 1,
+    dietPlan: [],
   }
 
   constructor(props) {
@@ -40,49 +118,113 @@ class CurrentDiet extends Component {
       foodLookup,
       unitLookup,
       dietPlanLength: this.props.dietPlan.length,
+      dietPlan: this.props.dietPlan
+        .map((item) => {
+          const localItem = { ...item };
+          Object.keys(item).forEach((i) => {
+            if (boolFields.find((val) => val === i)) {
+              localItem[i] = localItem[i] === 1; // make 1 and 0s for bool fields into true / false values
+            }
+          });
+          return localItem;
+        }),
+      updatedDietPlans: [],
+      isLoading: false,
+      numAnimals: props.numAnimals ? props.numAnimals : 1,
     };
-    console.log(this.state.foodSuggestions);
+    console.log(props);
+    console.log(this.state);
   }
 
   render() {
     return (
-      <>
-        <MuiThemeProvider theme={{
-          ...theme,
-          overrides: {
-            MuiTableCell: {
-              root: {
-                textAlign: 'center',
-                padding: '0px 4px 0px 4px',
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+        <MuiThemeProvider
+          theme={{
+            ...theme,
+            overrides: {
+              MuiTableCell: {
+                root: {
+                  textAlign: 'center',
+                  padding: '0px 4px 0px 4px',
+                },
+                paddingCheckbox: {
+                  padding: '0px 2px 0px 2px',
+                },
               },
-              paddingCheckbox: {
-                padding: '0px 2px 0px 2px',
+              MuiSelect: {
+                select: {
+                  maxWidth: '100px',
+                },
+              },
+              MuiIconButton: {
+                root: {
+                  padding: '5px 5px 5px 5px',
+                },
+              },
+              MuiTableSortLabel: {
+                icon: {
+                  display: 'none',
+                },
+              },
+              MuiIcon: {
+                root: {
+                  width: '1em !important',
+                },
               },
             },
-            MuiSelect: {
-              select: {
-                maxWidth: '100px',
-              },
-            },
-            MuiIconButton: {
-              root: {
-                padding: '5px 5px 5px 5px',
-              },
-            },
-            MuiTableSortLabel: {
-              icon: {
-                display: 'none',
-              },
-            },
-            MuiIcon: {
-              root: {
-                width: '1em !important',
-              },
-            },
-          },
-        }
-        }
+          }}
         >
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <TextField
+              variant="outlined"
+              type="number"
+              value={this.state.numAnimals}
+              onChange={(e) => {
+                let val = parseInt(e.target.value, 10);
+                if (val <= 0) {
+                  val = 1;
+                }
+
+                this.setState((prevState) => ({
+                  numAnimals: val,
+                  dietPlan: prevState.dietPlan.map((item) => {
+                    const locItem = { ...item };
+                    locItem.groupAmount = item.indAmount * val;
+                    return locItem;
+                  }),
+                  pendingChanges: true,
+                }));
+              }}
+              style={{ margin: '10px' }}
+              label="Number of Animals"
+            />
+            <div style={{ display: 'flex' }}>
+              <Button
+                onClick={() => {
+                  this.setState(({ isLoading: true }), () => {
+                    this.props.onSave(this.state.dietPlan, this.props.dietPlan, this.state.numAnimals).then(() => {
+                      this.setState({ isLoading: false, pendingChanges: false });
+                    }).catch(() => {
+                      this.setState({ isLoading: false });
+                    });
+                  });
+                }}
+                variant="contained"
+                color="primary"
+                style={{
+                  marginRight: '15px',
+                  marginTop: '10px',
+                  marginBottom: '10px',
+                  width: '200px',
+                }}
+                disabled={!this.state.pendingChanges}
+              >
+            Submit Changes
+              </Button>
+            </div>
+
+          </div>
           <MaterialTable
             title="Current Diet Plan"
             columns={[
@@ -101,6 +243,8 @@ class CurrentDiet extends Component {
               {
                 title: 'Total',
                 field: 'groupAmount',
+                readonly: true,
+                // editable: 'never', // this lands in the next material-table release
               },
               {
                 title: 'Unit',
@@ -156,14 +300,14 @@ class CurrentDiet extends Component {
               },
               {
                 title: 'Cycle',
-                field: 'freqWeeks',
+                field: 'freqRotation',
               },
               {
                 title: 'Week',
-                field: 'freqRotation',
+                field: 'freqWeeks',
               },
             ]}
-            data={this.props.dietPlan}
+            data={this.state.dietPlan}
             options={{
               pageSize: this.state.dietPlanLength + 10,
               search: false,
@@ -171,20 +315,85 @@ class CurrentDiet extends Component {
               addRowPosition: 'first',
             }}
             editable={{
-              onRowAdd: (newData) => {
-                console.log(newData);
-              },
-              onRowDelete: (oldData) => {
-                console.log(oldData);
-              },
-              onRowUpdate: (newData, oldData) => {
-                console.log(newData, oldData);
-              },
+              onRowAdd: (newData) => new Promise((res, rej) => {
+                const valid = dietPlanRequiredFieldCheck(newData, this.props.showNotification);
+
+                const localData = { ...newData };
+                localData.groupAmount = this.state.numAnimals * parseInt(localData.indAmount, 10);
+                if (!valid) {
+                  rej();
+                  return;
+                }
+                this.setState((prevState) => ({
+                  dietPlan: [...prevState.dietPlan, localData],
+                  pendingChanges: true,
+                }), () => {
+                  res();
+                  console.log(this.state);
+                });
+              }),
+              onRowDelete: (row) => new Promise((res) => {
+                console.log(row);
+                this.setState((prevState) => ({ dietPlan: [...prevState.dietPlan.filter((item) => item.id !== row.id)], pendingChanges: true }));
+                res();
+              }),
+              onRowUpdate: (rowUpdated, prevRow) => new Promise(async (res, rej) => {
+                const valid = dietPlanRequiredFieldCheck(rowUpdated, this.props.showNotification);
+                if (!valid) {
+                  rej();
+                  return;
+                }
+
+                const updatedCopy = { ...rowUpdated };
+                updatedCopy.groupAmount = this.state.numAnimals * parseInt(updatedCopy.indAmount, 10);
+                let fieldUpdated = false;
+                const updatedFields = Object.entries(updatedCopy).filter((column) => prevRow[column[0]] !== column[1]).map((entry) => entry[0]);
+                if (updatedFields && updatedFields.length > 0) {
+                  fieldUpdated = true;
+                }
+                if (fieldUpdated) {
+                  const updatedFieldsToServer = {};
+                  updatedFields.forEach((fieldToKeep) => { updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep]; });
+                  this.setState((prevState) => {
+                    const newUnits = [...prevState.dietPlan.map((item) => {
+                      if (item.id !== rowUpdated.id) {
+                        return item;
+                      }
+                      const updatedRow = item;
+                      Object.assign(updatedRow, updatedFieldsToServer);
+                      return updatedRow;
+                    })];
+                    return { dietPlan: newUnits, pendingChanges: true };
+                  });
+                  res();
+                  return;
+                }
+                this.props.showNotification('info', 'No pending changes detected');
+                rej();
+              }),
             }}
           />
+          {(this.state.isLoading) &&
+            <div style={{
+              position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', zIndex: 999999,
+            }}
+            >
+              <div style={{
+                display: 'table', width: '100%', height: '100%', backgroundColor: '#FFFFFFAA',
+              }}
+              >
+                <div style={{
+                  display: 'table-cell', width: '100%', height: '100%', verticalAlign: 'middle', textAlign: 'center',
+                }}
+                >
+                  <CircularProgress />
+                </div>
+              </div>
+            </div>
+          }
         </MuiThemeProvider>
 
-      </>
+      </div>
     );
   }
 }

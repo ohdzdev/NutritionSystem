@@ -203,11 +203,10 @@ class CurrentDiet extends Component {
               <Button
                 onClick={() => {
                   this.setState(({ isLoading: true }), () => {
-                    this.props.onSave(this.state.dietPlan, this.props.dietPlan, this.state.numAnimals).then(() => {
-                      this.setState({ isLoading: false, pendingChanges: false });
-                    }).catch(() => {
-                      this.setState({ isLoading: false });
-                    });
+                    this.props.onSave(this.state.dietPlan, this.props.dietPlan, this.state.numAnimals);
+                    // isloading and pending changes get changed via ref. This is because changelog dialog
+                    // can only be opened via state change which can't be listend to via a promise chain
+                    // when it is completed.
                   });
                 }}
                 variant="contained"

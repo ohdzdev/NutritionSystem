@@ -87,6 +87,19 @@ class DietChanges {
     const res = await axios.post(uri, params).catch((err) => Promise.reject(err));
     return res;
   }
+
+  /**
+   * delete diet plan via filters
+   * @param {string|number} filter required
+   */
+  async deleteDietChangesViaFilter(filter) {
+    if (!filter) {
+      return Promise.reject(new Error('must have filter to be able to delete'));
+    }
+    const uri = `${API_BASE_URL}/api/DietChanges/deleteAllViaFilter?access_token=${this.token}`;
+    const res = await axios.post(uri, { filter }).catch((err) => Promise.reject(err));
+    return res;
+  }
 }
 
 export default DietChanges;

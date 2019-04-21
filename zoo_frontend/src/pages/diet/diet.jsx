@@ -9,6 +9,7 @@ import classNames from 'classnames';
 
 import {
   Typography, Card, Grid, LinearProgress, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Divider,
+  DialogTitle, DialogContent, DialogContentText, DialogActions, Dialog, TextField,
 } from '@material-ui/core';
 
 import Delete from '@material-ui/icons/Delete';
@@ -31,7 +32,7 @@ import {
   Units,
 } from '../../api';
 
-import { Notifications } from '../../components';
+import { Notifications, ConfirmationDialog } from '../../components';
 
 import DietSelect from './DietSelectDialog';
 
@@ -192,6 +193,7 @@ export default class extends Component {
     this.state = {
       newDietOpen: props.new, // auto open up new form if from the url
       dietSelectDialogOpen: !props.new && !props.selectedDiet,
+      dietDeleteDialogOpen: false,
       Diets: props.Diets, // load Diets into the state to allow us to add a new diet in if created via page
       selectedDiet: props.selectedDiet || null, // if a user has a selected diet from the URL load it here
 
@@ -214,12 +216,22 @@ export default class extends Component {
         id: el.startId,
       })).reverse(),
 
+      // diet plan window
       viewCurrentDietPlan: true,
       selectedDietHistories: [],
+
+      // diet plan save data
+      newDietPlan: [],
+      oldDietPlan: [],
+      newNumberAnimals: 1,
+      dietPlanChangeDialog: false, // dietPlan specific changelog window
+
+      dietChangeDialog: false, // diet specific changelog window
     };
     this.clientDietAPI = new Diets(props.token);
 
     this.notificationBar = React.createRef();
+    this.currentDietRef = React.createRef();
 
     this.clientCaseNotesAPI = new CaseNotes(props.token);
     this.clientDietChangesAPI = new DietChanges(props.token);
@@ -289,34 +301,54 @@ export default class extends Component {
     });
   }
 
-  handleDietDelete() {
+  async handleDietDelete() {
     if (this.state.selectedDiet && this.state.selectedDiet.dietId) {
       const dietToDelete = this.state.selectedDiet.dietId;
 
-      this.clientDietAPI.deleteDiets(dietToDelete).then(
-        () => {
-          // set window href
-          const href = '/diet';
-          Router.push(href, href, { shallow: true });
+      // delete related diets then delete main diet
+      console.log(dietToDelete);
+      if (dietToDelete) {
+        try {
+          await Promise.all([
+            this.clientDietHistoryAPI.deleteDietHistoryViaFilter({ dietId: dietToDelete }),
+            this.clientCaseNotesAPI.deleteCaseNotesViaFilter({ dietId: dietToDelete }),
+            this.clientDietPlansAPI.deleteDietPlanViaFilter({ dietId: dietToDelete }),
+            this.clientPrepNotesAPI.deletePrepNotesViaFilter({ dietId: dietToDelete }),
+            this.clientDietChangesAPI.deleteDietChangesViaFilter({ dietId: dietToDelete }),
+          ]);
+        } catch (error) {
+          console.error(error);
+          this.notificationBar.current.showNotification('error', 'Error deleting related records of diet. Please contact system admin.');
+          return;
+        }
 
-          // clear state
-          this.setState((prevState) => ({
-            selectedDiet: null,
-            Diets: prevState.Diets.filter((diet) => diet.dietId !== dietToDelete),
-            // clear related record data since record is deleted.
-            CaseNotes: [],
-            DietChanges: [],
-            DietHistory: [],
-            DietHistoryOptions: [],
-            DietPlans: [],
-            PrepNotes: [],
-          }));
-        },
-        (reject) => {
-          console.error(reject);
-          this.notificationBar.current.showNotification('error', 'Error deleting diet on server');
-        },
-      );
+        this.clientDietAPI.deleteDiets(dietToDelete).then(
+          () => {
+            // set window href
+            const href = '/diet';
+            Router.push(href, href, { shallow: true });
+
+            // clear state
+            this.setState((prevState) => ({
+              selectedDiet: null,
+              Diets: prevState.Diets.filter((diet) => diet.dietId !== dietToDelete),
+              // clear related record data since record is deleted.
+              CaseNotes: [],
+              DietChanges: [],
+              DietHistory: [],
+              DietHistoryOptions: [],
+              DietPlans: [],
+              PrepNotes: [],
+            }));
+          },
+          (reject) => {
+            console.error(reject);
+            this.notificationBar.current.showNotification('error', 'Error deleting diet on server');
+          },
+        );
+      } else {
+        this.notificationBar.current.showNotification('error', 'selected diet is missing id');
+      }
     }
   }
 
@@ -498,11 +530,11 @@ export default class extends Component {
     }
   }
 
-  async handleDietPlanSave(newData, oldData, numAnimals, dietChangeReason) {
-    if (numAnimals !== this.state.selectedDiet.numAnimals) {
+  async handleDietPlanSave() {
+    if (this.state.newNumberAnimals !== this.state.selectedDiet.numAnimals) {
       // update the diet
       const localSelectedDiet = { ...this.state.selectedDiet };
-      Object.assign(localSelectedDiet, { numAnimals });
+      Object.assign(localSelectedDiet, { numAnimals: this.state.newNumberAnimals });
 
       // add new date and add the current user to be the last one to edit diet.
       localSelectedDiet.date = new Date().toISOString();
@@ -527,17 +559,16 @@ export default class extends Component {
           },
         );
       });
-
-      // priority for creating records is diet plan, diet history, diet changes
-
-      // to find out what to update
-      // figure out which dietPlan records were updated
-
-      // create diet history for all diet plan records after diet plan is updated
-
-      // create diet change with reason
-
     }
+
+    // priority for creating records is diet plan, diet history, diet changes
+
+    // to find out what to update
+    // figure out which dietPlan records were updated
+
+    // create diet history for all diet plan records after diet plan is updated
+
+    // create diet change with reason
   }
 
   render() {
@@ -591,7 +622,7 @@ export default class extends Component {
             >
               {this.state.selectedDiet && (
                 <Button
-                  onClick={() => this.handleDietDelete()}
+                  onClick={() => this.setState({ dietDeleteDialogOpen: true })}
                   variant="contained"
                   className={classNames(classes.newDietButton, classes.deleteDietButton)}
                 >
@@ -681,13 +712,18 @@ export default class extends Component {
               {this.state.viewCurrentDietPlan &&
                 <div>
                   <CurrentDietTable
+                    ref={this.currentDietRef}
                     allFoods={this.props.Foods}
                     allUnits={this.props.Units}
                     dietPlan={this.state.DietPlans}
-                    onSave={(newData, oldData, numAnimals) => new Promise((res, rej) => {
-                      console.log(newData, oldData, numAnimals);
-                      setTimeout(() => res(), 1000);
-                    })}
+                    onSave={(newData, oldData, numAnimals) => {
+                      this.setState({
+                        newDietPlan: newData,
+                        oldDietPlan: oldData,
+                        newNumberAnimals: numAnimals,
+                        dietPlanChangeDialog: true, // open diet plan specific changelog dialog
+                      });
+                    }}
                     showNotification={(type, message) => this.notificationBar.current.showNotification(type, message)}
                     numAnimals={this.state.selectedDiet.numAnimals}
                   />
@@ -863,6 +899,66 @@ export default class extends Component {
           </Grid>
         }
         <Notifications ref={this.notificationBar} />
+        <ConfirmationDialog
+          cancelButtonText="Cancel"
+          title="Are you sure you want to delete this diet?"
+          message="NOTE: This action will delete all related case notes, prep notes, diet history, diet plan records, and is irreversible."
+          open={this.state.dietDeleteDialogOpen}
+          onClose={() => this.setState({ dietDeleteDialogOpen: false }, () => this.handleDietDelete())}
+          okButtonText="OK"
+        />
+        <Dialog
+          disableBackdropClick
+          disableEscapeKeyDown
+          maxWidth="sm"
+          aria-labelledby="confirmation-dialog-title"
+          open={this.state.dietPlanChangeDialog}
+        >
+          <DialogTitle id="confirmation-dialog-title">asdf</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please enter a reason why the diet was changed.
+              *Required*
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="notes"
+              label="Change Notes"
+              variant="outlined"
+              multiline
+              rowsMax="4"
+              fullWidth
+              onChange={(e) => this.setState({ dialogChangeNotes: e.target.value })}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                this.setState({ dietPlanChangeDialog: false, dialogChangeNotes: '' }, () => {
+                  this.notificationBar.current.showNotification('warning', 'Changes are still pending! Navigating away from page will not save changes.');
+                  this.currentDietRef.current.setState({
+                    isLoading: false,
+                  });
+                });
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => this.setState({ dietPlanChangeDialog: false }, () => {
+                // change currentDiet loader after handleDietPlanSave has finished executing
+                this.handleDietPlanSave(); // all changes are present in state, thus no params
+              })}
+              color="primary"
+              variant="contained"
+              disabled={!this.state.dialogChangeNotes}
+            >
+              Subscribe
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }

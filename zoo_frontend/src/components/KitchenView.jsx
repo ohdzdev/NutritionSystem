@@ -9,19 +9,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 
-let id = 0;
-function createData(unit, food) {
-  id += 1;
-  return {
-    unit, food,
-  };
-}
-
-const rows = [
-  createData('500 g', 'MIXED GREANS'),
-  createData('330 g', 'SEASONAL FRUIT'),
-];
-
 const styles = theme => ({
   pageText: {
     textAlign: 'right',
@@ -53,7 +40,7 @@ const formatDate = (d) => {
 };
 
 const KitchenView = ({
-  classes, currentPage, pageLength, noteId, species, prepNotes, dc, dietChanges,
+  classes, currentPage, pageLength, noteId, species, prepNotes, dc, dietChanges, foodPrep,
 }) => (
   <div>
     <div className={classes.pageText}>
@@ -86,9 +73,9 @@ const KitchenView = ({
         </div>
         <Table className={classes.table}>
           <TableBody>
-            {rows.map(row => (
+            {foodPrep.map(row => (
               <TableRow key={row.id}>
-                <TableCell align="left">{row.unit}</TableCell>
+                <TableCell align="left">{row.group_amount + row.unit}</TableCell>
                 <TableCell align="left">{row.food}</TableCell>
               </TableRow>
             ))}
@@ -109,6 +96,8 @@ KitchenView.propTypes = {
   prepNotes: PropTypes.array,
   dc: PropTypes.string,
   dietChanges: PropTypes.array,
+  foodPrep: PropTypes.array,
+  date: PropTypes.string,
 };
 
 KitchenView.defaultProps = {
@@ -119,6 +108,8 @@ KitchenView.defaultProps = {
   prepNotes: [],
   dc: '',
   dietChanges: ['none'],
+  foodPrep: [],
+  date: '',
 };
 
 

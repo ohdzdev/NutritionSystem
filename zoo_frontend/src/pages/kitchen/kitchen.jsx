@@ -28,6 +28,9 @@ export default class extends Component {
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
     FoodPrepTables: PropTypes.array.isRequired,
+    date: PropTypes.string.isRequired,
+    PrepDiets: PropTypes.array.isRequired,
+    PrepDietsSub: PropTypes.array.isRequired,
   };
 
   static defaultProps = {
@@ -35,27 +38,21 @@ export default class extends Component {
   }
 
   static async getInitialProps({ authToken }) {
-    // api helpers on server side
-    // const serverAnimalAPI = new Animals(authToken);
-    // const serverCaseNotesAPI = new CaseNotes(authToken);
-    // const serverDeliverContainersAPI = new DeliveryContainers(authToken);
-    // const serverDietChangesAPI = new DietChanges(authToken);
-    // const serverDietHistoryAPI = new DietHistory(authToken);
-    // const serverDietPlansAPI = new DietPlans(authToken);
     const serverFoodPrepTablesAPI = new FoodPrepTables(authToken);
-    // const serverLifeStagesAPI = new LifeStages(authToken);
-    // const serverPrepNotesAPI = new PrepNotes(authToken);
-    // const serverSpeciesAPI = new Species(authToken);
+    const serverDietsAPI = new Diets(authToken);
 
     const [
       AllFoodPrepTables,
+      AllFoodPrep,
     ] = await Promise.all([
       serverFoodPrepTablesAPI.getFoodPrepTables(),
+      serverDietsAPI.getAnimalPrep('2019-4-21'), // this.props.date !!!!!!!!!!
     ]);
-
 
     return {
       FoodPrepTables: AllFoodPrepTables.data,
+      PrepDiets: AllFoodPrep.data.diets,
+      PrepDietsSub: AllFoodPrep.data.dietsSub,
     };
   }
 
@@ -69,6 +66,7 @@ export default class extends Component {
       prepNotes: ['none', 'newline?'],
       dc: '',
       dietChanges: ['none'],
+      foodPrep: [],
     };
 
     /* API */
@@ -130,10 +128,20 @@ export default class extends Component {
       prepNotes: prepNotes.data,
       dc: dc.data[0].dc,
       dietChanges: dietChanges.data.slice(0, 3),
+      foodPrep: this.getPrepFood(dietID),
     });
   }
 
+  /* Returns the food prep for the diet/animal */
+  // For entry in dietsSub where diet_id = dietID
+  // food, group_amount
+  getPrepFood(dietID) {
+    console.log(dietID);
+    const items = this.props.PrepDietsSub.filter(item => item.diet_id === dietID);
+    return items;
+  }
 
+  /* Handle table change !! */
   handleChange = name => event => {
     const e = event.target.value;
     this.setState({ [name]: e });
@@ -162,11 +170,12 @@ export default class extends Component {
     this.state.diets[this.state.currentIndex].speciesId, // speciesID
     this.state.diets[this.state.currentIndex].dietId, // dietID
     this.state.diets[this.state.currentIndex].dcId, // dcID
+    '2019-4-21', // SEND IN DATE HERE
   );
 
   render() {
     // const { role } = this.props.account;
-    const { FoodPrepTables } = this.props;
+    const { FoodPrepTables, date } = this.props;
 
     return (
       <div style={{
@@ -237,6 +246,8 @@ export default class extends Component {
               prepNotes={this.state.prepNotes}
               dc={this.state.dc}
               dietChanges={this.state.dietChanges}
+              foodPrep={this.state.foodPrep}
+              date={date}
             />
             : null
           }

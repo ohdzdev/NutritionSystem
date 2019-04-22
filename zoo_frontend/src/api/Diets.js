@@ -129,6 +129,11 @@ class Diet {
     const res = await axios.post(uri, params).catch((err) => Promise.reject(err));
     return res;
   }
+  async getAnimalPrep(date) {
+    const query = `${API_BASE_URL}/api/Diets/day-diets?date=${date}&access_token=${this.token}`;
+    const res = await axios.get(query);
+    return res;
+  }
 }
 
 export default Diet;

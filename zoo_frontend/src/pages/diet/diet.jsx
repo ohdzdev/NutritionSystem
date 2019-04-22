@@ -30,6 +30,7 @@ import {
   Subenclosures,
   Food,
   Units,
+  Users,
 } from '../../api';
 
 import { Notifications, ConfirmationDialog } from '../../components';
@@ -44,6 +45,8 @@ import DietChangeCard from './DietChangeCard';
 import DietHistoryTable from './DietHistory';
 import CurrentDietTable from './CurrentDiet';
 
+import blankDietPlanJSON from './blankDietPlan.json';
+
 export default class extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
@@ -56,6 +59,7 @@ export default class extends Component {
     Subenclosures: PropTypes.arrayOf(PropTypes.object).isRequired,
     Foods: PropTypes.arrayOf(PropTypes.object).isRequired,
     Units: PropTypes.arrayOf(PropTypes.object).isRequired,
+    Users: PropTypes.arrayOf(PropTypes.object).isRequired,
     selectedDiet: PropTypes.object,
     new: PropTypes.bool,
 
@@ -97,10 +101,11 @@ export default class extends Component {
     const serverSubenclosuresAPI = new Subenclosures(authToken);
     const serverFoodAPI = new Food(authToken);
     const serverUnitsAPI = new Units(authToken);
+    const serverUserAPI = new Users(authToken);
 
     // get base data that we know we will need to load
 
-    const [AllAnimals, AllDeliveryContainers, AllDiets, AllFoodPrepTables, AllLifeStages, AllSpecies, AllSubenclosures, AllFoods, AllUnits] = await Promise.all(
+    const [AllAnimals, AllDeliveryContainers, AllDiets, AllFoodPrepTables, AllLifeStages, AllSpecies, AllSubenclosures, AllFoods, AllUnits, AllUsers] = await Promise.all(
       [
         serverAnimalAPI.getAnimals(),
         serverDeliverContainersAPI.getDeliveryContainers(),
@@ -111,6 +116,7 @@ export default class extends Component {
         serverSubenclosuresAPI.getSubenclosures(),
         serverFoodAPI.getFood(),
         serverUnitsAPI.getUnits(),
+        serverUserAPI.getUsers(),
       ],
     );
 
@@ -131,6 +137,7 @@ export default class extends Component {
             Subenclosures: AllSubenclosures.data,
             Foods: AllFoods.data,
             Units: AllUnits.data,
+            Users: AllUsers.data,
             serverError: 'Diet in URL could not be found.',
           };
         }
@@ -159,6 +166,7 @@ export default class extends Component {
           Subenclosures: AllSubenclosures.data,
           Foods: AllFoods.data,
           Units: AllUnits.data,
+          Users: AllUsers.data,
           selectedDiet: matchedDiet,
         };
       }
@@ -172,6 +180,7 @@ export default class extends Component {
         Subenclosures: AllSubenclosures.data,
         Foods: AllFoods.data,
         Units: AllUnits.data,
+        Users: AllUsers.data,
         new: true,
       };
     }
@@ -185,6 +194,7 @@ export default class extends Component {
       Subenclosures: AllSubenclosures.data,
       Foods: AllFoods.data,
       Units: AllUnits.data,
+      Users: AllUsers.data,
     };
   }
 
@@ -226,6 +236,7 @@ export default class extends Component {
       newNumberAnimals: 1,
       dietPlanChangeDialog: false, // dietPlan specific changelog window
 
+      dialogChangeNotes: '',
       dietChangeDialog: false, // diet specific changelog window
     };
     this.clientDietAPI = new Diets(props.token);
@@ -371,7 +382,7 @@ export default class extends Component {
             (prevState) => ({
               Diets: [...prevState.Diets, result.data],
               newDietOpen: false,
-              selectedDiet: result.data,
+              selectedDiet: { ...result.data },
               // all related record data should be null on a brand new entry
               // this is just in case state wasn't cleared properly
               CaseNotes: [],
@@ -382,6 +393,7 @@ export default class extends Component {
               PrepNotes: [],
             }),
             () => {
+              console.log('selected diet', this.state.selectedDiet);
               res();
             },
           );
@@ -530,45 +542,144 @@ export default class extends Component {
     }
   }
 
-  async handleDietPlanSave() {
-    if (this.state.newNumberAnimals !== this.state.selectedDiet.numAnimals) {
-      // update the diet
-      const localSelectedDiet = { ...this.state.selectedDiet };
-      Object.assign(localSelectedDiet, { numAnimals: this.state.newNumberAnimals });
+  handleDietPlanSave() {
+    return new Promise(async (resolve, reject) => {
+      if (this.state.newNumberAnimals !== this.state.selectedDiet.numAnimals) {
+        // update the diet
+        const localSelectedDiet = { ...this.state.selectedDiet };
+        Object.assign(localSelectedDiet, { numAnimals: this.state.newNumberAnimals });
 
-      // add new date and add the current user to be the last one to edit diet.
-      localSelectedDiet.date = new Date().toISOString();
-      localSelectedDiet.userLogin = this.props.account.id;
+        // add new date and add the current user to be the last one to edit diet.
+        localSelectedDiet.date = new Date().toISOString();
+        localSelectedDiet.userLogin = this.props.account.id;
 
-      await new Promise((res, rej) => {
-        this.clientDietAPI.updateDiets(localSelectedDiet.dietId, localSelectedDiet).then(
-          (result) => {
-            this.setState((prevState) => ({
-              selectedDiet: result.data,
-              Diets: prevState.Diets.map((old) => {
-                if (old.dietId === result.data.dietId) {
-                  return result.data;
-                }
-                return old;
-              }),
-            }), () => res());
-          },
-          (err) => {
-            console.error(err);
-            rej();
-          },
-        );
+        await new Promise((res, rej) => {
+          this.clientDietAPI.updateDiets(localSelectedDiet.dietId, localSelectedDiet).then(
+            (result) => {
+              this.setState((prevState) => ({
+                selectedDiet: result.data,
+                Diets: prevState.Diets.map((old) => {
+                  if (old.dietId === result.data.dietId) {
+                    return result.data;
+                  }
+                  return old;
+                }),
+              }), () => res());
+            },
+            (err) => {
+              console.error(err);
+              rej();
+            },
+          );
+        });
+      }
+
+      let newDietChange = {};
+      const now = new Date();
+
+      let dietChangeAxios = {};
+      dietChangeAxios = await this.clientDietChangesAPI.createDietChanges({
+        dietChangeDate: now,
+        dietChangeReason: this.state.dialogChangeNotes,
+        dietId: this.state.selectedDiet.dietId,
+        userId: this.props.account.id,
+      }).catch((err) => {
+        this.notificationBar.current.showNotification('error', 'Error creating diet change record on server. Please contact system admin');
+        console.error(err);
+        reject(new Error('Error creating diet change record on server. Please contact system admin'));
       });
-    }
 
-    // priority for creating records is diet plan, diet history, diet changes
+      newDietChange = dietChangeAxios.data;
+      const { dietChangeId } = newDietChange; // use this to map dietChange to all new dietHistory records
 
-    // to find out what to update
-    // figure out which dietPlan records were updated
+      // from dietPlan create all new dietHistories and link up the dietChange
+      const dietHistoryPromises = this.state.oldDietPlan.map((entry) => {
+        const {
+          id, groupAmount, tempAmount, feeding, ...rest
+        } = entry;
+        return this.clientDietHistoryAPI.createDietHistories({
+          ...rest,
+          dietChangeId,
+          amount: entry.groupAmount,
+          startId: now,
+        });
+      });
 
-    // create diet history for all diet plan records after diet plan is updated
+      let newDietHistories = [];
 
-    // create diet change with reason
+      newDietHistories = await Promise.all(dietHistoryPromises).catch((error) => {
+        this.notificationBar.current.showNotification('error', 'Error creating diet history records on server. Please contact system admin.');
+        console.error(error);
+        reject(new Error('Error creating diet history records on server'));
+      });
+
+      newDietHistories = newDietHistories.map((i) => i.data);
+
+      const newcombinedDietHistory = [...this.state.DietHistory, ...newDietHistories];
+      // from our new list of diet history, create new selection list items
+      const newHistoryOptions = newcombinedDietHistory.filter((item, index) => newcombinedDietHistory.findIndex((el) => el.startId === item.startId) >= index).map((el) => ({
+        text: moment(new Date(el.startId)).format('MM-DD-YYYY h:mm A'),
+        id: el.startId,
+      })).reverse();
+
+      // FIND NEW DIET PLANS
+      const newDietPlans = this.state.newDietPlan.filter((item) => !('id' in item));
+
+      // CREATE NEW DIET PLANS
+      const createdDietPlanPromises = newDietPlans.map((entry) => this.clientDietPlansAPI.createDietPlans(Object.assign(blankDietPlanJSON, entry)));
+      let createdDietPlans = await Promise.all(createdDietPlanPromises).catch((err) => {
+        this.notificationBar.current.showNotification('error', 'Error creating new diet plan records on server. Please contact system admin.');
+        console.error(err);
+        reject(new Error('Error creating new diet plan records on server.'));
+      });
+      createdDietPlans = createdDietPlans.map((i) => i.data);
+
+      // FIND EXISTING DIET PLANS
+      const updatedDietPlans = this.state.newDietPlan.filter((plan) => {
+        if (this.state.deletedDietPlans.find((deleted) => deleted.id === plan.id)) {
+          return false;
+        }
+        // new diet plans are harder to match perfectly since they don't have a unique id since they havent been created
+        // match against foodId, dietId, and indAmount
+        if (newDietPlans.find((newPlan) => newPlan.foodId === plan.foodId && newPlan.dietId === plan.dietId && newPlan.indAmount === plan.indAmount)) {
+          return false;
+        }
+        return true;
+      });
+
+
+      // UDPATE EXISTING DIET PLANS
+      const UpdatedDietPlanPromises = updatedDietPlans.map((plan) => this.clientDietPlansAPI.updateDietPlans(plan.id, plan));
+      let updatedDietPlanResults = await Promise.all(UpdatedDietPlanPromises).catch((err) => {
+        this.notificationBar.current.showNotification('error', 'Error updating existing diet plan records on server. Please contact system admin.');
+        console.error(err);
+        reject(new Error('Error updating existing diet plan records on server.'));
+      });
+
+      updatedDietPlanResults = updatedDietPlanResults.map((i) => i.data);
+
+      // DELETE REMOVED DIET PLANS
+      const deleteDietPlanPromises = this.state.deletedDietPlans.map((deleted) => this.clientDietPlansAPI.deleteDietPlans(deleted.id));
+      await Promise.all(deleteDietPlanPromises).catch((err) => {
+        this.notificationBar.current.showNotification('error', 'Error deleting removed diet plan records on server. Please contact system admin.');
+        console.error(err);
+        reject(new Error('Error deleting removed diet plan records on server.'));
+      });
+
+      this.currentDietRef.current.setState({
+        isLoading: false,
+        pendingChanges: false,
+      }, () => {
+        this.setState((prevState) => ({
+          DietPlans: [...updatedDietPlanResults, ...createdDietPlans],
+          DietChanges: [newDietChange, ...prevState.DietChanges],
+          DietHistoryOptions: newHistoryOptions,
+          DietHistory: newcombinedDietHistory,
+        }), () => {
+          resolve();
+        });
+      });
+    });
   }
 
   render() {
@@ -716,12 +827,17 @@ export default class extends Component {
                     allFoods={this.props.Foods}
                     allUnits={this.props.Units}
                     dietPlan={this.state.DietPlans}
-                    onSave={(newData, oldData, numAnimals) => {
+                    currentDiet={this.state.selectedDiet}
+                    onSave={(newData, oldData, deletedDietPlans, numAnimals) => {
                       this.setState({
-                        newDietPlan: newData,
-                        oldDietPlan: oldData,
+                        newDietPlan: [...newData],
+                        oldDietPlan: [...oldData],
+                        deletedDietPlans,
                         newNumberAnimals: numAnimals,
                         dietPlanChangeDialog: true, // open diet plan specific changelog dialog
+                        dialogChangeNotes: '', // reset if not blank from a previous change
+                      }, () => {
+                        this.currentDietRef.current.setState({ isLoading: false });
                       });
                     }}
                     showNotification={(type, message) => this.notificationBar.current.showNotification(type, message)}
@@ -744,10 +860,9 @@ export default class extends Component {
                     <DietChangeCard
                       key={value.dietChangeId}
                       {...value}
+                      AllUsers={this.props.Users}
                     />
                   ))}
-                  {this.state.currentHistory}
-                <pre>{JSON.stringify(this.state.selectedDietHistories, null, 2)}</pre>
               </div>
             }
             </Grid>
@@ -891,6 +1006,7 @@ export default class extends Component {
                     <DietChangeCard
                       key={value.dietChangeId}
                       {...value}
+                      AllUsers={this.props.Users}
                     />
                   ))}
                 </List>
@@ -929,6 +1045,7 @@ export default class extends Component {
               multiline
               rowsMax="4"
               fullWidth
+              value={this.state.dialogChangeNotes}
               onChange={(e) => this.setState({ dialogChangeNotes: e.target.value })}
             />
           </DialogContent>
@@ -949,7 +1066,9 @@ export default class extends Component {
             <Button
               onClick={() => this.setState({ dietPlanChangeDialog: false }, () => {
                 // change currentDiet loader after handleDietPlanSave has finished executing
-                this.handleDietPlanSave(); // all changes are present in state, thus no params
+                this.handleDietPlanSave().catch((err) => {
+                  console.error(err);
+                });
               })}
               color="primary"
               variant="contained"

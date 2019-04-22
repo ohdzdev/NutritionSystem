@@ -85,6 +85,7 @@ class CurrentDiet extends Component {
     onSave: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     numAnimals: PropTypes.number,
+    currentDiet: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -203,7 +204,7 @@ class CurrentDiet extends Component {
               <Button
                 onClick={() => {
                   this.setState(({ isLoading: true }), () => {
-                    this.props.onSave(this.state.dietPlan, this.props.dietPlan, this.state.numAnimals);
+                    this.props.onSave(this.state.dietPlan, this.props.dietPlan, this.state.deletedDietPlans, this.state.numAnimals);
                     // isloading and pending changes get changed via ref. This is because changelog dialog
                     // can only be opened via state change which can't be listend to via a promise chain
                     // when it is completed.
@@ -319,6 +320,7 @@ class CurrentDiet extends Component {
 
                 const localData = { ...newData };
                 localData.groupAmount = this.state.numAnimals * parseInt(localData.indAmount, 10);
+                localData.dietId = this.props.currentDiet.dietId;
                 if (!valid) {
                   rej();
                   return;
@@ -333,7 +335,7 @@ class CurrentDiet extends Component {
               }),
               onRowDelete: (row) => new Promise((res) => {
                 console.log(row);
-                this.setState((prevState) => ({ dietPlan: [...prevState.dietPlan.filter((item) => item.id !== row.id)], pendingChanges: true }));
+                this.setState((prevState) => ({ dietPlan: [...prevState.dietPlan.filter((item) => item.id !== row.id)], pendingChanges: true, deletedDietPlans: [...prevState.deletedDietPlans, row] }));
                 res();
               }),
               onRowUpdate: (rowUpdated, prevRow) => new Promise(async (res, rej) => {

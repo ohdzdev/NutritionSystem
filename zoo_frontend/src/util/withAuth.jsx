@@ -64,6 +64,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
         } catch (err2) {
           // ignore this error
         }
+        console.error(err);
         if (process.browser) {
           document.cookie = 'authToken=; path=/';
         }

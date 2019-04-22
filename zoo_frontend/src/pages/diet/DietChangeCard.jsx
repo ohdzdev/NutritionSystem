@@ -39,8 +39,9 @@ const DietChangeCard = (props) => {
   if (props.userId) {
     if (props.email) {
       changedBy = props.email;
-    } else {
-      changedBy = props.userId;
+    } else if (props.userId) {
+      const cardUser = props.AllUsers.find((user) => user.id === props.userId);
+      changedBy = cardUser.email;
     }
   } else if (props.bgtUserId) {
     changedBy = props.bgtUserId;
@@ -84,6 +85,7 @@ DietChangeCard.propTypes = {
   }).isRequired,
   dietChangeDate: PropTypes.string.isRequired,
   dietChangeReason: PropTypes.string,
+  AllUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 DietChangeCard.defaultProps = {

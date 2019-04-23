@@ -10,7 +10,6 @@ import { theme } from '../../getPageContext';
 
 const boolFields = ['sun', 'mon', 'tue', 'wed', 'thr', 'fri', 'sat'];
 
-
 /**
  * This function helps check if required fields have been met for new and edits on records
  */
@@ -25,7 +24,10 @@ const dietPlanRequiredFieldCheck = (rowUpdated, showNotification) => {
     return false;
   }
   if (Number.isNaN(parseInt(rowUpdated.indAmount, 10))) {
-    showNotification('error', 'Individual Amount is a number field. Please enter a number');
+    showNotification(
+      'error',
+      'Individual Amount is a number field. Please enter a number',
+    );
     return false;
   }
 
@@ -60,7 +62,10 @@ const dietPlanRequiredFieldCheck = (rowUpdated, showNotification) => {
   }
 
   if (Number.isNaN(parseInt(rowUpdated.freqRotation, 10))) {
-    showNotification('error', 'Cycle is a number field. Please enter a number.');
+    showNotification(
+      'error',
+      'Cycle is a number field. Please enter a number.',
+    );
     return false;
   }
 
@@ -86,12 +91,17 @@ class CurrentDiet extends Component {
     showNotification: PropTypes.func.isRequired,
     numAnimals: PropTypes.number,
     currentDiet: PropTypes.object.isRequired,
-  }
+    onDietPlanAdd: PropTypes.func.isRequired,
+    onDietPlanUpdate: PropTypes.func.isRequired,
+    onDietPlanDelete: PropTypes.func.isRequired,
+    onNumAnimalsChange: PropTypes.func.isRequired,
+    pendingChanges: PropTypes.bool.isRequired,
+  };
 
   static defaultProps = {
     numAnimals: 1,
     dietPlan: [],
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -102,7 +112,7 @@ class CurrentDiet extends Component {
       return acc;
     }, foodLookup);
 
-    const foodSuggestions = props.allFoods.map((val) => ({
+    const foodSuggestions = props.allFoods.map(val => ({
       ...val,
       label: val.food,
       value: val.foodId,
@@ -115,31 +125,35 @@ class CurrentDiet extends Component {
     }, unitLookup);
 
     this.state = {
+      deletedDietPlans: [],
       foodSuggestions,
       foodLookup,
       unitLookup,
-      dietPlanLength: this.props.dietPlan.length,
-      dietPlan: this.props.dietPlan
-        .map((item) => {
-          const localItem = { ...item };
-          Object.keys(item).forEach((i) => {
-            if (boolFields.find((val) => val === i)) {
-              localItem[i] = localItem[i] === 1; // make 1 and 0s for bool fields into true / false values
-            }
-          });
-          return localItem;
-        }),
-      updatedDietPlans: [],
+      dietPlan: this.props.dietPlan.map(item => {
+        const localItem = { ...item };
+        Object.keys(item).forEach(i => {
+          if (boolFields.find(val => val === i)) {
+            localItem[i] = localItem[i] === 1; // make 1 and 0s for bool fields into true / false values
+          }
+        });
+        return localItem;
+      }),
       isLoading: false,
-      numAnimals: props.numAnimals ? props.numAnimals : 1,
     };
     console.log(props);
     console.log(this.state);
   }
 
   render() {
+    console.log(this.props);
     return (
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <MuiThemeProvider
           theme={{
             ...theme,
@@ -180,22 +194,14 @@ class CurrentDiet extends Component {
             <TextField
               variant="outlined"
               type="number"
-              value={this.state.numAnimals}
-              onChange={(e) => {
+              value={this.props.numAnimals}
+              onChange={e => {
                 let val = parseInt(e.target.value, 10);
                 if (val <= 0) {
                   val = 1;
                 }
 
-                this.setState((prevState) => ({
-                  numAnimals: val,
-                  dietPlan: prevState.dietPlan.map((item) => {
-                    const locItem = { ...item };
-                    locItem.groupAmount = item.indAmount * val;
-                    return locItem;
-                  }),
-                  pendingChanges: true,
-                }));
+                this.props.onNumAnimalsChange(val);
               }}
               style={{ margin: '10px' }}
               label="Number of Animals"
@@ -203,11 +209,11 @@ class CurrentDiet extends Component {
             <div style={{ display: 'flex' }}>
               <Button
                 onClick={() => {
-                  this.setState(({ isLoading: true }), () => {
-                    this.props.onSave(this.state.dietPlan, this.props.dietPlan, this.state.deletedDietPlans, this.state.numAnimals);
+                  this.setState({ isLoading: true }, () => {
                     // isloading and pending changes get changed via ref. This is because changelog dialog
                     // can only be opened via state change which can't be listend to via a promise chain
                     // when it is completed.
+                    this.props.onSave(this.state.deletedDietPlans);
                   });
                 }}
                 variant="contained"
@@ -218,12 +224,11 @@ class CurrentDiet extends Component {
                   marginBottom: '10px',
                   width: '200px',
                 }}
-                disabled={!this.state.pendingChanges}
+                disabled={!this.props.pendingChanges}
               >
-            Submit Changes
+                Submit Changes
               </Button>
             </div>
-
           </div>
           <MaterialTable
             title="Current Diet Plan"
@@ -307,93 +312,128 @@ class CurrentDiet extends Component {
                 field: 'freqWeeks',
               },
             ]}
-            data={this.state.dietPlan}
+            data={this.props.dietPlan}
             options={{
-              pageSize: this.state.dietPlanLength + 10,
+              pageSize: this.props.dietPlan.length + 10,
               search: false,
               emptyRowsWhenPaging: false,
               addRowPosition: 'first',
             }}
             editable={{
-              onRowAdd: (newData) => new Promise((res, rej) => {
-                const valid = dietPlanRequiredFieldCheck(newData, this.props.showNotification);
+              onRowAdd: newData => new Promise((res, rej) => {
+                const valid = dietPlanRequiredFieldCheck(
+                  newData,
+                  this.props.showNotification,
+                );
 
                 const localData = { ...newData };
-                localData.groupAmount = this.state.numAnimals * parseInt(localData.indAmount, 10);
+                localData.groupAmount =
+                  this.props.numAnimals * parseInt(localData.indAmount, 10);
                 localData.dietId = this.props.currentDiet.dietId;
                 if (!valid) {
                   rej();
                   return;
                 }
-                this.setState((prevState) => ({
-                  dietPlan: [...prevState.dietPlan, localData],
-                  pendingChanges: true,
-                }), () => {
+
+                // update via props to prevent issues with updating state once diets have been created via 'submit changes' button
+                this.props.onDietPlanAdd(localData).then(() => {
                   res();
-                  console.log(this.state);
                 });
               }),
-              onRowDelete: (row) => new Promise((res) => {
+              onRowDelete: row => new Promise((res, rej) => {
                 console.log(row);
-                this.setState((prevState) => ({ dietPlan: [...prevState.dietPlan.filter((item) => item.id !== row.id)], pendingChanges: true, deletedDietPlans: [...prevState.deletedDietPlans, row] }));
-                res();
+                this.props
+                  .onDietPlanDelete(row)
+                  .then(() => {
+                    this.setState(
+                      prevState => ({
+                        deletedDietPlans: [...prevState.deletedDietPlans, row],
+                      }),
+                      () => {
+                        res();
+                      },
+                    );
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    rej();
+                  });
               }),
               onRowUpdate: (rowUpdated, prevRow) => new Promise(async (res, rej) => {
-                const valid = dietPlanRequiredFieldCheck(rowUpdated, this.props.showNotification);
+                const valid = dietPlanRequiredFieldCheck(
+                  rowUpdated,
+                  this.props.showNotification,
+                );
                 if (!valid) {
                   rej();
                   return;
                 }
 
                 const updatedCopy = { ...rowUpdated };
-                updatedCopy.groupAmount = this.state.numAnimals * parseInt(updatedCopy.indAmount, 10);
+                updatedCopy.groupAmount = this.props.numAnimals * parseInt(updatedCopy.indAmount, 10);
                 let fieldUpdated = false;
-                const updatedFields = Object.entries(updatedCopy).filter((column) => prevRow[column[0]] !== column[1]).map((entry) => entry[0]);
+                const updatedFields = Object.entries(updatedCopy)
+                  .filter(column => prevRow[column[0]] !== column[1])
+                  .map(entry => entry[0]);
                 if (updatedFields && updatedFields.length > 0) {
                   fieldUpdated = true;
                 }
                 if (fieldUpdated) {
                   const updatedFieldsToServer = {};
-                  updatedFields.forEach((fieldToKeep) => { updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep]; });
-                  this.setState((prevState) => {
-                    const newUnits = [...prevState.dietPlan.map((item) => {
-                      if (item.id !== rowUpdated.id) {
-                        return item;
-                      }
-                      const updatedRow = item;
-                      Object.assign(updatedRow, updatedFieldsToServer);
-                      return updatedRow;
-                    })];
-                    return { dietPlan: newUnits, pendingChanges: true };
+                  updatedFields.forEach(fieldToKeep => {
+                    updatedFieldsToServer[fieldToKeep] =
+                      updatedCopy[fieldToKeep];
+                  });
+                  console.log('fields updating', updatedFieldsToServer);
+                  await this.props.onDietPlanUpdate(updatedFieldsToServer, updatedCopy.id).catch((err) => {
+                    console.error(err);
+                    rej();
                   });
                   res();
                   return;
                 }
-                this.props.showNotification('info', 'No pending changes detected');
+                this.props.showNotification(
+                  'info',
+                  'No pending changes detected',
+                );
                 rej();
               }),
             }}
           />
-          {(this.state.isLoading) &&
-            <div style={{
-              position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', zIndex: 999999,
-            }}
-            >
-              <div style={{
-                display: 'table', width: '100%', height: '100%', backgroundColor: '#FFFFFFAA',
+          {this.state.isLoading && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                height: '100%',
+                width: '100%',
+                zIndex: 999999,
               }}
-              >
-                <div style={{
-                  display: 'table-cell', width: '100%', height: '100%', verticalAlign: 'middle', textAlign: 'center',
+            >
+              <div
+                style={{
+                  display: 'table',
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '#FFFFFFAA',
                 }}
+              >
+                <div
+                  style={{
+                    display: 'table-cell',
+                    width: '100%',
+                    height: '100%',
+                    verticalAlign: 'middle',
+                    textAlign: 'center',
+                  }}
                 >
                   <CircularProgress />
                 </div>
               </div>
             </div>
-          }
+          )}
         </MuiThemeProvider>
-
       </div>
     );
   }

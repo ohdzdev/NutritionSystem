@@ -9,7 +9,6 @@ import classNames from 'classnames';
 
 import {
   Typography, Card, Grid, LinearProgress, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Divider,
-  DialogTitle, DialogContent, DialogContentText, DialogActions, Dialog, TextField,
 } from '@material-ui/core';
 
 import Delete from '@material-ui/icons/Delete';
@@ -36,6 +35,7 @@ import {
 import { Notifications, ConfirmationDialog } from '../../components';
 
 import DietSelect from './DietSelectDialog';
+import DietPlanChangeDialog from './DietPlanChangeDialog';
 
 import DietHistoryList from './dietHistoryList';
 import DietForm from './dietForm';
@@ -67,6 +67,7 @@ export default class extends Component {
     DietChanges: PropTypes.arrayOf(PropTypes.object),
     DietHistory: PropTypes.arrayOf(PropTypes.object),
     DietPlans: PropTypes.arrayOf(PropTypes.object),
+    oldDietPlan: PropTypes.arrayOf(PropTypes.object),
     PrepNotes: PropTypes.arrayOf(PropTypes.object),
 
     serverError: PropTypes.string,
@@ -80,6 +81,7 @@ export default class extends Component {
     DietChanges: [],
     DietHistory: [],
     DietPlans: [],
+    oldDietPlan: [],
     PrepNotes: [],
 
     serverError: '',
@@ -158,6 +160,7 @@ export default class extends Component {
           DietChanges: matchedDietChanges.data,
           DietHistory: matchedDietHistory.data,
           DietPlans: matchedDietPlans.data,
+          oldDietPlan: matchedDietPlans.data,
           Diets: AllDiets.data,
           FoodPrepTables: AllFoodPrepTables.data,
           LifeStages: AllLifeStages.data,
@@ -212,6 +215,7 @@ export default class extends Component {
       DietChanges: props.DietChanges || [],
       DietHistory: props.DietHistory || [],
       DietPlans: props.DietPlans || [],
+      oldDietPlan: props.oldDietPlan || [],
       PrepNotes: props.PrepNotes || [],
 
       // dropdown selection codes
@@ -229,15 +233,12 @@ export default class extends Component {
       // diet plan window
       viewCurrentDietPlan: true,
       selectedDietHistories: [],
+      numAnimals: props.selectedDiet ? props.selectedDiet.numAnimals : 1,
+      pendingChanges: false,
 
       // diet plan save data
-      newDietPlan: [],
-      oldDietPlan: [],
-      newNumberAnimals: 1,
-      dietPlanChangeDialog: false, // dietPlan specific changelog window
-
+      dietPlanChangeDialogOpen: false, // dietPlan specific changelog window
       dialogChangeNotes: '',
-      dietChangeDialog: false, // diet specific changelog window
     };
     this.clientDietAPI = new Diets(props.token);
 
@@ -317,7 +318,6 @@ export default class extends Component {
       const dietToDelete = this.state.selectedDiet.dietId;
 
       // delete related diets then delete main diet
-      console.log(dietToDelete);
       if (dietToDelete) {
         try {
           await Promise.all([
@@ -378,25 +378,20 @@ export default class extends Component {
           Router.push(href, href, { shallow: true });
 
           // update state
-          this.setState(
-            (prevState) => ({
-              Diets: [...prevState.Diets, result.data],
-              newDietOpen: false,
-              selectedDiet: { ...result.data },
-              // all related record data should be null on a brand new entry
-              // this is just in case state wasn't cleared properly
-              CaseNotes: [],
-              DietChanges: [],
-              DietHistory: [],
-              DietHistoryOptions: [],
-              DietPlans: [],
-              PrepNotes: [],
-            }),
-            () => {
-              console.log('selected diet', this.state.selectedDiet);
-              res();
-            },
-          );
+          this.setState((prevState) => ({
+            Diets: [...prevState.Diets, result.data],
+            newDietOpen: false,
+            selectedDiet: { ...result.data },
+            numAnimals: result.data.numAnimals,
+            // all related record data should be null on a brand new entry
+            // this is just in case state wasn't cleared properly
+            CaseNotes: [],
+            DietChanges: [],
+            DietHistory: [],
+            DietHistoryOptions: [],
+            DietPlans: [],
+            PrepNotes: [],
+          }));
         },
         (error) => {
           console.error(error);
@@ -429,7 +424,6 @@ export default class extends Component {
   handlePrepNoteChange(payload) {
     return new Promise((res, rej) => {
       const localPayload = { ...this.state.selectedPrepNote, ...payload };
-      console.log(localPayload);
       if (!localPayload.prepNoteId) {
         rej();
         this.notificationBar.current.showNotification('error', 'Error updating prep note, id of prep note is missing');
@@ -499,7 +493,6 @@ export default class extends Component {
       const localPayload = { ...this.state.selectedCaseNote, ...payload };
       // update the last touched time to now if description is changed
       localPayload.caseDate = new Date().toISOString();
-      console.log(localPayload);
       if (!localPayload.caseNotesId) {
         rej();
         this.notificationBar.current.showNotification('error', 'Error updating prep note, id of prep note is missing');
@@ -542,12 +535,71 @@ export default class extends Component {
     }
   }
 
+  handleDietPlanUpdate(valuesChanged, id) {
+    return new Promise((resolve) => {
+      this.setState(prevState => {
+        const UpdatedDietPlans = [
+          ...prevState.DietPlans.map(item => {
+            if (item.id !== id) {
+              return item;
+            }
+            const updatedRow = item;
+            Object.assign(updatedRow, valuesChanged);
+            return updatedRow;
+          }),
+        ];
+        return { DietPlans: UpdatedDietPlans, pendingChanges: true };
+      }, () => {
+        resolve();
+      });
+    });
+  }
+
+  handleDietPlanAdd(newRow) {
+    return new Promise((resolve) => {
+      this.setState((prevState) => ({
+        DietPlans: [...prevState.DietPlans, newRow],
+        pendingChanges: true,
+      }), () => {
+        resolve();
+      });
+    });
+  }
+
+  handleDietPlanDelete(oldRow) {
+    return new Promise((resolve) => {
+      this.setState((prevState) => ({
+        DietPlans: [...prevState.DietPlans.filter((item) => item.id !== oldRow.id)],
+        pendingChanges: true,
+      }), () => {
+        resolve();
+      });
+    });
+  }
+
+  handleNumAnimalsChange(newNumAnimals) {
+    return new Promise((resolve) => {
+      this.setState(prevState => ({
+        numAnimals: newNumAnimals,
+        DietPlans: prevState.DietPlans.map(item => {
+          const locItem = { ...item };
+          locItem.groupAmount = item.indAmount * newNumAnimals;
+          return locItem;
+        }),
+        pendingChanges: true,
+      }), () => {
+        resolve();
+      });
+    });
+  }
+
   handleDietPlanSave() {
     return new Promise(async (resolve, reject) => {
-      if (this.state.newNumberAnimals !== this.state.selectedDiet.numAnimals) {
+      // is there a change in the number of animals from the previously known selected value
+      if (this.state.numAnimals !== this.state.selectedDiet.numAnimals) {
         // update the diet
         const localSelectedDiet = { ...this.state.selectedDiet };
-        Object.assign(localSelectedDiet, { numAnimals: this.state.newNumberAnimals });
+        Object.assign(localSelectedDiet, { numAnimals: this.state.numAnimals });
 
         // add new date and add the current user to be the last one to edit diet.
         localSelectedDiet.date = new Date().toISOString();
@@ -613,9 +665,10 @@ export default class extends Component {
         reject(new Error('Error creating diet history records on server'));
       });
 
+      // create new whole list of diet history records for every diet plan item
       newDietHistories = newDietHistories.map((i) => i.data);
-
       const newcombinedDietHistory = [...this.state.DietHistory, ...newDietHistories];
+
       // from our new list of diet history, create new selection list items
       const newHistoryOptions = newcombinedDietHistory.filter((item, index) => newcombinedDietHistory.findIndex((el) => el.startId === item.startId) >= index).map((el) => ({
         text: moment(new Date(el.startId)).format('MM-DD-YYYY h:mm A'),
@@ -623,7 +676,7 @@ export default class extends Component {
       })).reverse();
 
       // FIND NEW DIET PLANS
-      const newDietPlans = this.state.newDietPlan.filter((item) => !('id' in item));
+      const newDietPlans = this.state.DietPlans.filter((item) => !('id' in item));
 
       // CREATE NEW DIET PLANS
       const createdDietPlanPromises = newDietPlans.map((entry) => this.clientDietPlansAPI.createDietPlans(Object.assign(blankDietPlanJSON, entry)));
@@ -635,7 +688,7 @@ export default class extends Component {
       createdDietPlans = createdDietPlans.map((i) => i.data);
 
       // FIND EXISTING DIET PLANS
-      const updatedDietPlans = this.state.newDietPlan.filter((plan) => {
+      const updatedDietPlans = this.state.DietPlans.filter((plan) => {
         if (this.state.deletedDietPlans.find((deleted) => deleted.id === plan.id)) {
           return false;
         }
@@ -668,13 +721,13 @@ export default class extends Component {
 
       this.currentDietRef.current.setState({
         isLoading: false,
-        pendingChanges: false,
       }, () => {
         this.setState((prevState) => ({
           DietPlans: [...updatedDietPlanResults, ...createdDietPlans],
           DietChanges: [newDietChange, ...prevState.DietChanges],
           DietHistoryOptions: newHistoryOptions,
           DietHistory: newcombinedDietHistory,
+          pendingChanges: false,
         }), () => {
           resolve();
         });
@@ -765,7 +818,11 @@ export default class extends Component {
           deliveryContainers={this.props.DeliveryContainers}
           species={this.props.Species}
           onCancel={() => this.setState({ dietSelectDialogOpen: false })}
-          onSave={(diet) => this.setState({ selectedDiet: diet, dietSelectDialogOpen: false }, () => {
+          onSave={(diet) => this.setState({
+            selectedDiet: diet,
+            numAnimals: diet.numAnimals,
+            dietSelectDialogOpen: false,
+          }, () => {
             const href = `/diet?id=${diet.dietId}`;
             Router.push(href, href, { shallow: true });
 
@@ -782,9 +839,9 @@ export default class extends Component {
                     id: el.startId,
                   })).reverse() || [],
                   DietPlans: results.matchedDietPlans || [],
+                  oldDietPlan: results.matchedDietPlans || [],
                   PrepNotes: results.matchedPrepNotes || [],
                 });
-                console.log('after grabRelatedDietRecords', this.state);
               }, (reason) => {
                 console.error(reason);
                 this.setState({ loading: false });
@@ -794,203 +851,205 @@ export default class extends Component {
           }
         />
         {this.state.loading &&
-        <LinearProgress />
-        }
-        { this.state.selectedDiet && !this.state.loading &&
-        <Card className={classes.dietPlanCard}>
-          <Grid container>
-            <Grid item xs={12} sm={2}>
-              <DietHistoryList
-                currentClick={() => {
-                  this.setState({ viewCurrentDietPlan: true, currentHistory: null });
-                }}
-                historyClick={(id) => {
-                  this.setState((prevState) => ({
-                    viewCurrentDietPlan: false,
-                    currentHistory: id,
-                    selectedDietHistories: prevState.DietHistory.filter((historyRecord) => {
-                      if (historyRecord.startId !== id) return false;
-                      return true;
-                    }),
-                  }));
-                }}
-                history={this.state.DietHistoryOptions}
-                currentSelected={this.state.viewCurrentDietPlan}
-                selectedHistory={this.state.currentHistory}
-              />
-            </Grid>
-            <Grid item xs={12} sm={10}>
-              {this.state.viewCurrentDietPlan &&
-                <div>
-                  <CurrentDietTable
-                    ref={this.currentDietRef}
-                    allFoods={this.props.Foods}
-                    allUnits={this.props.Units}
-                    dietPlan={this.state.DietPlans}
-                    currentDiet={this.state.selectedDiet}
-                    onSave={(newData, oldData, deletedDietPlans, numAnimals) => {
-                      this.setState({
-                        newDietPlan: [...newData],
-                        oldDietPlan: [...oldData],
-                        deletedDietPlans,
-                        newNumberAnimals: numAnimals,
-                        dietPlanChangeDialog: true, // open diet plan specific changelog dialog
-                        dialogChangeNotes: '', // reset if not blank from a previous change
-                      }, () => {
-                        this.currentDietRef.current.setState({ isLoading: false });
-                      });
-                    }}
-                    showNotification={(type, message) => this.notificationBar.current.showNotification(type, message)}
-                    numAnimals={this.state.selectedDiet.numAnimals}
-                  />
-                </div>
-            }
-              {!this.state.viewCurrentDietPlan &&
-              <div>
-                <DietHistoryTable
-                  dietHistory={this.state.selectedDietHistories}
-                  allFoods={this.props.Foods}
-                  allUnits={this.props.Units}
-                  currentHistoryTime={this.state.currentHistory}
-                />
-                {this.state.DietChanges
-                  .reverse()
-                  .filter((dietChange) => this.state.currentHistory === dietChange.dietChangeDate)
-                  .map(value => (
-                    <DietChangeCard
-                      key={value.dietChangeId}
-                      {...value}
-                      AllUsers={this.props.Users}
-                    />
-                  ))}
-              </div>
-            }
-            </Grid>
-          </Grid>
-        </Card>
+          <LinearProgress />
         }
         {this.state.selectedDiet && !this.state.loading &&
-        <Grid container>
-          <Grid item xs={12} md={6}>
-            <Card className={classes.card}>
-              <Typography
-                variant="h4"
-                color="textSecondary"
-              >Case Notes
-              </Typography>
-              <CaseNotesForm
-                {...this.state.selectedCaseNote}
-                submitForm={(payload) => {
-                  if (!this.state.selectedCaseNote) {
-                    return this.handleCaseNoteCreate(payload);
-                  }
-                  return this.handleCaseNoteChange(payload);
-                }}
-                submitButtonText={this.state.selectedCaseNote ? 'Submit Case Note Change' : 'Submit New Case Note'}
-              />
-              {this.state.selectedCaseNote &&
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                fullWidth
-                onClick={() => { this.setState({ selectedCaseNote: null }); }}
-              >
-                Cancel
-              </Button>
-              }
-
-              <List className={classes.overflowList}>
-                {this.state.CaseNotes.map(value => (
-                  <div key={value.caseNotesId}>
-                    <ListItem>
-                      {/* add extra padding around the second action since it's not fully supported */}
-                      <ListItemText
-                        style={{ paddingRight: '32px' }}
-                        secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format('MM-DD-YYYY h:mm A')}`}
-                      >
-                        {value.caseNote}
-                      </ListItemText>
-                      <ListItemSecondaryAction>
-                        <IconButton onClick={() => {
-                          this.setState({ selectedCaseNote: { ...value } });
-                        }}
-                        >
-                          <Edit />
-                        </IconButton>
-                        <IconButton onClick={() => {
-                          this.handleCaseNoteDelete(value);
-                        }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider light />
+          <Card className={classes.dietPlanCard}>
+            <Grid container>
+              <Grid item xs={12} sm={2}>
+                <DietHistoryList
+                  currentClick={() => {
+                    this.setState({ viewCurrentDietPlan: true, currentHistory: null });
+                  }}
+                  historyClick={(id) => {
+                    this.setState((prevState) => ({
+                      viewCurrentDietPlan: false,
+                      currentHistory: id,
+                      selectedDietHistories: prevState.DietHistory.filter((historyRecord) => {
+                        if (historyRecord.startId !== id) return false;
+                        return true;
+                      }),
+                    }));
+                  }}
+                  history={this.state.DietHistoryOptions}
+                  currentSelected={this.state.viewCurrentDietPlan}
+                  selectedHistory={this.state.currentHistory}
+                />
+              </Grid>
+              <Grid item xs={12} sm={10}>
+                {this.state.viewCurrentDietPlan &&
+                  <div>
+                    <CurrentDietTable
+                      ref={this.currentDietRef}
+                      allFoods={this.props.Foods}
+                      allUnits={this.props.Units}
+                      dietPlan={this.state.DietPlans}
+                      currentDiet={this.state.selectedDiet}
+                      onSave={(deletedDietPlans) => {
+                        this.setState({
+                          deletedDietPlans,
+                          dietPlanChangeDialogOpen: true, // open diet plan specific changelog dialog
+                          dialogChangeNotes: '', // reset if not blank from a previous change
+                        }, () => {
+                          this.currentDietRef.current.setState({ isLoading: false });
+                        });
+                      }}
+                      showNotification={(type, message) => this.notificationBar.current.showNotification(type, message)}
+                      numAnimals={this.state.numAnimals}
+                      onDietPlanAdd={(newRow) => this.handleDietPlanAdd(newRow)}
+                      onDietPlanUpdate={(updatedValues, id) => this.handleDietPlanUpdate(updatedValues, id)}
+                      onDietPlanDelete={(oldRow) => this.handleDietPlanDelete(oldRow)}
+                      onNumAnimalsChange={(newNumber) => this.handleNumAnimalsChange(newNumber)}
+                      pendingChanges={this.state.pendingChanges}
+                    />
                   </div>
-                ))}
-              </List>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Card className={classes.card}>
-              <Typography
-                variant="h4"
-                color="textSecondary"
-              >Prep Notes
-              </Typography>
-              <PrepNotesForm
-                {...this.state.selectedPrepNote}
-                submitForm={(payload) => {
-                  if (!this.state.selectedPrepNote) {
-                    return this.handlePrepNotesCreate(payload);
-                  }
-                  return this.handlePrepNoteChange(payload);
-                }}
-                submitButtonText={this.state.selectedPrepNote ? 'Submit Prep Note Change' : 'Submit New Prep Note'}
-              />
-              {this.state.selectedPrepNote &&
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                fullWidth
-                onClick={() => { this.setState({ selectedPrepNote: null }); }}
-              >
-                Cancel
-              </Button>
-              }
-
-              <List className={classes.overflowList}>
-                {this.state.PrepNotes.map(value => (
-                  <div key={value.prepNoteId}>
-                    <ListItem>
-                      {/* add extra padding around the second action since it's not fully supported */}
-                      <ListItemText style={{ paddingRight: '32px' }}>
-                        {value.prepNote}
-                      </ListItemText>
-                      <ListItemSecondaryAction>
-                        <IconButton onClick={() => {
-                          this.setState({ selectedPrepNote: { ...value } });
-                        }}
-                        >
-                          <Edit />
-                        </IconButton>
-                        <IconButton onClick={() => {
-                          this.handlePrepNoteDelete(value);
-                        }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider light />
+                }
+                {!this.state.viewCurrentDietPlan &&
+                  <div>
+                    <DietHistoryTable
+                      dietHistory={this.state.selectedDietHistories}
+                      allFoods={this.props.Foods}
+                      allUnits={this.props.Units}
+                      currentHistoryTime={this.state.currentHistory}
+                    />
+                    {this.state.DietChanges
+                      .reverse()
+                      .filter((dietChange) => this.state.currentHistory === dietChange.dietChangeDate)
+                      .map(value => (
+                        <DietChangeCard
+                          key={value.dietChangeId}
+                          {...value}
+                          AllUsers={this.props.Users}
+                        />
+                      ))}
                   </div>
-                ))}
-              </List>
-            </Card>
+                }
+              </Grid>
+            </Grid>
+          </Card>
+        }
+        {this.state.selectedDiet && !this.state.loading &&
+          <Grid container>
+            <Grid item xs={12} md={6}>
+              <Card className={classes.card}>
+                <Typography
+                  variant="h4"
+                  color="textSecondary"
+                >Case Notes
+                </Typography>
+                <CaseNotesForm
+                  {...this.state.selectedCaseNote}
+                  submitForm={(payload) => {
+                    if (!this.state.selectedCaseNote) {
+                      return this.handleCaseNoteCreate(payload);
+                    }
+                    return this.handleCaseNoteChange(payload);
+                  }}
+                  submitButtonText={this.state.selectedCaseNote ? 'Submit Case Note Change' : 'Submit New Case Note'}
+                />
+                {this.state.selectedCaseNote &&
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    fullWidth
+                    onClick={() => { this.setState({ selectedCaseNote: null }); }}
+                  >
+                    Cancel
+                  </Button>
+                }
+
+                <List className={classes.overflowList}>
+                  {this.state.CaseNotes.map(value => (
+                    <div key={value.caseNotesId}>
+                      <ListItem>
+                        {/* add extra padding around the second action since it's not fully supported */}
+                        <ListItemText
+                          style={{ paddingRight: '32px' }}
+                          secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format('MM-DD-YYYY h:mm A')}`}
+                        >
+                          {value.caseNote}
+                        </ListItemText>
+                        <ListItemSecondaryAction>
+                          <IconButton onClick={() => {
+                            this.setState({ selectedCaseNote: { ...value } });
+                          }}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton onClick={() => {
+                            this.handleCaseNoteDelete(value);
+                          }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                      <Divider light />
+                    </div>
+                  ))}
+                </List>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Card className={classes.card}>
+                <Typography
+                  variant="h4"
+                  color="textSecondary"
+                >Prep Notes
+                </Typography>
+                <PrepNotesForm
+                  {...this.state.selectedPrepNote}
+                  submitForm={(payload) => {
+                    if (!this.state.selectedPrepNote) {
+                      return this.handlePrepNotesCreate(payload);
+                    }
+                    return this.handlePrepNoteChange(payload);
+                  }}
+                  submitButtonText={this.state.selectedPrepNote ? 'Submit Prep Note Change' : 'Submit New Prep Note'}
+                />
+                {this.state.selectedPrepNote &&
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    fullWidth
+                    onClick={() => { this.setState({ selectedPrepNote: null }); }}
+                  >
+                    Cancel
+                  </Button>
+                }
+
+                <List className={classes.overflowList}>
+                  {this.state.PrepNotes.map(value => (
+                    <div key={value.prepNoteId}>
+                      <ListItem>
+                        {/* add extra padding around the second action since it's not fully supported */}
+                        <ListItemText style={{ paddingRight: '32px' }}>
+                          {value.prepNote}
+                        </ListItemText>
+                        <ListItemSecondaryAction>
+                          <IconButton onClick={() => {
+                            this.setState({ selectedPrepNote: { ...value } });
+                          }}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton onClick={() => {
+                            this.handlePrepNoteDelete(value);
+                          }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                      <Divider light />
+                    </div>
+                  ))}
+                </List>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
         }
         {this.state.selectedDiet && !this.state.loading &&
           <Grid container>
@@ -1023,61 +1082,32 @@ export default class extends Component {
           onClose={() => this.setState({ dietDeleteDialogOpen: false }, () => this.handleDietDelete())}
           okButtonText="OK"
         />
-        <Dialog
-          disableBackdropClick
-          disableEscapeKeyDown
-          maxWidth="sm"
-          aria-labelledby="confirmation-dialog-title"
-          open={this.state.dietPlanChangeDialog}
-        >
-          <DialogTitle id="confirmation-dialog-title">asdf</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Please enter a reason why the diet was changed.
-              *Required*
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="notes"
-              label="Change Notes"
-              variant="outlined"
-              multiline
-              rowsMax="4"
-              fullWidth
-              value={this.state.dialogChangeNotes}
-              onChange={(e) => this.setState({ dialogChangeNotes: e.target.value })}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => {
-                this.setState({ dietPlanChangeDialog: false, dialogChangeNotes: '' }, () => {
-                  this.notificationBar.current.showNotification('warning', 'Changes are still pending! Navigating away from page will not save changes.');
-                  this.currentDietRef.current.setState({
-                    isLoading: false,
-                  });
+        <DietPlanChangeDialog
+          open={this.state.dietPlanChangeDialogOpen}
+          defaultChangeNotes={this.state.dialogChangeNotes}
+          onCancel={() => {
+            this.setState({
+              dietPlanChangeDialogOpen: false,
+              dialogChangeNotes: '',
+            }, () => {
+              this.notificationBar.current.showNotification('warning', 'Changes are still pending! Navigating away from page will not save changes.');
+              this.currentDietRef.current.setState({
+                isLoading: false,
+              });
+            });
+          }}
+          onSave={(changeNotes) => {
+            this.setState({ dietPlanChangeDialogOpen: false, dialogChangeNotes: changeNotes }, () => {
+              this.handleDietPlanSave().catch((err) => {
+                console.error(err);
+              }).then(() => {
+                this.currentDietRef.current.setState({
+                  isLoading: false,
                 });
-              }}
-              color="primary"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => this.setState({ dietPlanChangeDialog: false }, () => {
-                // change currentDiet loader after handleDietPlanSave has finished executing
-                this.handleDietPlanSave().catch((err) => {
-                  console.error(err);
-                });
-              })}
-              color="primary"
-              variant="contained"
-              disabled={!this.state.dialogChangeNotes}
-            >
-              Subscribe
-            </Button>
-          </DialogActions>
-        </Dialog>
+              });
+            });
+          }}
+        />
       </div>
     );
   }

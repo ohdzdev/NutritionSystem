@@ -86,6 +86,19 @@ class Food {
     const res = await axios.post(uri, params).catch((err) => Promise.reject(err));
     return res;
   }
+
+  /**
+   * Get the prep sheets data for the kitchen
+   * @param {string} date date string in the format YYYY-MM-DD
+   * @return {array} data returned from the api call
+   */
+  async getPrepDaySheets(date) {
+    const uri = `${API_BASE_URL}/api/Food/day-prep-sheet-data?date=${date}&access_token=${this.token}`;
+
+    const res = await axios.get(uri);
+
+    return res;
+  }
 }
 
 export default Food;

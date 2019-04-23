@@ -44,7 +44,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
 
         console.log('redirect to login because user has no session token');
         // redirecting to login because current page does not support unauth users
-        redirectTo('/login', { res: ctx.res, status: 301 });
+        redirectTo('/login', { res: ctx.res, status: 302 });
         console.log('success');
         return { ...pageProps };
       }
@@ -69,7 +69,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
         }
         api.setToken('');
         console.log('redirect to login because users key did not validate properly on server end');
-        redirectTo('/login', { res: ctx.res, status: 301 });
+        redirectTo('/login', { res: ctx.res, status: 302 });
         return { ...pageProps };
       }
     }

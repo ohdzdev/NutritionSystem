@@ -75,7 +75,7 @@ BEGIN
 			)
 		)
 	UNION
-	SELECT DISTINCT SUBENCLOSURES.group_id as diet_id,
+	SELECT DISTINCT SUBENCLOSURES.se_id as diet_id,
 					DIET_PLAN.food_id as food_id,
 					Sum(DIET_PLAN.group_amount) as group_amount,
 					DIET_PLAN.unit_id as unit_id,
@@ -145,7 +145,7 @@ BEGIN
 				)
 			)
 		)
-	GROUP BY SUBENCLOSURES.group_id,
+	GROUP BY SUBENCLOSURES.se_id,
 			FOOD.food,
 			DIET_PLAN.food_id,
 			UNITS.unit,

@@ -23,6 +23,13 @@ export default class DietPlanChangeDialog extends Component {
       changeNotes: props.defaultChangeNotes ? props.defaultChangeNotes : '',
     };
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.defaultChangeNotes !== prevProps.defaultChangeNotes) {
+      this.setState({ changeNotes: this.props.defaultChangeNotes }); // eslint-disable-line
+    }
+  }
+
   render() {
     return (
       <>

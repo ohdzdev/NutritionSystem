@@ -8,8 +8,6 @@ import PropTypes from 'prop-types';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { theme } from '../../getPageContext';
 
-const boolFields = ['sun', 'mon', 'tue', 'wed', 'thr', 'fri', 'sat'];
-
 /**
  * This function helps check if required fields have been met for new and edits on records
  */
@@ -129,15 +127,6 @@ class CurrentDiet extends Component {
       foodSuggestions,
       foodLookup,
       unitLookup,
-      dietPlan: this.props.dietPlan.map(item => {
-        const localItem = { ...item };
-        Object.keys(item).forEach(i => {
-          if (boolFields.find(val => val === i)) {
-            localItem[i] = localItem[i] === 1; // make 1 and 0s for bool fields into true / false values
-          }
-        });
-        return localItem;
-      }),
       isLoading: false,
     };
     console.log(props);

@@ -209,6 +209,7 @@ export default class extends Component {
       dietDeleteDialogOpen: false,
       Diets: props.Diets, // load Diets into the state to allow us to add a new diet in if created via page
       selectedDiet: props.selectedDiet || null, // if a user has a selected diet from the URL load it here
+      dietChangeDialogOpen: false,
 
       // if diet specific stuff is gathered from URL load it into state so we can change dependent tables etc accordingly
       CaseNotes: props.CaseNotes || [],
@@ -281,11 +282,28 @@ export default class extends Component {
     return Promise.reject(new Error('selected diet is blank'));
   }
 
-  handleDietUpdate(payload) {
-    // eslint-disable-line
-    return new Promise((res, rej) => {
+  handleDietUpdate() {
+    return new Promise(async (res, rej) => {
       const localSelectedDiet = { ...this.state.selectedDiet };
-      Object.assign(localSelectedDiet, payload);
+      Object.assign(localSelectedDiet, this.state.dietUpdatePayload);
+
+
+      let newDietChange = {};
+      const now = new Date();
+
+      let dietChangeAxios = {};
+      dietChangeAxios = await this.clientDietChangesAPI.createDietChanges({
+        dietChangeDate: now,
+        dietChangeReason: this.state.dialogChangeNotes,
+        dietId: localSelectedDiet.dietId,
+        userId: this.props.account.id,
+      }).catch((err) => {
+        this.notificationBar.current.showNotification('error', 'Error creating diet change record on server. Please contact system admin');
+        console.error(err);
+        rej(new Error('Error creating diet change record on server. Please contact system admin'));
+      });
+
+      newDietChange = dietChangeAxios.data;
 
       // add new date and add the current user to be the last one to edit diet.
       localSelectedDiet.date = new Date().toISOString();
@@ -294,6 +312,8 @@ export default class extends Component {
       this.clientDietAPI.updateDiets(localSelectedDiet.dietId, localSelectedDiet).then(
         (result) => {
           this.setState((prevState) => ({
+            dietUpdatePayload: null, // clear value since it's now updated
+            dialogChangeNotes: '', // clear out change notes
             selectedDiet: result.data,
             Diets: prevState.Diets.map((old) => {
               if (old.dietId === result.data.dietId) {
@@ -301,6 +321,7 @@ export default class extends Component {
               }
               return old;
             }),
+            DietChanges: [...prevState.DietChanges, newDietChange],
           }));
           // need to update state here
           res();
@@ -724,7 +745,7 @@ export default class extends Component {
       }, () => {
         this.setState((prevState) => ({
           DietPlans: [...updatedDietPlanResults, ...createdDietPlans],
-          DietChanges: [newDietChange, ...prevState.DietChanges],
+          DietChanges: [...prevState.DietChanges, newDietChange],
           DietHistoryOptions: newHistoryOptions,
           DietHistory: newcombinedDietHistory,
           pendingChanges: false,
@@ -804,7 +825,12 @@ export default class extends Component {
               groupDietCodes={this.state.groupDietCodeOptions}
               submitForm={(payload) => {
                 if (!this.state.newDietOpen) {
-                  return this.handleDietUpdate(payload);
+                  this.setState({
+                    dietUpdatePayload: { ...payload },
+                    dietChangeDialogOpen: true,
+                    dialogChangeNotes: '',
+                  });
+                  return Promise.resolve();
                 }
                 return this.handleDietCreate(payload);
               }}
@@ -1104,6 +1130,25 @@ export default class extends Component {
                 this.currentDietRef.current.setState({
                   isLoading: false,
                 });
+              });
+            });
+          }}
+        />
+        <DietPlanChangeDialog
+          open={this.state.dietChangeDialogOpen}
+          defaultChangeNotes={this.state.dialogChangeNotes}
+          onCancel={() => {
+            this.setState({
+              dietChangeDialogOpen: false,
+              dialogChangeNotes: '',
+            }, () => {
+              this.notificationBar.current.showNotification('warning', 'Changes are still pending! Navigating away from page will not save changes.');
+            });
+          }}
+          onSave={(changeNotes) => {
+            this.setState({ dietChangeDialogOpen: false, dialogChangeNotes: changeNotes }, () => {
+              this.handleDietUpdate().catch((err) => {
+                console.error(err);
               });
             });
           }}

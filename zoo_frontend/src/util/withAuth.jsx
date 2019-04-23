@@ -32,6 +32,8 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
     static async getInitialProps(ctx) {
       let pageProps = {};
 
+      console.log('ctx', ctx);
+
       const c = cookies(ctx);
 
       if (c.authToken == null || c.authToken === '' || c.authToken === undefined) {
@@ -68,8 +70,11 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
           document.cookie = 'authToken=; path=/';
         }
         api.setToken('');
-        console.log('redirect to login because users key did not validate properly on server end');
-        redirectTo('/login', { res: ctx.res, status: 301 });
+        if (ctx.pathname !== '/login') {
+          // only redirect if we are not already going to the login page
+          console.log('redirect to login because users key did not validate properly on server end');
+          redirectTo('/login', { res: ctx.res, status: 301 });
+        }
         return { ...pageProps };
       }
     }

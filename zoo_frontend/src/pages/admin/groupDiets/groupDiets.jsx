@@ -84,10 +84,10 @@ class GroupDiets extends Component {
       ...generateStateData(props.subenclosures, props.locations),
     };
     this.notificationsRef = React.createRef();
+    this.subenclosuresApi = new SubenclosuresAPI(props.token);
   }
 
   onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    const subenclosuresApi = new SubenclosuresAPI(this.props.token);
     // Reject if a field is not filled out
     if (!newData.subenclosure || !newData.locationName) {
       this.notificationsRef.current.showNotification('error', 'Please fill out all of the "Species" and "Scientific Name".');
@@ -109,7 +109,7 @@ class GroupDiets extends Component {
 
     try {
       // Create the group diet entry
-      await subenclosuresApi.createSubenclosures({
+      await this.subenclosuresApi.createSubenclosures({
         subenclosure: newData.subenclosure,
         locationId: location.locationId,
       });
@@ -119,7 +119,7 @@ class GroupDiets extends Component {
 
     // Refresh Data
     try {
-      const subRes = await subenclosuresApi.getSubenclosures();
+      const subRes = await this.subenclosuresApi.getSubenclosures();
       this.setState({ ...generateStateData(subRes.data, this.props.locations) });
     } catch (err) {
       reject();
@@ -175,17 +175,16 @@ class GroupDiets extends Component {
   })
 
   onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const subenclosuresApi = new SubenclosuresAPI(this.props.token);
     try {
       // Delete the group diet
-      await subenclosuresApi.deleteSubenclosures(oldData.seId);
+      await this.subenclosuresApi.deleteSubenclosures(oldData.seId);
     } catch (err) {
       reject();
       return;
     }
     // Refresh Data
     try {
-      const subRes = await subenclosuresApi.getSubenclosures();
+      const subRes = await this.subenclosuresApi.getSubenclosures();
       this.setState({ ...generateStateData(subRes.data, this.props.locations) });
     } catch (err) {
       reject();

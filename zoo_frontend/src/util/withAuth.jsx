@@ -32,8 +32,6 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
     static async getInitialProps(ctx) {
       let pageProps = {};
 
-      console.log('ctx', ctx);
-
       const c = cookies(ctx);
 
       if (c.authToken == null || c.authToken === '' || c.authToken === undefined) {

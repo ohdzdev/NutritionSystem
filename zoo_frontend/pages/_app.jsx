@@ -9,8 +9,6 @@ import getPageContext from '../src/getPageContext';
 import AuthProvider, { AuthContext } from '../src/util/AuthProvider';
 import PageLayout from '../src/util/PageLayout';
 
-import './blank.css';
-
 class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {
     let pageProps = {};

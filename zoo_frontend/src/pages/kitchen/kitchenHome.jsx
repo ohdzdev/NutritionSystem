@@ -1,72 +1,69 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import { ListItemIcon } from '@material-ui/core';
-import { Print, RemoveRedEye, Star } from '@material-ui/icons';
-import Link from 'next/link';
-import { AgGridReact } from 'ag-grid-react';
+import Router from 'next/router';
 
-// import ag-grid css files
-import 'ag-grid/dist/styles/ag-grid.css';
-import 'ag-grid/dist/styles/ag-theme-material.css';
+
+import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
+import moment from 'moment';
+import MomentUtils from '@date-io/moment';
 
 import PrintPrepSheets from '../../components/PrintPrepSheets';
-
-import { hasAccess, Diet, Food } from '../PageAccess';
+import { Kitchen } from '../PageAccess';
 
 class KitchenHome extends Component {
   static propTypes = {
-    account: PropTypes.object.isRequired,
+    // account: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      date: moment(),
+    };
+  }
+
+  onDateChange = (date) => this.setState({ date })
+
+  handlePrepScreen = () => {
+    Router.push({
+      pathname: Kitchen.prep.link,
+      query: { date: this.state.date.format('YYYY-M-D') },
+    });
   }
 
   render() {
-    const { classes, account = {}, token } = this.props;
-    const { role = '' } = account;
+    const { classes = {}, token } = this.props;
 
     return (
-      <div className={classes.root}>
-        <div className={classes.row}>
-          <div className={classes.column}>
-            <div className={classes.row}>
-              {hasAccess(role, Diet.edit.roles) &&
-                <Link href={Diet.edit.link}>
-                  <Button variant="contained" className={classes.button} color="secondary">
-                  Edit Diets
-                  </Button>
-                </Link>
-              }
-              {hasAccess(role, Food.edit.roles) &&
-                <Link href={Diet.edit.link}>
-                  <Button variant="contained" className={classes.button} color="secondary">
-                    Edit Foods
-                  </Button>
-                </Link>
-              }
-              {hasAccess(role, Food.nicknames.roles) &&
-                <Link href={Food.nicknames.link}>
-                  <Button variant="contained" className={classes.button} color="secondary">
-                    Edit Food Nicknames
-                  </Button>
-                </Link>
-              }
-            </div>
-            <div>
-              <PrintPrepSheets token={token} />
-            </div>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <div className={classes.root}>
+          <div className={classes.item}>
+            <DatePicker
+              keyboard
+              format="MM/DD/YYYY"
+              value={this.state.date}
+              onChange={this.onDateChange}
+              mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+              label="Prep For Date"
+              style={{ width: 300 }}
+            />
+          </div>
+          <div className={classes.item}>
+            <PrintPrepSheets date={this.state.date} token={token} />
+          </div>
+          <div className={classes.item}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handlePrepScreen}
+            >Open Prep Screen
+            </Button>
           </div>
         </div>
-      </div>
+      </MuiPickersUtilsProvider>
     );
   }
 }

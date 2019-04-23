@@ -97,7 +97,6 @@ KitchenView.propTypes = {
   dc: PropTypes.string,
   dietChanges: PropTypes.array,
   foodPrep: PropTypes.array,
-  date: PropTypes.string,
 };
 
 KitchenView.defaultProps = {
@@ -109,7 +108,6 @@ KitchenView.defaultProps = {
   dc: '',
   dietChanges: ['none'],
   foodPrep: [],
-  date: '',
 };
 
 

@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactToPrint from 'react-to-print';
 
-import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
-import moment from 'moment';
-
+import NativeSelect from '@material-ui/core/NativeSelect';
+import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import withStyles from '@material-ui/core/styles/withStyles';
 
@@ -31,6 +29,7 @@ class PrintPrepSheets extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
+    date: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -39,7 +38,6 @@ class PrintPrepSheets extends Component {
     this.state = {
       meatPrepSheetData: [],
       veggiePrepSheetData: [],
-      date: moment(),
     };
 
     this.printOutMeat = React.createRef();
@@ -51,7 +49,7 @@ class PrintPrepSheets extends Component {
   handlePrint = async () => {
     const foodApi = new FoodAPI(this.props.token);
 
-    const { date } = this.state;
+    const { date } = this.props;
 
     const res = await foodApi.getPrepDaySheets(date.format('YYYY-M-D'));
 
@@ -102,58 +100,55 @@ class PrintPrepSheets extends Component {
     this.printerVeggie.current.handlePrint();
   }
 
-  onDateChange = (date) => this.setState({ date })
 
   render() {
-    const { classes } = this.props;
+    const { classes, date } = this.props;
+    console.log(date);
     return (
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <div className={classes.container}>
-          <DatePicker
-            keyboard
-            format="MM/DD/YYYY"
-            value={this.state.date}
-            onChange={this.onDateChange}
-            mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-            label="Prep Sheet Date"
+      <div className={classes.container}>
+        <ReactToPrint
+          ref={this.printerMeat}
+          trigger={() => <div style={{ display: 'none' }} />}
+          content={() => this.printOutMeat.current}
+          pageStyle={printOutPageStyle}
+          onAfterPrint={this.onAfterMeatPrint}
+        />
+        <ReactToPrint
+          ref={this.printerVeggie}
+          trigger={() => <div style={{ display: 'none' }} />}
+          content={() => this.printOutVeggie.current}
+          pageStyle={printOutPageStyle}
+        />
+        <NativeSelect
+                // onChange={}
+          input={<Input name="report" id="report-native-helper" />}
+          style={{ width: 300 }}
+        >
+          <option value={0}>List of Food Needed</option>
+        </NativeSelect>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.printButton}
+          onClick={this.handlePrint}
+        >
+            Print Prep Sheet
+        </Button>
+        <div style={{ display: 'none' }}>
+          <PrepSheetPrintOut
+            ref={this.printOutMeat}
+            prepSheetData={this.state.meatPrepSheetData}
+            date={date}
           />
-          <ReactToPrint
-            ref={this.printerMeat}
-            trigger={() => <div style={{ display: 'none' }} />}
-            content={() => this.printOutMeat.current}
-            pageStyle={printOutPageStyle}
-            onAfterPrint={this.onAfterMeatPrint}
-          />
-          <ReactToPrint
-            ref={this.printerVeggie}
-            trigger={() => <div style={{ display: 'none' }} />}
-            content={() => this.printOutVeggie.current}
-            pageStyle={printOutPageStyle}
-          />
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.printButton}
-            onClick={this.handlePrint}
-          >
-            Print Prep Sheets
-          </Button>
-          <div style={{ display: 'none' }}>
-            <PrepSheetPrintOut
-              ref={this.printOutMeat}
-              prepSheetData={this.state.meatPrepSheetData}
-              date={this.state.date}
-            />
-          </div>
-          <div style={{ display: 'none' }}>
-            <PrepSheetPrintOut
-              ref={this.printOutVeggie}
-              prepSheetData={this.state.veggiePrepSheetData}
-              date={this.state.date}
-            />
-          </div>
         </div>
-      </MuiPickersUtilsProvider>
+        <div style={{ display: 'none' }}>
+          <PrepSheetPrintOut
+            ref={this.printOutVeggie}
+            prepSheetData={this.state.veggiePrepSheetData}
+            date={date}
+          />
+        </div>
+      </div>
     );
   }
 }

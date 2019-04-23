@@ -25,6 +25,7 @@ export default class extends Component {
     classes: PropTypes.object.isRequired,
     FoodPrepTables: PropTypes.array.isRequired,
     date: PropTypes.string.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
     PrepDiets: PropTypes.array.isRequired,
     PrepDietsSub: PropTypes.array.isRequired,
   };
@@ -33,7 +34,7 @@ export default class extends Component {
     token: '',
   }
 
-  static async getInitialProps({ authToken }) {
+  static async getInitialProps({ query, authToken }) {
     const serverFoodPrepTablesAPI = new FoodPrepTables(authToken);
     const serverDietsAPI = new Diets(authToken);
 
@@ -43,9 +44,10 @@ export default class extends Component {
         AllFoodPrep,
       ] = await Promise.all([
         serverFoodPrepTablesAPI.getFoodPrepTables(),
-        serverDietsAPI.getAnimalPrep('2019-4-21'), // this.props.date !!!!!!!!!!
+        serverDietsAPI.getAnimalPrep(query.date), // this.props.date !!!!!!!!!!
       ]);
       return {
+        ...query,
         FoodPrepTables: AllFoodPrepTables.data,
         PrepDiets: AllFoodPrep.data.diets,
         PrepDietsSub: AllFoodPrep.data.dietsSub,
@@ -172,11 +174,12 @@ export default class extends Component {
     this.state.diets[this.state.currentIndex].speciesId, // speciesID
     this.state.diets[this.state.currentIndex].dietId, // dietID
     this.state.diets[this.state.currentIndex].dcId, // dcID
-    '2019-4-21', // SEND IN DATE HERE
+    this.props.date,
   );
 
   render() {
     // const { role } = this.props.account;
+    // eslint-disable-next-line no-shadow
     const { FoodPrepTables, date } = this.props;
 
     return (

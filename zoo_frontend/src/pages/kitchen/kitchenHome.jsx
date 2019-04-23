@@ -27,84 +27,18 @@ class KitchenHome extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      columnDefs: [
-        { headerName: 'Make', field: 'make' },
-        { headerName: 'Model', field: 'model' },
-        { headerName: 'Price', field: 'price' },
-      ],
-      rowData: [
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 },
-      ],
-      anchorEl: null,
-    };
+    this.state = {};
   }
-
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
 
   render() {
     const { classes, account = {}, token } = this.props;
     const { role = '' } = account;
-    const { anchorEl } = this.state;
 
     return (
       <div className={classes.root}>
         <div className={classes.row}>
           <div className={classes.column}>
             <div className={classes.row}>
-              <IconButton
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="Menu"
-                aria-owns={anchorEl ? 'simple-menu' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleClick}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.handleClose}
-
-              >
-                <MenuItem onClick={this.handleClose}>
-                  <ListItemIcon>
-                    <Print />
-                  </ListItemIcon>
-                  Print Labels
-                </MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <ListItemIcon>
-                    <Print />
-                  </ListItemIcon>
-                  Print Prep Sheets
-                </MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <ListItemIcon>
-                    <RemoveRedEye />
-                  </ListItemIcon>
-                  View Diets
-                </MenuItem>
-                <MenuItem onClick={this.handleClose}>Produce Order</MenuItem>
-                <MenuItem onClick={this.handleClose}>Rodent Order</MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <ListItemIcon>
-                    <Star />
-                  </ListItemIcon>
-                  Special Order
-                </MenuItem>
-
-              </Menu>
               {hasAccess(role, Diet.edit.roles) &&
                 <Link href={Diet.edit.link}>
                   <Button variant="contained" className={classes.button} color="secondary">
@@ -126,18 +60,6 @@ class KitchenHome extends Component {
                   </Button>
                 </Link>
               }
-            </div>
-            <div
-              className="ag-theme-material"
-              style={{
-                height: '500px',
-                width: '600px',
-              }}
-            >
-              <AgGridReact
-                columnDefs={this.state.columnDefs}
-                rowData={this.state.rowData}
-              />
             </div>
             <div>
               <PrintPrepSheets token={token} />

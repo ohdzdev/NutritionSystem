@@ -12,9 +12,6 @@ import Paper from '@material-ui/core/Paper';
 import KitchenView from '../../../components/KitchenView';
 
 
-// import Link from 'next/link';
-// import { Button } from '@material-ui/core';
-
 // import { hasAccess, Home, Diet } from '../PageAccess';
 
 import {
@@ -40,19 +37,28 @@ export default class extends Component {
     const serverFoodPrepTablesAPI = new FoodPrepTables(authToken);
     const serverDietsAPI = new Diets(authToken);
 
-    const [
-      AllFoodPrepTables,
-      AllFoodPrep,
-    ] = await Promise.all([
-      serverFoodPrepTablesAPI.getFoodPrepTables(),
-      serverDietsAPI.getAnimalPrep('2019-4-21'), // this.props.date !!!!!!!!!!
-    ]);
-
-    return {
-      FoodPrepTables: AllFoodPrepTables.data,
-      PrepDiets: AllFoodPrep.data.diets,
-      PrepDietsSub: AllFoodPrep.data.dietsSub,
-    };
+    try {
+      const [
+        AllFoodPrepTables,
+        AllFoodPrep,
+      ] = await Promise.all([
+        serverFoodPrepTablesAPI.getFoodPrepTables(),
+        serverDietsAPI.getAnimalPrep('2019-4-21'), // this.props.date !!!!!!!!!!
+      ]);
+      return {
+        FoodPrepTables: AllFoodPrepTables.data,
+        PrepDiets: AllFoodPrep.data.diets,
+        PrepDietsSub: AllFoodPrep.data.dietsSub,
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        error: true,
+        FoodPrepTables: [],
+        PrepDiets: [],
+        PrepDietsSub: [],
+      };
+    }
   }
 
   constructor(props) {

@@ -1,12 +1,12 @@
 import withStyles from '@material-ui/core/styles/withStyles';
 import { compose } from 'recompose';
 
-import withAuth from '../../util/withAuth';
+import withAuth from '../../../util/withAuth';
 
-import { Kitchen } from '../PageAccess';
+import { Kitchen } from '../../PageAccess';
 
-import page from './kitchenHome';
-import styles from './kitchenHome.styles';
+import page from './kitchen';
+import styles from './kitchen.styles';
 
 export default compose(
   withAuth(Kitchen.roles),

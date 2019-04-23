@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Fab from '@material-ui/core/Fab';
-import Typography from '@material-ui/core/Typography';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -10,7 +9,7 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import NextIcon from '@material-ui/icons/NavigateNext';
 import PrevIcon from '@material-ui/icons/NavigateBefore';
 import Paper from '@material-ui/core/Paper';
-import KitchenView from '../../components/KitchenView';
+import KitchenView from '../../../components/KitchenView';
 
 
 // import Link from 'next/link';
@@ -20,7 +19,7 @@ import KitchenView from '../../components/KitchenView';
 
 import {
   DeliveryContainers, DietChanges, Diets, FoodPrepTables, PrepNotes, Species,
-} from '../../api';
+} from '../../../api';
 
 export default class extends Component {
   static propTypes = {
@@ -123,7 +122,6 @@ export default class extends Component {
     ]);
 
     this.setState({
-      loading: false,
       species: species.data[0].species,
       prepNotes: prepNotes.data,
       dc: dc.data[0].dc,
@@ -144,7 +142,7 @@ export default class extends Component {
   /* Handle table change !! */
   handleChange = name => event => {
     const e = event.target.value;
-    this.setState({ [name]: e });
+    this.setState({ [name]: e, currentIndex: 0 });
     this.getDietsData(e).then(() => {
       this.updateState();
     });
@@ -153,7 +151,6 @@ export default class extends Component {
   handleNext = () => {
     this.setState((prevState) => ({
       currentIndex: prevState.currentIndex + 1,
-      loading: true,
     }));
     this.updateState();
   }
@@ -161,7 +158,6 @@ export default class extends Component {
   handlePrev = () => {
     this.setState((prevState) => ({
       currentIndex: prevState.currentIndex - 1,
-      loading: true,
     }));
     this.updateState();
   }
@@ -223,21 +219,7 @@ export default class extends Component {
           </Fab>
         </div>
         <Paper className={this.props.classes.paper}>
-          {/* Send data based on this.state.table
-          1. Use API calls to all fields needed
-          2. Props: data object for every field needed
-          3. Then KitchenView can just use the index of the array as the page state
-
-          Object:
-            noteId: Diets.noteId
-            species: Diets.speciesId
-            delContainer: Diets.dcId maps to DC.dc
-            prepNotes: for each dietId, array of prepNote
-            description: sort of in the state rn, grab it
-            foods: DIET_PLAN.dietId
-            History: DIET_CHANGES.dietId, diet_change_reason
-          */}
-          {!this.state.loading && this.state.table && this.state.diets && this.state.diets.length > 0 ?
+          {this.state.table && this.state.diets && this.state.diets.length > 0 ?
             <KitchenView
               pageLength={this.state.diets.length}
               currentPage={this.state.currentIndex + 1}

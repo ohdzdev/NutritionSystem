@@ -5,6 +5,9 @@ module.exports = {
   apps : [{
     name: 'zoo_api',
     script: './zoo_api/server/server.js',
+    env_production: {
+      NODE_ENV: "production",
+    },
     instances: 2,
     autorestart: true,
     watch: false,
@@ -18,6 +21,9 @@ module.exports = {
     name: 'zoo_frontend',
     script: 'node_modules/next/dist/bin/next-start',
     args: 'zoo_frontend',
+    env_production: {
+      NODE_ENV: "production",
+    },
     instances: 2,
     autorestart: true,
     watch: false,

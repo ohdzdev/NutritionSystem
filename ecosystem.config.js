@@ -16,8 +16,8 @@ module.exports = {
   },
   {
     name: 'zoo_frontend',
-    script: 'node_modules/next/dist/bin/next-start',
-    args: 'zoo_frontend',
+    script: 'node_modules/next/dist/bin/next',
+    args: 'start zoo_frontend',
     instances: 2,
     autorestart: true,
     watch: false,

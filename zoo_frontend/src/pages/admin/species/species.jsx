@@ -161,6 +161,7 @@ class Home extends Component {
               pageSize: 25,
               pageSizeOptions: [25, 100, 800],
               exportButton: true,
+              addRowPosition: 'first',
             }}
             columns={[
               { title: 'Species', field: 'species' },

@@ -151,6 +151,7 @@ export default class units extends Component {
           options={{
             pageSize: 10,
             exportButton: true,
+            addRowPosition: 'first',
           }}
           editable={{
             onRowAdd: this.onRowAdd,

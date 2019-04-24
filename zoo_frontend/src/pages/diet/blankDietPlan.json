@@ -1,0 +1,19 @@
+{
+  "dietId": null,
+  "foodId": null,
+  "indAmount": 0,
+  "groupAmount": 0,
+  "unitId": null,
+  "sun": 0,
+  "mon": 0,
+  "tue": 0,
+  "wed": 0,
+  "thr": 0,
+  "fri": 0,
+  "sat": 0,
+  "sort": 1,
+  "tote": 1,
+  "lineNotes": "",
+  "freqWeeks": 1,
+  "freqRotation": 1
+}

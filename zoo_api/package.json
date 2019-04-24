@@ -24,14 +24,15 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
     "serve-favicon": "^2.5.0",
-    "strong-error-handler": "^3.2.0"
+    "strong-error-handler": "^3.2.0",
+    "tmp": "^0.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-loopback": "^8.0.0",
-    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4"
   },

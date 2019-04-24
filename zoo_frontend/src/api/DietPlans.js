@@ -115,6 +115,19 @@ class DietPlan {
     const res = await axios.post(uri, params).catch((err) => Promise.reject(err));
     return res;
   }
+
+  /**
+   * delete diet plans by diet id
+   * @param {string|number} dietId required
+   */
+  async deleteDietPlanByDietId(dietId) {
+    if (!dietId) {
+      return Promise.reject(new Error('must have dietId to be able to delete'));
+    }
+    const uri = `${API_BASE_URL}/api/DietPlans/deleteAllByDietId?access_token=${this.token}`;
+    const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
+    return res;
+  }
 }
 
 export default DietPlan;

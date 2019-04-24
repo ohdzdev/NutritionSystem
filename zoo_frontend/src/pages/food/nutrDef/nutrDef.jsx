@@ -171,6 +171,7 @@ class Home extends Component {
               pageSize: 10,
               pageSizeOptions: [10, 50, 200],
               exportButton: true,
+              addRowPosition: 'first',
             }}
             columns={[
               { title: 'Tag Name', field: 'tagname' },

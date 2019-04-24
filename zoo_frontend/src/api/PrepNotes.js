@@ -73,6 +73,19 @@ class PrepNotes {
     const res = await axios.post(uri, params).catch((err) => Promise.reject(err));
     return res;
   }
+
+  /**
+   * delete diet plan via filters
+   * @param {string|number} dietId required
+   */
+  async deletePrepNotesByDietId(dietId) {
+    if (!dietId) {
+      return Promise.reject(new Error('must have dietId to be able to delete'));
+    }
+    const uri = `${API_BASE_URL}/api/PrepNotes/deleteAllByDietId?access_token=${this.token}`;
+    const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
+    return res;
+  }
 }
 
 export default PrepNotes;

@@ -18,4 +18,31 @@ export default (theme) => ({
   menuButton: {
     marginRight: theme.spacing.unit * 3,
   },
+  card: {
+    padding: theme.spacing.unit * 2,
+    margin: theme.spacing.unit,
+    overflow: 'visible',
+  },
+  dietPlanCard: {
+    margin: theme.spacing.unit,
+    overflow: 'visible',
+  },
+  newDietButton: {
+    marginLeft: theme.spacing.unit * 2,
+  },
+  exportDietButton: {
+    marginLeft: theme.spacing.unit * 2,
+  },
+  deleteDietButton: {
+    color: 'white',
+    backgroundColor: '#b71c1c',
+    '&:hover': {
+      backgroundColor: '#e53935',
+    },
+    alignContent: 'flex-end',
+  },
+  overflowList: {
+    overflow: 'auto',
+    maxHeight: 400, // change this for height of list
+  },
 });

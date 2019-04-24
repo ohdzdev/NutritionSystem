@@ -131,6 +131,9 @@ class FoodWeightTable extends Component {
             onRowUpdate: this.onFoodWeightUdpate,
             onRowDelete: this.onFoodWeightDelete,
           }}
+          options={{
+            addRowPosition: 'first',
+          }}
         />
         <Notifications
           ref={this.notificationBar}

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 const styles = theme => ({
   input: {
     display: 'flex',
-    padding: 0,
+    padding: theme.spacing.unit,
   },
   valueContainer: {
     display: 'flex',
@@ -33,7 +33,7 @@ const styles = theme => ({
   },
   paper: {
     position: 'absolute',
-    zIndex: 1,
+    zIndex: 999,
     marginTop: theme.spacing.unit,
     left: 0,
     right: 0,
@@ -43,6 +43,11 @@ const styles = theme => ({
   },
   standardFontColor: {
     color: theme.palette.font,
+  },
+  optionCell: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
 });
 
@@ -227,7 +232,7 @@ const components = {
 
 const IntegrationReactSelect = (props) => {
   const {
-    label, suggestions, onChange, defaultValue, classes, theme, field, form, helperText, error,
+    label, suggestions, onChange, classes, theme, field, form, helperText, error, value,
   } = props;
   const [selected, setSelected] = useState(false);
 
@@ -261,7 +266,8 @@ const IntegrationReactSelect = (props) => {
         options={suggestions}
         name={field.name || ''}
         components={components}
-        defaultValue={suggestions.find((item) => item.value == defaultValue) || ''} // eslint-disable-line eqeqeq
+        // defaultValue={suggestions.find((item) => item.value == defaultValue) || ''} // eslint-disable-line eqeqeq
+        value={suggestions.find((item) => item.value == value) || ''} // eslint-disable-line eqeqeq
         onChange={handleChangeSingle}
         onFocus={() => {
           setSelected(true);
@@ -287,7 +293,7 @@ IntegrationReactSelect.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.number.isRequired]),
   })).isRequired,
   onChange: PropTypes.func,
-  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   label: PropTypes.string,
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
@@ -302,7 +308,7 @@ IntegrationReactSelect.propTypes = {
 
 IntegrationReactSelect.defaultProps = {
   onChange: () => {},
-  defaultValue: '',
+  value: '',
   label: '',
   id: Math.random(1000),
   field: {},

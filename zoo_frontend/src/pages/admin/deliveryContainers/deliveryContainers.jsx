@@ -246,6 +246,7 @@ class DeliveryContainers extends Component {
               pageSize: 25,
               pageSizeOptions: [25, 50, 100],
               exportButton: true,
+              addRowPosition: 'first',
             }}
             editable={{
               onRowAdd: this.onRowAdd,

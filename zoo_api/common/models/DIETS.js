@@ -1,7 +1,10 @@
+
+const tmp = require('tmp');
+const { spawnSync } = require('child_process');
 const moment = require('moment');
+const app = require('../../server/server');
 
 const Util = require('../../server/util');
-const app = require('../../server/server');
 
 module.exports = function(Diets) {
   Diets.getDayDiets = function(date, cb) {
@@ -24,23 +27,59 @@ module.exports = function(Diets) {
     });
   };
 
-  Diets.remoteMethod(
-    'getDayDiets',
-    {
-      description: 'Gets the data for the diets for a given day.',
-      accepts: [
-        {
-          arg: 'date',
-          type: 'string',
-          required: true,
-          http: { source: 'query' },
-          description: 'The date to make the diet data for in YYYY-MM-DD format.',
-        },
-      ],
-      returns: {
-        arg: 'data', type: 'object', root: true,
+  Diets.exportDietAnalysis = (dietId, res, cb) => {
+    Diets.findById(dietId, (err, diet) => {
+      if (err || !diet) {
+        cb(Util.createError('Diet not found'));
+      } else {
+        // make a temporary file for the workbook
+        tmp.file({ postfix: '.xlsm' }, (err3, tmpWorkbook) => {
+          if (err3) {
+            cb(Util.createError('Error making shared temp file'));
+          } else {
+            const processResult = spawnSync('./ExcelApp', [`${diet.dietId}`, tmpWorkbook], {
+              cwd: './lib/DietAnalysisExport/bin',
+            });
+            if (!processResult || processResult.status !== 0) {
+              console.log(processResult);
+              cb(Util.createError('Error running export process'));
+            } else {
+              res.download(tmpWorkbook, 'DietDataAnalysis.xlsm');
+            }
+          }
+        });
+      }
+    });
+  };
+
+  Diets.remoteMethod('exportDietAnalysis', {
+    description: 'Export a diet analysis spreadsheet',
+    accepts: [
+      { arg: 'id', type: 'any', required: true },
+      {
+        arg: 'res', type: 'object', http: { source: 'res' },
       },
-      http: { verb: 'get', path: '/day-diets' },
-    }
-  );
+    ],
+    returns: {
+      arg: 'data', type: 'file', root: true,
+    },
+    http: { verb: 'get', path: '/:id/export-diet-analysis' },
+  });
+
+  Diets.remoteMethod('getDayDiets', {
+    description: 'Gets the data for the diets for a given day.',
+    accepts: [
+      {
+        arg: 'date',
+        type: 'string',
+        required: true,
+        http: { source: 'query' },
+        description: 'The date to make the diet data for in YYYY-MM-DD format.',
+      },
+    ],
+    returns: {
+      arg: 'data', type: 'object', root: true,
+    },
+    http: { verb: 'get', path: '/day-diets' },
+  });
 };

@@ -1,36 +1,39 @@
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import HomeIcon from '@material-ui/icons/Home';
-import FoodIcon from '@material-ui/icons/Restaurant';
-import DietIcon from '@material-ui/icons/FormatListBulleted';
+
 import AdminIcon from '@material-ui/icons/Security';
+import AssIcon from '@material-ui/icons/Assignment';
+import BookIcon from '@material-ui/icons/Book';
+import Chat from '@material-ui/icons/Chat';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import DeliveryContainersIcon from '@material-ui/icons/ShoppingCart';
+import DepartmentIcon from '@material-ui/icons/Business';
+import DietIcon from '@material-ui/icons/FormatListBulleted';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import DepartmentIcon from '@material-ui/icons/Business';
+import FoodIcon from '@material-ui/icons/Restaurant';
+import HomeIcon from '@material-ui/icons/Home';
+import KitchenIcon from '@material-ui/icons/Kitchen';
+import ProfileIcon from '@material-ui/icons/AccountCircle';
+import SettingsIcon from '@material-ui/icons/Settings';
 import SpeciesIcon from '@material-ui/icons/Pets';
 import UsersIcon from '@material-ui/icons/SupervisorAccount';
-import ProfileIcon from '@material-ui/icons/AccountCircle';
-import BookIcon from '@material-ui/icons/Book';
-import AssIcon from '@material-ui/icons/Assignment';
-import SettingsIcon from '@material-ui/icons/Settings';
-import DeliveryContainersIcon from '@material-ui/icons/ShoppingCart';
-import Chat from '@material-ui/icons/Chat';
-import KitchenIcon from '@material-ui/icons/Kitchen';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faRulerCombined,
+  faCrow,
 } from '@fortawesome/free-solid-svg-icons';
 
 import Link from 'next/link';
@@ -193,6 +196,14 @@ const SidebarDrawer = (props) => {
                   </ListItem>
                   <Collapse in={adminCollapse} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
+                      {hasAccess(role, Admin.deliveryContainers.roles) &&
+                        <Link href={Admin.deliveryContainers.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon><DeliveryContainersIcon /></ListItemIcon>
+                            <ListItemText inset primary="Delivery Containers" />
+                          </ListItem>
+                        </Link>
+                      }
                       {hasAccess(role, Admin.department.roles) &&
                         <Link href={Admin.department.link}>
                           <ListItem button className={classes.nested}>
@@ -201,11 +212,11 @@ const SidebarDrawer = (props) => {
                           </ListItem>
                         </Link>
                       }
-                      {hasAccess(role, Admin.deliveryContainers.roles) &&
-                        <Link href={Admin.deliveryContainers.link}>
+                      {hasAccess(role, Admin.groupDiets.roles) &&
+                        <Link href={Admin.groupDiets.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><DeliveryContainersIcon /></ListItemIcon>
-                            <ListItemText inset primary="Delivery Containers" />
+                            <ListItemIcon style={{ marginLeft: -2.6 }}><FontAwesomeIcon icon={faCrow} size="lg" /></ListItemIcon>
+                            <ListItemText inset primary="Group Diets" />
                           </ListItem>
                         </Link>
                       }

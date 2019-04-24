@@ -1,6 +1,4 @@
-const withCSS = require('@zeit/next-css');
-
-module.exports = withCSS({
+module.exports = {
   webpack: (config) => {
     // Fixes npm packages that depend on `fs` module
     config.node = {
@@ -13,4 +11,4 @@ module.exports = withCSS({
   // this makes builds much faster because on deploy we reset the
   // repo on circleCI job to prevent scripts etc from not getting updated correctly
   // distDir: '../../zooFrontendBuildFiles',
-});
+};

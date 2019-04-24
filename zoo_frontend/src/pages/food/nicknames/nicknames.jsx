@@ -126,10 +126,10 @@ export default class extends Component {
             </DialogContent>
             <DialogActions>
               <Button onClick={() => this.handleCancelDialog()} color="primary">
-              Cancel
+                Cancel
               </Button>
               <Button disabled={!this.state.dirty} onClick={() => this.handleDialogSave()} color="primary">
-              Save
+                Save
               </Button>
             </DialogActions>
           </Dialog>
@@ -141,6 +141,7 @@ export default class extends Component {
           options={{
             pageSize: 10,
             actionsColumnIndex: 0,
+            emptyRowsWhenPaging: false,
           }}
           actions={[
             (rowData) => ({

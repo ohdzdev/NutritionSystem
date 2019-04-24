@@ -476,6 +476,7 @@ class User extends Component {
               pageSize: 25,
               pageSizeOptions: [25, 50, 100],
               exportButton: true,
+              emptyRowsWhenPaging: false,
               addRowPosition: 'first',
             }}
             editable={{

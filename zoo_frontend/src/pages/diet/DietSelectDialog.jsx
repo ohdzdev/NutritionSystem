@@ -78,6 +78,7 @@ const DietSelectDialog = (props) => {
               columns={preppedColumns}
               options={{
                 pageSize: 7,
+                emptyRowsWhenPaging: false,
               }}
               onRowClick={(evt, rowData) => {
                 setSelected({ ...rowData });

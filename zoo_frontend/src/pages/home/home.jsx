@@ -1,25 +1,52 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Router from 'next/router';
+import CircProgress from '@material-ui/core/CircularProgress';
+
+
+import Roles from '../../static/Roles';
+
+import { Admin, Kitchen } from '../PageAccess';
+
+
 class Home extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired,
-    token: PropTypes.string.isRequired,
   };
+
+  static async getInitialProps(ctx) {
+    console.log(ctx.account);
+  }
 
   constructor(props) {
     super(props);
     this.state = {
     };
+    const { role = '' } = props.account;
+
+    if (role === Roles.ADMIN) {
+      Router.push(Admin.user.link);
+    } else if (role === Roles.KEEPER || role === Roles.KITCHEN) {
+      Router.push(Kitchen.link);
+    } else if (role === Roles.SUPERVISOR) {
+      Router.push(Kitchen.link);
+    }
   }
 
   render() {
-    const { classes, account = {}, token } = this.props;
-    const { role = '' } = account;
-
     return (
-      <div className={classes.root} />
+      <div
+        style={{
+          height: '90vh',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <CircProgress />
+      </div>
     );
   }
 }

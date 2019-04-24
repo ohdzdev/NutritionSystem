@@ -55,8 +55,8 @@ class FoodPage extends Component {
     // server side grab all data for list view
     const res = await api.getFood().catch((err) => ({ foodItems: [{ err: true, msg: err }] }));
     // grab all categories because its highly likely that we will use them all for ALL the foods listed
-    const foodCategories = await categoryAPI.getCategories().catch(() => {});
-    const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => {});
+    const foodCategories = await categoryAPI.getCategories().catch(() => { });
+    const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => { });
     // grab all the budget codes for same reason
 
     return { foodItems: res.data, foodCategories: foodCategories.data, budgetCodes: budgetCodes.data };
@@ -142,7 +142,7 @@ class FoodPage extends Component {
                 <Link href={`${Food.edit.link}?id=${rowData.foodId}`}>
                   <Button className={this.props.classes.button} color="secondary" variant="contained">
                     <FontAwesomeIcon icon={faEdit} className={this.props.classes.faIcon} />
-                      View / Edit
+                    View / Edit
                   </Button>
                 </Link>
               }
@@ -205,13 +205,13 @@ class FoodPage extends Component {
           justifyContent: 'center',
         }}
       >
-        { this.state.newFoodOpen &&
+        {this.state.newFoodOpen &&
           <FoodForm {...this.state.newFood} foodCategories={this.state.foodCategories} budgetCodes={this.state.budgetCodes} submitForm={(payload) => this.createNewFood(payload)} />
         }
-        { !this.state.newFoodOpen &&
+        {!this.state.newFoodOpen &&
           <Grid item xs={12} md={3} style={{ padding: '10px' }}>
             <Button onClick={() => { this.setState({ newFoodOpen: true }); }} variant="contained" color="primary">
-            Add New Food
+              Add New Food
             </Button>
           </Grid>
         }
@@ -238,6 +238,7 @@ class FoodPage extends Component {
               pageSize: 20,
               pageSizeOptions: [20, 50, 100],
               actionsColumnIndex: -1,
+              emptyRowsWhenPaging: false,
             }}
             icons={{
               Search,

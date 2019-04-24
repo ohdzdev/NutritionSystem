@@ -8,7 +8,8 @@ yarn
 yarn build:frontend
 
 # run the frontend and api
-pm2 start ./ecosystem.config.js
+pm2 delete all
+pm2 start ./ecosystem.config.js -- env production
 
 echo ---------------------------------
 echo .

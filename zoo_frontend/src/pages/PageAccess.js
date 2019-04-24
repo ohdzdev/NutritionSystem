@@ -21,17 +21,13 @@ export const Admin = {
     link: '/admin/department',
     roles: [Roles.ADMIN],
   },
+  groupDiets: {
+    link: '/admin/group-diets',
+    roles: [Roles.ADMIN],
+  },
   species: {
     link: '/admin/species',
-    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
-    edit: {
-      link: '/admin/species/edit',
-      roles: [Roles.ADMIN, Roles.NUTRITIONIST],
-    },
-    new: {
-      link: '/admin/species/new',
-      roles: [Roles.ADMIN, Roles.NUTRITIONIST],
-    },
+    roles: [Roles.ADMIN],
   },
   user: {
     link: '/admin/user',

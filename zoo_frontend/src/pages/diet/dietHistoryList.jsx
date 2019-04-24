@@ -16,7 +16,6 @@ import { theme } from '../../getPageContext';
 
 const styles = t => ({
   root: {
-    maxWidth: 200,
     backgroundColor: t.palette.background.paper,
     borderColor: t.palette.primary.main,
     borderWidth: t.spacing.unit / 2,
@@ -93,24 +92,24 @@ class NestedList extends React.Component {
             {this.state.open ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
           {this.props.history &&
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {this.props.history.map((entry) => (
-                <ListItem
-                  key={String(entry.id)}
-                  button
-                  className={classes.nested}
-                  onClick={() => {
-                    this.props.historyClick(entry.id);
-                  }}
-                  selected={entry.id === this.props.selectedHistory}
-                >
-                  <ListItemText>{entry.text}</ListItemText>
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
-        }
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {this.props.history.map((entry) => (
+                  <ListItem
+                    key={String(entry.id)}
+                    button
+                    className={classes.nested}
+                    onClick={() => {
+                      this.props.historyClick(entry.id);
+                    }}
+                    selected={entry.id === this.props.selectedHistory}
+                  >
+                    <ListItemText>{entry.text}</ListItemText>
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+          }
 
         </List>
       </MuiThemeProvider>
@@ -134,8 +133,8 @@ NestedList.defaultProps = {
   history: [
   ],
   currentSelected: false,
-  historyClick: () => {},
-  currentClick: () => {},
+  historyClick: () => { },
+  currentClick: () => { },
   selectedHistory: '',
 };
 

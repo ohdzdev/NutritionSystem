@@ -699,6 +699,7 @@ export default class extends Component {
       // FIND NEW DIET PLANS
       const newDietPlans = this.state.DietPlans.filter((item) => !('id' in item));
 
+      console.log('pending created diet plans', newDietPlans);
       // CREATE NEW DIET PLANS
       const createdDietPlanPromises = newDietPlans.map((entry) => this.clientDietPlansAPI.createDietPlans(Object.assign(blankDietPlanJSON, entry)));
       let createdDietPlans = await Promise.all(createdDietPlanPromises).catch((err) => {
@@ -721,10 +722,13 @@ export default class extends Component {
         return true;
       });
 
+      console.log('pending updated diet plans', updatedDietPlans);
 
       // UDPATE EXISTING DIET PLANS
-      const UpdatedDietPlanPromises = updatedDietPlans.map((plan) => this.clientDietPlansAPI.updateDietPlans(plan.id, plan));
-      let updatedDietPlanResults = await Promise.all(UpdatedDietPlanPromises).catch((err) => {
+      let UpdatedDietPlanPromises = [];
+      UpdatedDietPlanPromises = updatedDietPlans.map((plan) => this.clientDietPlansAPI.updateDietPlans(plan.id, plan));
+      let updatedDietPlanResults = [];
+      updatedDietPlanResults = await Promise.all(UpdatedDietPlanPromises).catch((err) => {
         this.notificationBar.current.showNotification('error', 'Error updating existing diet plan records on server. Please contact system admin.');
         console.error(err);
         reject(new Error('Error updating existing diet plan records on server.'));
@@ -732,8 +736,11 @@ export default class extends Component {
 
       updatedDietPlanResults = updatedDietPlanResults.map((i) => i.data);
 
+      console.log('pending delete diet plans', this.state.deletedDietPlans);
+
       // DELETE REMOVED DIET PLANS
-      const deleteDietPlanPromises = this.state.deletedDietPlans.map((deleted) => this.clientDietPlansAPI.deleteDietPlans(deleted.id));
+      let deleteDietPlanPromises = [];
+      deleteDietPlanPromises = this.state.deletedDietPlans.map((deleted) => this.clientDietPlansAPI.deleteDietPlans(deleted.id));
       await Promise.all(deleteDietPlanPromises).catch((err) => {
         this.notificationBar.current.showNotification('error', 'Error deleting removed diet plan records on server. Please contact system admin.');
         console.error(err);
@@ -1105,7 +1112,13 @@ export default class extends Component {
           title="Are you sure you want to delete this diet?"
           message="NOTE: This action will delete all related case notes, prep notes, diet history, diet plan records, and is irreversible."
           open={this.state.dietDeleteDialogOpen}
-          onClose={() => this.setState({ dietDeleteDialogOpen: false }, () => this.handleDietDelete())}
+          onClose={(cancelled) => {
+            this.setState({ dietDeleteDialogOpen: false }, () => {
+              if (!cancelled) {
+                this.handleDietDelete();
+              }
+            });
+          }}
           okButtonText="OK"
         />
         <DietPlanChangeDialog

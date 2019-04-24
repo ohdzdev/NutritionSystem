@@ -110,12 +110,6 @@ class CurrentDiet extends Component {
       return acc;
     }, foodLookup);
 
-    const foodSuggestions = props.allFoods.map(val => ({
-      ...val,
-      label: val.food,
-      value: val.foodId,
-    }));
-
     const unitLookup = {};
     props.allUnits.slice(0).reduce((acc, unit) => {
       acc[unit.unitId] = unit.unit;
@@ -124,17 +118,13 @@ class CurrentDiet extends Component {
 
     this.state = {
       deletedDietPlans: [],
-      foodSuggestions,
       foodLookup,
       unitLookup,
       isLoading: false,
     };
-    console.log(props);
-    console.log(this.state);
   }
 
   render() {
-    console.log(this.props);
     return (
       <div
         style={{
@@ -330,7 +320,6 @@ class CurrentDiet extends Component {
                 });
               }),
               onRowDelete: row => new Promise((res, rej) => {
-                console.log(row);
                 this.props
                   .onDietPlanDelete(row)
                   .then(() => {
@@ -373,7 +362,6 @@ class CurrentDiet extends Component {
                     updatedFieldsToServer[fieldToKeep] =
                       updatedCopy[fieldToKeep];
                   });
-                  console.log('fields updating', updatedFieldsToServer);
                   await this.props.onDietPlanUpdate(updatedFieldsToServer, updatedCopy.id).catch((err) => {
                     console.error(err);
                     rej();

@@ -90,4 +90,8 @@ export const Profile = {
 export const Kitchen = {
   link: '/kitchen',
   roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
+  prep: {
+    link: '/kitchen/prep',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
+  },
 };

@@ -1,7 +1,8 @@
 export default (theme) => ({
   root: {
-    marginLeft: theme.spacing.unit * 4,
-    marginRight: theme.spacing.unit * 4,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   table: {
     margin: theme.spacing.unit * 3,

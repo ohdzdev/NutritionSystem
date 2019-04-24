@@ -5,8 +5,6 @@ const Util = require('../../server/util');
 
 module.exports = function(Food) {
   Food.getDayPrepSheets = function(date, cb) {
-    console.log(date);
-
     const nextDate = moment(date, 'YYYY-MM-DD').add(1, 'days');
     app.datasources.zoo_mysql.connector.execute('CALL zoo.GetDayPrepSheets(?)', [nextDate.format('YYYY-M-D')], (err, [rows]) => {
       if (err) {

@@ -119,6 +119,7 @@ const Form = props => {
               value={speciesId}
               error={touched.speciesId && Boolean(errors.speciesId)}
               helperText={touched.speciesId ? errors.speciesId : ''}
+              disabled={props.editDisabled}
             />
           </Grid>
           <Grid item xs={12}>
@@ -133,6 +134,7 @@ const Form = props => {
               variant="outlined"
               fullWidth
               onFocus={change.bind(null, 'noteId')}
+              disabled={props.editDisabled}
             />
           </Grid>
         </Grid>
@@ -151,6 +153,7 @@ const Form = props => {
               }}
               variant="outlined"
               fullWidth
+              disabled={props.editDisabled}
             />
           </Grid>
           <Grid item xs={12}>
@@ -167,6 +170,7 @@ const Form = props => {
               }}
               variant="outlined"
               fullWidth
+              disabled={props.editDisabled}
             />
           </Grid>
           <Grid item xs={12}>
@@ -183,6 +187,7 @@ const Form = props => {
               }}
               variant="outlined"
               fullWidth
+              disabled={props.editDisabled}
             />
           </Grid>
           <Grid item xs={12}>
@@ -199,6 +204,7 @@ const Form = props => {
               }}
               variant="outlined"
               fullWidth
+              disabled={props.editDisabled}
             />
           </Grid>
         </Grid>
@@ -212,6 +218,7 @@ const Form = props => {
               value={tableId}
               error={touched.tableId && Boolean(errors.tableId)}
               helperText={touched.tableId ? errors.tableId : ''}
+              disabled={props.editDisabled}
             />
           </Grid>
           <Grid item xs={12}>
@@ -223,6 +230,7 @@ const Form = props => {
               value={dcId}
               error={touched.dcId && Boolean(errors.dcId)}
               helperText={touched.dcId ? errors.dcId : ''}
+              disabled={props.editDisabled}
             />
           </Grid>
           <Grid item xs={12}>
@@ -234,6 +242,7 @@ const Form = props => {
               value={groupId}
               error={touched.groupId && Boolean(errors.groupId)}
               helperText={touched.groupId ? errors.groupId : ''}
+              disabled={props.editDisabled}
             />
           </Grid>
         </Grid>
@@ -297,6 +306,7 @@ Form.propTypes = {
   })).isRequired,
   isSubmitting: PropTypes.bool,
   submitButtonText: PropTypes.string,
+  editDisabled: PropTypes.bool,
 };
 
 Form.defaultProps = {
@@ -313,6 +323,7 @@ Form.defaultProps = {
   },
   isSubmitting: false,
   submitButtonText: 'Submit',
+  editDisabled: true,
 };
 
 class FormikSelect extends React.Component {

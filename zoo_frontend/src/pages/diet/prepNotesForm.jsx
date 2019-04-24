@@ -57,6 +57,7 @@ const Form = props => {
     isValid,
     setFieldTouched,
     isSubmitting,
+    editDisabled,
   } = props;
 
   const change = (name, e) => {
@@ -93,6 +94,7 @@ const Form = props => {
             variant="outlined"
             fullWidth
             onFocus={change.bind(null, 'prepNote')}
+            disabled={editDisabled}
           />
         </Grid>
       </Grid>
@@ -131,6 +133,7 @@ Form.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool,
   submitButtonText: PropTypes.string,
+  editDisabled: PropTypes.bool,
 };
 
 Form.defaultProps = {
@@ -139,6 +142,7 @@ Form.defaultProps = {
   },
   isSubmitting: false,
   submitButtonText: 'Submit',
+  editDisabled: false,
 };
 
 export default formikEnhancer(Form);

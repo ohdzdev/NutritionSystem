@@ -132,6 +132,7 @@ class FoodWeightTable extends Component {
             onRowDelete: this.onFoodWeightDelete,
           }}
           options={{
+            emptyRowsWhenPaging: false,
             addRowPosition: 'first',
           }}
         />

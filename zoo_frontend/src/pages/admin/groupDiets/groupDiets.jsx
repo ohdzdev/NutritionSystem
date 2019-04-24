@@ -210,6 +210,8 @@ class GroupDiets extends Component {
               pageSize: 25,
               pageSizeOptions: [25, 100, 800],
               exportButton: true,
+              emptyRowsWhenPaging: false,
+              addRowPosition: 'first',
             }}
             columns={[
               { title: 'Group Name', field: 'subenclosure' },

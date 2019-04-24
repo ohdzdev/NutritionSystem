@@ -352,7 +352,7 @@ export default class extends Component {
           >
             <DialogTitle id="form-dialog-title">Edit Nutrition Row</DialogTitle>
             <DialogContent className={this.props.classes.dialogContent}>
-              { Object.entries(this.state.dialogRow).map((item) => {
+              {Object.entries(this.state.dialogRow).map((item) => {
                 const { meta } = this.state.dialogRow;
                 // from meta in rowData figure out what type of field we have and display information accordingly
                 const fieldType = meta.types[item[0]];
@@ -398,10 +398,10 @@ export default class extends Component {
             </DialogContent>
             <DialogActions>
               <Button onClick={() => this.handleCancelDialogue()} color="primary">
-              Cancel
+                Cancel
               </Button>
               <Button onClick={() => this.handleNutrientSave()} color="primary">
-              Save
+                Save
               </Button>
             </DialogActions>
           </Dialog>
@@ -449,10 +449,10 @@ export default class extends Component {
             </DialogContent>
             <DialogActions>
               <Button onClick={() => this.handleNewNutrientDialogClose(true)} color="primary">
-              Cancel
+                Cancel
               </Button>
               <Button onClick={() => this.handleNewNutrientDialogClose(false, this.state.dialogRow)} color="primary">
-              Save
+                Save
               </Button>
             </DialogActions>
           </Dialog>
@@ -483,7 +483,7 @@ export default class extends Component {
           className={this.props.classes.nutrientAddButton}
           onClick={() => this.handleNewNutrient()}
         >
-        Add Nutrient
+          Add Nutrient
         </Button>
         <MaterialTable
           title="Nutrients"
@@ -512,6 +512,7 @@ export default class extends Component {
             pageSize: 10,
             pageSizeOptions: [10, 30, this.state.nutritionData.length],
             exportButton: true,
+            emptyRowsWhenPaging: false,
           }}
         />
         <ConfirmationDialog

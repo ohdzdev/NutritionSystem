@@ -161,6 +161,7 @@ class Home extends Component {
               pageSize: 10,
               pageSizeOptions: [10, 25, 50, 100],
               exportButton: true,
+              emptyRowsWhenPaging: false,
               addRowPosition: 'first',
             }}
             columns={[

@@ -152,6 +152,7 @@ export default class units extends Component {
             pageSize: 10,
             exportButton: true,
             addRowPosition: 'first',
+            emptyRowsWhenPaging: false,
           }}
           editable={{
             onRowAdd: this.onRowAdd,

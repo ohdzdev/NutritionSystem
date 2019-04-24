@@ -76,7 +76,7 @@ BEGIN
 		)
 	)
 	UNION
-	SELECT DISTINCT SUBENCLOSURES.group_id as diet_id,
+	SELECT DISTINCT SUBENCLOSURES.se_id as diet_id,
 					DIET_PLAN.food_id as food_id,
 					Sum(DIET_PLAN.group_amount) as group_amount,
 					DIET_PLAN.unit_id as unit_id,
@@ -146,7 +146,7 @@ BEGIN
 				)
 			)
 		)
-	GROUP BY SUBENCLOSURES.group_id,
+	GROUP BY SUBENCLOSURES.se_id,
 			FOOD.food,
 			DIET_PLAN.food_id,
 			UNITS.unit,
@@ -214,20 +214,20 @@ BEGIN
 			SUBENCLOSURES.subenclosure AS dc,
 			LOCATIONS.location as location,
 			tTomorrowDietSubCopy.sort_order as sort_order,
-			SUBENCLOSURES.group_id,
+			SUBENCLOSURES.se_id,
 			FALSE as nc_prepares
 	FROM tTomorrowDietSubCopy INNER JOIN
 			(
 				LOCATIONS INNER JOIN SUBENCLOSURES
 				ON LOCATIONS.location_id = SUBENCLOSURES.location_id
 			)
-			ON tTomorrowDietSubCopy.diet_id = SUBENCLOSURES.group_id
+			ON tTomorrowDietSubCopy.diet_id = SUBENCLOSURES.se_id
 	GROUP BY tTomorrowDietSubCopy.diet_id,
 			SUBENCLOSURES.subenclosure,
 			LOCATIONS.location,
 			tTomorrowDietSubCopy.target,
 			tTomorrowDietSubCopy.sort_order,
-			SUBENCLOSURES.group_id;
+			SUBENCLOSURES.se_id;
 
 	SELECT FOOD.food as food,
 			UNITS.unit as unit,

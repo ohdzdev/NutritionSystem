@@ -143,7 +143,7 @@ class CurrentDiet extends Component {
         title: 'Total',
         field: 'groupAmount',
         readonly: true,
-        // editable: 'never', // this lands in the next material-table release
+        editable: 'never',
       },
       {
         title: 'Unit',

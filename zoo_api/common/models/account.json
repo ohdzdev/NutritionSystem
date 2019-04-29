@@ -39,8 +39,7 @@
       "foreignKey": ""
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$unauthenticated",
@@ -50,6 +49,26 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "accessType": "*"
+    }, {
+      "principalType": "ROLE",
+      "principalId": "kitchen",
+      "accessType": "READ",
+      "permission": "ALLOW",
+      "property": "find"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "keeper",
+      "accessType": "READ",
+      "permission": "ALLOW",
+      "property": "find"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "nutritionist",
+      "accessType": "READ",
+      "permission": "ALLOW",
+      "property": "find"
     }
   ],
   "methods": {}

@@ -47,6 +47,9 @@ import CurrentDietTable from './CurrentDiet';
 
 import blankDietPlanJSON from './blankDietPlan.json';
 
+
+import Roles from '../../static/Roles';
+
 export default class extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
@@ -203,6 +206,15 @@ export default class extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props.account);
+
+    let editDisabled = false;
+    if (this.props.account && this.props.account.role) {
+      const { role } = this.props.account;
+      if (role !== Roles.ADMIN && role !== Roles.NUTRITIONIST) {
+        editDisabled = true;
+      }
+    }
     this.state = {
       newDietOpen: props.new, // auto open up new form if from the url
       dietSelectDialogOpen: !props.new && !props.selectedDiet,
@@ -240,6 +252,9 @@ export default class extends Component {
       // diet plan save data
       dietPlanChangeDialogOpen: false, // dietPlan specific changelog window
       dialogChangeNotes: '',
+
+      // DISABLE EDIT
+      editDisabled,
     };
     this.clientDietAPI = new Diets(props.token);
 
@@ -800,6 +815,7 @@ export default class extends Component {
                 color="secondary"
                 variant="outlined"
                 className={classes.newDietButton}
+                disabled={this.state.editDisabled}
               >
                 New Diet
               </Button>
@@ -817,6 +833,7 @@ export default class extends Component {
                   onClick={() => this.setState({ dietDeleteDialogOpen: true })}
                   variant="contained"
                   className={classNames(classes.newDietButton, classes.deleteDietButton)}
+                  disabled={this.state.editDisabled}
                 >
                   Delete
                 </Button>
@@ -842,6 +859,7 @@ export default class extends Component {
                 return this.handleDietCreate(payload);
               }}
               submitButtonText={this.state.newDietOpen ? 'Save New Diet' : 'Save Diet Changes'}
+              editDisabled={this.state.editDisabled}
             />
           )}
         </Card>
@@ -934,6 +952,7 @@ export default class extends Component {
                       onDietPlanDelete={(oldRow) => this.handleDietPlanDelete(oldRow)}
                       onNumAnimalsChange={(newNumber) => this.handleNumAnimalsChange(newNumber)}
                       pendingChanges={this.state.pendingChanges}
+                      editDisabled={this.state.editDisabled}
                     />
                   </div>
                 }
@@ -979,6 +998,7 @@ export default class extends Component {
                     return this.handleCaseNoteChange(payload);
                   }}
                   submitButtonText={this.state.selectedCaseNote ? 'Submit Case Note Change' : 'Submit New Case Note'}
+                  editDisabled={this.state.editDisabled}
                 />
                 {this.state.selectedCaseNote &&
                   <Button
@@ -1004,15 +1024,19 @@ export default class extends Component {
                           {value.caseNote}
                         </ListItemText>
                         <ListItemSecondaryAction>
-                          <IconButton onClick={() => {
-                            this.setState({ selectedCaseNote: { ...value } });
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.setState({ selectedCaseNote: { ...value } });
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Edit />
                           </IconButton>
-                          <IconButton onClick={() => {
-                            this.handleCaseNoteDelete(value);
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.handleCaseNoteDelete(value);
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Delete />
                           </IconButton>
@@ -1040,6 +1064,7 @@ export default class extends Component {
                     return this.handlePrepNoteChange(payload);
                   }}
                   submitButtonText={this.state.selectedPrepNote ? 'Submit Prep Note Change' : 'Submit New Prep Note'}
+                  editDisabled={this.state.editDisabled}
                 />
                 {this.state.selectedPrepNote &&
                   <Button
@@ -1062,15 +1087,19 @@ export default class extends Component {
                           {value.prepNote}
                         </ListItemText>
                         <ListItemSecondaryAction>
-                          <IconButton onClick={() => {
-                            this.setState({ selectedPrepNote: { ...value } });
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.setState({ selectedPrepNote: { ...value } });
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Edit />
                           </IconButton>
-                          <IconButton onClick={() => {
-                            this.handlePrepNoteDelete(value);
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.handlePrepNoteDelete(value);
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Delete />
                           </IconButton>
@@ -1112,9 +1141,9 @@ export default class extends Component {
           title="Are you sure you want to delete this diet?"
           message="NOTE: This action will delete all related case notes, prep notes, diet history, diet plan records, and is irreversible."
           open={this.state.dietDeleteDialogOpen}
-          onClose={(cancelled) => {
+          onClose={(notCancelled) => {
             this.setState({ dietDeleteDialogOpen: false }, () => {
-              if (!cancelled) {
+              if (notCancelled) {
                 this.handleDietDelete();
               }
             });

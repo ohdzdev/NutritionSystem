@@ -232,8 +232,9 @@ const components = {
 
 const IntegrationReactSelect = (props) => {
   const {
-    label, suggestions, onChange, classes, theme, field, form, helperText, error, value,
+    label, suggestions, onChange, classes, theme, field, form, helperText, error, value, disabled,
   } = props;
+  console.log(disabled);
   const [selected, setSelected] = useState(false);
 
   function handleChangeSingle(v) {
@@ -256,9 +257,9 @@ const IntegrationReactSelect = (props) => {
   return (
     <NoSsr>
       {label &&
-      <Typography color={selected ? 'primary' : 'textPrimary'}>
-        {label}
-      </Typography>
+        <Typography color={selected ? 'primary' : 'textPrimary'}>
+          {label}
+        </Typography>
       }
       <Select
         classes={classes}
@@ -277,6 +278,7 @@ const IntegrationReactSelect = (props) => {
         }}
         onBlur={() => setSelected(false)}
         id={props.id}
+        isDisabled={disabled}
       />
       {(error || helperText) &&
         <Typography color={error ? 'error' : 'textPrimary'}>
@@ -304,10 +306,11 @@ IntegrationReactSelect.propTypes = {
   form: PropTypes.object,
   helperText: PropTypes.string,
   error: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 IntegrationReactSelect.defaultProps = {
-  onChange: () => {},
+  onChange: () => { },
   value: '',
   label: '',
   id: Math.random(1000),
@@ -315,6 +318,7 @@ IntegrationReactSelect.defaultProps = {
   form: undefined,
   helperText: '',
   error: false,
+  disabled: false,
 };
 
 export default withTheme()(withStyles(styles, { withTheme: true })(IntegrationReactSelect));

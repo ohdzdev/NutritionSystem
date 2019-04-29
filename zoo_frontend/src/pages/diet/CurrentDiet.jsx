@@ -80,6 +80,7 @@ const dietPlanRequiredFieldCheck = (rowUpdated, showNotification) => {
   return true;
 };
 
+
 class CurrentDiet extends Component {
   static propTypes = {
     allFoods: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -94,11 +95,13 @@ class CurrentDiet extends Component {
     onDietPlanDelete: PropTypes.func.isRequired,
     onNumAnimalsChange: PropTypes.func.isRequired,
     pendingChanges: PropTypes.bool.isRequired,
+    editDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     numAnimals: 1,
     dietPlan: [],
+    editDisabled: false,
   };
 
   constructor(props) {
@@ -122,6 +125,87 @@ class CurrentDiet extends Component {
       unitLookup,
       isLoading: false,
     };
+
+    this.columns = [
+      {
+        title: 'Food',
+        field: 'foodId',
+        lookup: this.state.foodLookup,
+        cellStyle: {
+          width: '100px !important',
+        },
+      },
+      {
+        title: 'Ind',
+        field: 'indAmount',
+      },
+      {
+        title: 'Total',
+        field: 'groupAmount',
+        readonly: true,
+        // editable: 'never', // this lands in the next material-table release
+      },
+      {
+        title: 'Unit',
+        field: 'unitId',
+        lookup: this.state.unitLookup,
+        cellStyle: {
+          width: '30px',
+        },
+      },
+      {
+        title: 'SU',
+        field: 'sun',
+        type: 'boolean',
+      },
+      {
+        title: 'M',
+        field: 'mon',
+        type: 'boolean',
+      },
+      {
+        title: 'T',
+        field: 'tue',
+        type: 'boolean',
+      },
+      {
+        title: 'W',
+        field: 'wed',
+        type: 'boolean',
+      },
+      {
+        title: 'R',
+        field: 'thr',
+        type: 'boolean',
+      },
+      {
+        title: 'F',
+        field: 'fri',
+        type: 'boolean',
+      },
+      {
+        title: 'S',
+        field: 'sat',
+        type: 'boolean',
+      },
+      {
+        title: 'Sort',
+        field: 'sort',
+        defaultSort: 'asc',
+      },
+      {
+        title: 'Bag',
+        field: 'tote',
+      },
+      {
+        title: 'Cycle',
+        field: 'freqRotation',
+      },
+      {
+        title: 'Week',
+        field: 'freqWeeks',
+      },
+    ];
   }
 
   render() {
@@ -184,6 +268,7 @@ class CurrentDiet extends Component {
               }}
               style={{ margin: '10px' }}
               label="Number of Animals"
+              disabled={this.props.editDisabled}
             />
             <div style={{ display: 'flex' }}>
               <Button
@@ -209,174 +294,114 @@ class CurrentDiet extends Component {
               </Button>
             </div>
           </div>
-          <MaterialTable
-            title="Current Diet Plan"
-            columns={[
-              {
-                title: 'Food',
-                field: 'foodId',
-                lookup: this.state.foodLookup,
-                cellStyle: {
-                  width: '100px !important',
-                },
-              },
-              {
-                title: 'Ind',
-                field: 'indAmount',
-              },
-              {
-                title: 'Total',
-                field: 'groupAmount',
-                readonly: true,
-                // editable: 'never', // this lands in the next material-table release
-              },
-              {
-                title: 'Unit',
-                field: 'unitId',
-                lookup: this.state.unitLookup,
-                cellStyle: {
-                  width: '30px',
-                },
-              },
-              {
-                title: 'SU',
-                field: 'sun',
-                type: 'boolean',
-              },
-              {
-                title: 'M',
-                field: 'mon',
-                type: 'boolean',
-              },
-              {
-                title: 'T',
-                field: 'tue',
-                type: 'boolean',
-              },
-              {
-                title: 'W',
-                field: 'wed',
-                type: 'boolean',
-              },
-              {
-                title: 'R',
-                field: 'thr',
-                type: 'boolean',
-              },
-              {
-                title: 'F',
-                field: 'fri',
-                type: 'boolean',
-              },
-              {
-                title: 'S',
-                field: 'sat',
-                type: 'boolean',
-              },
-              {
-                title: 'Sort',
-                field: 'sort',
-                defaultSort: 'asc',
-              },
-              {
-                title: 'Bag',
-                field: 'tote',
-              },
-              {
-                title: 'Cycle',
-                field: 'freqRotation',
-              },
-              {
-                title: 'Week',
-                field: 'freqWeeks',
-              },
-            ]}
-            data={this.props.dietPlan}
-            options={{
-              pageSize: this.props.dietPlan.length + 10,
-              search: false,
-              emptyRowsWhenPaging: false,
-              addRowPosition: 'first',
-            }}
-            editable={{
-              onRowAdd: newData => new Promise((res, rej) => {
-                const valid = dietPlanRequiredFieldCheck(
-                  newData,
-                  this.props.showNotification,
-                );
+          {this.props.editDisabled ?
+            <MaterialTable
+              title="Current Diet Plan"
+              columns={this.columns}
+              data={this.props.dietPlan}
+              options={{
+                pageSize: this.props.dietPlan.length + 10,
+                search: false,
+                emptyRowsWhenPaging: false,
+                addRowPosition: 'first',
 
-                const localData = { ...newData };
-                localData.groupAmount =
-                  this.props.numAnimals * parseInt(localData.indAmount, 10);
-                localData.dietId = this.props.currentDiet.dietId;
-                if (!valid) {
-                  rej();
-                  return;
-                }
+              }}
+            />
+            :
+            <MaterialTable
+              title="Current Diet Plan"
+              columns={this.columns}
+              data={this.props.dietPlan}
+              options={{
+                pageSize: this.props.dietPlan.length + 10,
+                search: false,
+                emptyRowsWhenPaging: false,
+                addRowPosition: 'first',
 
-                // update via props to prevent issues with updating state once diets have been created via 'submit changes' button
-                this.props.onDietPlanAdd(localData).then(() => {
-                  res();
-                });
-              }),
-              onRowDelete: row => new Promise((res, rej) => {
-                this.props
-                  .onDietPlanDelete(row)
-                  .then(() => {
-                    this.setState(
-                      prevState => ({
-                        deletedDietPlans: [...prevState.deletedDietPlans, row],
-                      }),
-                      () => {
-                        res();
-                      },
-                    );
-                  })
-                  .catch(err => {
-                    console.error(err);
+              }}
+              editable={{
+                onRowAdd: newData => new Promise((res, rej) => {
+                  const valid = dietPlanRequiredFieldCheck(
+                    newData,
+                    this.props.showNotification,
+                  );
+
+                  const localData = { ...newData };
+                  localData.groupAmount =
+                    this.props.numAnimals * parseInt(localData.indAmount, 10);
+                  localData.dietId = this.props.currentDiet.dietId;
+                  if (!valid) {
                     rej();
-                  });
-              }),
-              onRowUpdate: (rowUpdated, prevRow) => new Promise(async (res, rej) => {
-                const valid = dietPlanRequiredFieldCheck(
-                  rowUpdated,
-                  this.props.showNotification,
-                );
-                if (!valid) {
-                  rej();
-                  return;
-                }
+                    return;
+                  }
 
-                const updatedCopy = { ...rowUpdated };
-                updatedCopy.groupAmount = this.props.numAnimals * parseInt(updatedCopy.indAmount, 10);
-                let fieldUpdated = false;
-                const updatedFields = Object.entries(updatedCopy)
-                  .filter(column => prevRow[column[0]] !== column[1])
-                  .map(entry => entry[0]);
-                if (updatedFields && updatedFields.length > 0) {
-                  fieldUpdated = true;
-                }
-                if (fieldUpdated) {
-                  const updatedFieldsToServer = {};
-                  updatedFields.forEach(fieldToKeep => {
-                    updatedFieldsToServer[fieldToKeep] =
-                      updatedCopy[fieldToKeep];
+                  // update via props to prevent issues with updating state once diets have been created via 'submit changes' button
+                  this.props.onDietPlanAdd(localData).then(() => {
+                    res();
                   });
-                  await this.props.onDietPlanUpdate(updatedFieldsToServer, updatedCopy.id).catch((err) => {
-                    console.error(err);
+                }),
+
+
+                onRowDelete: row => new Promise((res, rej) => {
+                  this.props
+                    .onDietPlanDelete(row)
+                    .then(() => {
+                      this.setState(
+                        prevState => ({
+                          deletedDietPlans: [...prevState.deletedDietPlans, row],
+                        }),
+                        () => {
+                          res();
+                        },
+                      );
+                    })
+                    .catch(err => {
+                      console.error(err);
+                      rej();
+                    });
+                }),
+
+                onRowUpdate: (rowUpdated, prevRow) => new Promise(async (res, rej) => {
+                  const valid = dietPlanRequiredFieldCheck(
+                    rowUpdated,
+                    this.props.showNotification,
+                  );
+                  if (!valid) {
                     rej();
-                  });
-                  res();
-                  return;
-                }
-                this.props.showNotification(
-                  'info',
-                  'No pending changes detected',
-                );
-                rej();
-              }),
-            }}
-          />
+                    return;
+                  }
+
+                  const updatedCopy = { ...rowUpdated };
+                  updatedCopy.groupAmount = this.props.numAnimals * parseInt(updatedCopy.indAmount, 10);
+                  let fieldUpdated = false;
+                  const updatedFields = Object.entries(updatedCopy)
+                    .filter(column => prevRow[column[0]] !== column[1])
+                    .map(entry => entry[0]);
+                  if (updatedFields && updatedFields.length > 0) {
+                    fieldUpdated = true;
+                  }
+                  if (fieldUpdated) {
+                    const updatedFieldsToServer = {};
+                    updatedFields.forEach(fieldToKeep => {
+                      updatedFieldsToServer[fieldToKeep] =
+                        updatedCopy[fieldToKeep];
+                    });
+                    await this.props.onDietPlanUpdate(updatedFieldsToServer, updatedCopy.id).catch((err) => {
+                      console.error(err);
+                      rej();
+                    });
+                    res();
+                    return;
+                  }
+                  this.props.showNotification(
+                    'info',
+                    'No pending changes detected',
+                  );
+                  rej();
+                }),
+              }}
+            />
+          }
           {this.state.isLoading && (
             <div
               style={{

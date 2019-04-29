@@ -32,14 +32,14 @@ const formikEnhancer = withFormik({
     manufacturerName: Yup.string().nullable(),
     ohdzName: Yup.string().nullable(),
     costG: Yup.number().nullable(),
-    budgetId: Yup.number().nullable(),
-    category: Yup.number().nullable(),
+    budgetId: Yup.string().required('Budget ID is required'),
+    category: Yup.string().required('Food Category is required'),
     usdaFoodGroupDesc: Yup.number().nullable(),
-    dry: Yup.bool().required(),
-    meat: Yup.bool().required(),
-    preChop: Yup.bool().required(),
-    preBag: Yup.bool().required(),
-    active: Yup.bool().required(),
+    dry: Yup.bool(),
+    meat: Yup.bool(),
+    preChop: Yup.bool(),
+    preBag: Yup.bool(),
+    active: Yup.bool(),
   }),
   mapPropsToValues: props => ({
     food: props.food ? props.food : '',
@@ -90,6 +90,7 @@ const Form = props => {
     handleChange,
     isValid,
     setFieldTouched,
+    setFieldValue,
     isSubmitting,
   } = props;
 
@@ -97,6 +98,16 @@ const Form = props => {
     e.persist();
     handleChange(e);
     setFieldTouched(name, true, false);
+  };
+
+  const handleBlur = (name, e) => {
+    const { value } = e.target;
+    if (name === 'food' && ohdzName === '') {
+      if (value) {
+        setFieldValue('ohdzName', value, false);
+        setFieldTouched('ohdzName', true, false);
+      }
+    }
   };
   return (
     <form
@@ -117,6 +128,8 @@ const Form = props => {
             onChange={change.bind(null, 'food')}
             variant="outlined"
             fullWidth
+            onFocus={change.bind(null, 'food')}
+            onBlur={handleBlur.bind(null, 'food')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -130,6 +143,7 @@ const Form = props => {
             onChange={change.bind(null, 'sciName')}
             fullWidth
             variant="outlined"
+            onFocus={change.bind(null, 'sciName')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -143,6 +157,7 @@ const Form = props => {
             variant="outlined"
             value={manufacturerName}
             onChange={change.bind(null, 'manufacturerName')}
+            onFocus={change.bind(null, 'manufacturerName')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -156,6 +171,7 @@ const Form = props => {
             variant="outlined"
             value={ohdzName}
             onChange={change.bind(null, 'ohdzName')}
+            onFocus={change.bind(null, 'ohdzName')}
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
@@ -167,15 +183,32 @@ const Form = props => {
             label="Cost Per Gram"
             value={costG}
             onChange={change.bind(null, 'costG')}
+            onFocus={change.bind(null, 'costG')}
             variant="outlined"
             fullWidth
           />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px', alignSelf: 'center' }}>
-          <Field name="budgetId" component={SingleSelect} suggestions={props.budgetCodes} defaultValue={budgetId} />
+          <Field
+            name="budgetId"
+            label="Budget ID"
+            component={SingleSelect}
+            suggestions={props.budgetCodes}
+            defaultValue={budgetId}
+            error={touched.budgetId && Boolean(errors.budgetId)}
+            helperText={touched.budgetId ? errors.budgetId : ''}
+          />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px', alignSelf: 'center' }}>
-          <Field name="category" component={SingleSelect} suggestions={props.foodCategories} defaultValue={category} />
+          <Field
+            name="category"
+            label="Category"
+            component={SingleSelect}
+            suggestions={props.foodCategories}
+            defaultValue={category}
+            error={touched.category && Boolean(errors.category)}
+            helperText={touched.category ? errors.category : ''}
+          />
         </Grid>
         <Grid item xs={12} md={4} style={{ padding: '10px' }}>
           <TextField
@@ -186,6 +219,7 @@ const Form = props => {
             label="USDA Food Group Description"
             value={usdaFoodGroupDesc}
             onChange={change.bind(null, 'usdaFoodGroupDesc')}
+            onFocus={change.bind(null, 'usdaFoodGroupDesc')}
             variant="outlined"
             fullWidth
           />
@@ -288,7 +322,7 @@ const Form = props => {
           color="primary"
           disabled={!isValid}
         >
-        Submit Food Update
+          {props.submitButtonText}
         </Button>
       </Grid>
       {/* <DisplayFormikState {...props} /> */}
@@ -302,7 +336,7 @@ Form.propTypes = {
     manufacturerName: PropTypes.string,
     ohdzName: PropTypes.string,
     food: PropTypes.string.isRequired,
-    costG: PropTypes.number,
+    costG: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     budgetId: PropTypes.number,
     category: PropTypes.number,
     usdaFoodGroupDesc: PropTypes.string,
@@ -317,6 +351,7 @@ Form.propTypes = {
   handleChange: PropTypes.func.isRequired,
   isValid: PropTypes.bool.isRequired,
   setFieldTouched: PropTypes.func.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   budgetCodes: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string,
@@ -327,6 +362,7 @@ Form.propTypes = {
     value: PropTypes.number,
   })).isRequired,
   isSubmitting: PropTypes.bool,
+  submitButtonText: PropTypes.string,
 };
 
 Form.defaultProps = {
@@ -335,7 +371,7 @@ Form.defaultProps = {
     manufacturerName: '',
     ohdzName: '',
     food: '',
-    costG: 0,
+    costG: '',
     budgetId: 0,
     category: 0,
     usdaFoodGroupDesc: '',
@@ -346,6 +382,7 @@ Form.defaultProps = {
     active: false,
   },
   isSubmitting: false,
+  submitButtonText: 'Submit',
 };
 
 class FormikSelect extends React.Component {

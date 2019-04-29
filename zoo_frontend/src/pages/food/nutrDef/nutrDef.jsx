@@ -42,14 +42,13 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: props.token, // eslint-disable-line react/no-unused-state
       nutrDef: props.nutrDef,
     };
     this.notificationsRef = React.createRef();
   }
 
   onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    const nutrDefApi = new NutrDefApi(this.state.token);
+    const nutrDefApi = new NutrDefApi(this.props.token);
     // Reject if no short form
     if (!newData.tagname || !newData.units || !newData.nutrDesc || !newData.srOrder) {
       this.notificationsRef.current.showNotification('error', 'Please fill out "Tag Name", "Units", "Description", "SR Order".');
@@ -77,7 +76,7 @@ class Home extends Component {
   })
 
   onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const nutrDefApi = new NutrDefApi(this.state.token);
+    const nutrDefApi = new NutrDefApi(this.props.token);
 
     // Determine if we need to update and what to update
     let fieldUpdated = false;
@@ -133,7 +132,7 @@ class Home extends Component {
   })
 
   onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const nutrDefApi = new NutrDefApi(this.state.token);
+    const nutrDefApi = new NutrDefApi(this.props.token);
     try {
       // Delete the nutrDef
       await nutrDefApi.deleteNutrDef(oldData.nutrNo);
@@ -172,6 +171,8 @@ class Home extends Component {
               pageSize: 10,
               pageSizeOptions: [10, 50, 200],
               exportButton: true,
+              addRowPosition: 'first',
+              emptyRowsWhenPaging: false,
             }}
             columns={[
               { title: 'Tag Name', field: 'tagname' },

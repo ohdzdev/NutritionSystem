@@ -7,7 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 
-const styles = theme => ({ // eslint-disable-line no-unused-vars
+const styles = theme => ({
   root: {
     display: 'flex',
   },
@@ -17,7 +17,7 @@ const styles = theme => ({ // eslint-disable-line no-unused-vars
 });
 
 const CustomFormCheckbox = (props) => {
-  const { classes } = props;
+  const { classes, disabled } = props;
   return (
     <div className={classes.root}>
       <FormControl required error={props.error} component="fieldset" className={classes.formControl}>
@@ -25,8 +25,9 @@ const CustomFormCheckbox = (props) => {
           <FormControlLabel
             control={
               <Checkbox id={props.id} checked={props.value} onChange={(e) => props.onChange(e)} value={props.label} />
-              }
+            }
             label={props.label}
+            disabled={disabled}
           />
         </FormGroup>
         {props.helperText &&
@@ -46,12 +47,14 @@ CustomFormCheckbox.propTypes = {
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   error: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 CustomFormCheckbox.defaultProps = {
-  onChange: () => {},
+  onChange: () => { },
   error: false,
   helperText: '',
+  disabled: false,
 };
 
 export default withStyles(styles)(CustomFormCheckbox);

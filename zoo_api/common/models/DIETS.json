@@ -12,8 +12,8 @@
         "type": "belongsTo",
         "foreignKey": "dcId"
       },
-      "dietEmployee": {
-        "model": "Employees",
+      "dietAccount": {
+        "model": "account",
         "type": "belongsTo",
         "foreignKey": "userLogin"
       },
@@ -82,17 +82,17 @@
       }
     },
     "userLogin": {
-      "type": "String",
+      "type": "Number",
       "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
         "columnName": "user_login",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     },

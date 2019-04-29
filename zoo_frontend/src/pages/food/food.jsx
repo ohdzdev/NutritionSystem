@@ -23,7 +23,7 @@ import NextPage from '@material-ui/icons/ChevronRight';
 import PreviousPage from '@material-ui/icons/ChevronLeft';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faInfo, faCheck, faTimes, faSignature, faEdit,
+  faInfo, faCheck, faTimes, faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 
 // API helpers
@@ -55,8 +55,8 @@ class FoodPage extends Component {
     // server side grab all data for list view
     const res = await api.getFood().catch((err) => ({ foodItems: [{ err: true, msg: err }] }));
     // grab all categories because its highly likely that we will use them all for ALL the foods listed
-    const foodCategories = await categoryAPI.getCategories().catch(() => {});
-    const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => {});
+    const foodCategories = await categoryAPI.getCategories().catch(() => { });
+    const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => { });
     // grab all the budget codes for same reason
 
     return { foodItems: res.data, foodCategories: foodCategories.data, budgetCodes: budgetCodes.data };
@@ -68,6 +68,7 @@ class FoodPage extends Component {
     foodItems: PropTypes.array.isRequired,
     foodCategories: PropTypes.array.isRequired,
     budgetCodes: PropTypes.array.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -83,7 +84,7 @@ class FoodPage extends Component {
       dialogRow: {},
     };
 
-    this.clientFoodAPI = new FoodAPI(this.state.token);
+    this.clientFoodAPI = new FoodAPI(this.props.token);
   }
 
   /**
@@ -141,15 +142,7 @@ class FoodPage extends Component {
                 <Link href={`${Food.edit.link}?id=${rowData.foodId}`}>
                   <Button className={this.props.classes.button} color="secondary" variant="contained">
                     <FontAwesomeIcon icon={faEdit} className={this.props.classes.faIcon} />
-                      View / Edit
-                  </Button>
-                </Link>
-              }
-              {hasAccess(this.props.account.role, Food.nicknames.roles) &&
-                <Link href={`${Food.nicknames.link}?id=${rowData.foodId}`}>
-                  <Button className={this.props.classes.button} color="secondary" variant="contained" disabled={rowData.active !== 1}>
-                    <FontAwesomeIcon icon={faSignature} className={this.props.classes.faIcon} />
-                    Edit Nickname
+                    View / Edit
                   </Button>
                 </Link>
               }
@@ -169,9 +162,7 @@ class FoodPage extends Component {
       return Promise.reject();
     }
     const prom = new Promise((r, rej) => {
-      console.log('in view page', payload);
       this.clientFoodAPI.createFood(payload).then((res) => {
-        console.log('from API', res);
         this.setState((prevState) => ({ newFoodOpen: false, newFood: { ...res.data }, foodItems: [...prevState.foodItems, res.data] }), () => {
           r();
         });
@@ -185,7 +176,6 @@ class FoodPage extends Component {
 
   async handleDelete(shouldDelete) {
     if (shouldDelete) {
-      console.log(this.state);
       if (this.state.dialogRow && this.state.dialogRow.foodId) {
         const { foodId } = this.state.dialogRow;
         try {
@@ -212,13 +202,13 @@ class FoodPage extends Component {
           justifyContent: 'center',
         }}
       >
-        { this.state.newFoodOpen &&
+        {this.state.newFoodOpen &&
           <FoodForm {...this.state.newFood} foodCategories={this.state.foodCategories} budgetCodes={this.state.budgetCodes} submitForm={(payload) => this.createNewFood(payload)} />
         }
-        { !this.state.newFoodOpen &&
+        {!this.state.newFoodOpen &&
           <Grid item xs={12} md={3} style={{ padding: '10px' }}>
             <Button onClick={() => { this.setState({ newFoodOpen: true }); }} variant="contained" color="primary">
-            Add New Food
+              Add New Food
             </Button>
           </Grid>
         }
@@ -245,6 +235,7 @@ class FoodPage extends Component {
               pageSize: 20,
               pageSizeOptions: [20, 50, 100],
               actionsColumnIndex: -1,
+              emptyRowsWhenPaging: false,
             }}
             icons={{
               Search,
@@ -278,22 +269,10 @@ class FoodPage extends Component {
                   });
                 },
               },
-              rowData => ({
-                icon: () => (<FontAwesomeIcon icon={faSignature} />),
-                tooltip: 'Edit Nickname',
-                disabled: (rowData.active !== 1 && hasAccess(role, Food.nicknames.roles)),
-                onClick: (e, data) => {
-                  Router.push({
-                    pathname: Food.nicknames.link,
-                    query: { id: data.foodId },
-                  });
-                },
-              }),
               {
                 disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
                 icon: () => <Delete />,
                 onClick: (evt, row) => {
-                  console.log(row);
                   this.setState({ deleteDialogOpen: true, dialogRow: row });
                 },
                 tooltip: 'Delete Food',

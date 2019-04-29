@@ -42,14 +42,13 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: props.token, // eslint-disable-line react/no-unused-state
       dataSrc: props.dataSrc,
     };
     this.notificationsRef = React.createRef();
   }
 
   onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    const dataSrcApi = new DataSrcApi(this.state.token);
+    const dataSrcApi = new DataSrcApi(this.props.token);
     // Reject if no short form
     if (!newData.shortForm) {
       this.notificationsRef.current.showNotification('error', 'Please fill out "Short Form".');
@@ -77,7 +76,7 @@ class Home extends Component {
   })
 
   onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const dataSrcApi = new DataSrcApi(this.state.token);
+    const dataSrcApi = new DataSrcApi(this.props.token);
 
     // Determine if we need to update and what to update
     let fieldUpdated = false;
@@ -123,7 +122,7 @@ class Home extends Component {
   })
 
   onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const dataSrcApi = new DataSrcApi(this.state.token);
+    const dataSrcApi = new DataSrcApi(this.props.token);
     try {
       // Delete the dataSrc
       await dataSrcApi.deleteDataSrc(oldData.dataSrcId);
@@ -162,6 +161,8 @@ class Home extends Component {
               pageSize: 10,
               pageSizeOptions: [10, 25, 50, 100],
               exportButton: true,
+              emptyRowsWhenPaging: false,
+              addRowPosition: 'first',
             }}
             columns={[
               { title: 'Short Form', field: 'shortForm' },

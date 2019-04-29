@@ -1,0 +1,15 @@
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\libhostpolicy.so
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\libhostfxr.so
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\ExcelApp
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\appsettings.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\ExcelApp.deps.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\ExcelApp.runtimeconfig.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\ExcelApp.runtimeconfig.dev.json
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\ExcelApp.dll
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Release\netcoreapp2.1\linux-x64\ExcelApp.pdb
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\linux-x64\ExcelApp.csprojAssemblyReference.cache
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\linux-x64\ExcelApp.csproj.CoreCompileInputs.cache
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\linux-x64\ExcelApp.AssemblyInfoInputs.cache
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\linux-x64\ExcelApp.AssemblyInfo.cs
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\linux-x64\ExcelApp.dll
+C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Release\netcoreapp2.1\linux-x64\ExcelApp.pdb

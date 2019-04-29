@@ -14,7 +14,8 @@
     "test:api": "cd zoo_api && yarn test && cd ../",
     "test:frontend": "cd zoo_frontend && yarn test && cd ../",
     "powershell:prod": "powershell.exe $env:NODE_ENV='production'",
-    "bash:prod": "export NODE_ENV=production"
+    "bash:prod": "export NODE_ENV=production",
+    "docs": "echo \"run this in bash after npm install -g docco: docco zoo_frontend/{**/*,**/**/*,**/**/**/*,**/**/**/**/*,**/**/**/**/**/*,**/**/**/**/**/**/*,**/**/**/**/**/**/**/*}.{jsx,js}\""
   },
   "repository": {
     "type": "git",

@@ -19,6 +19,14 @@ const redirectTo = (destination, { res, status } = {}) => {
   }
 };
 
+Router.events.on('routeChangeError', (error) => {
+  console.error('route change status[❌]', error.message);
+});
+
+Router.events.on('routeChangeComplete', (evt) => {
+  console.log('route change status[✔] path:', evt);
+});
+
 export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
   class withAuth extends Component {
     static async getInitialProps(ctx) {
@@ -26,9 +34,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
 
       const c = cookies(ctx);
 
-      console.log(c);
-
-      if (c.authToken == null || c.authToken === '') {
+      if (c.authToken == null || c.authToken === '' || c.authToken === undefined) {
         if (allowedRoles.includes('unauthenticated')) {
           if (WrappedComponent.getInitialProps) {
             pageProps = await WrappedComponent.getInitialProps(ctx);
@@ -36,21 +42,15 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
           return { ...pageProps };
         }
 
+        console.log('redirect to login because user has no session token');
         // redirecting to login because current page does not support unauth users
-        redirectTo('/login', { res: ctx.res, status: 301 });
+        redirectTo('/login', { res: ctx.res, status: 302 });
         return { ...pageProps };
       }
 
-      const api = new Api(c.authToken || '');
-
+      const api = new Api(c.authToken);
       try {
-        await api.validateToken().catch(() => {
-          if (process.browser) {
-            document.cookie = 'authToken=; path=/';
-          }
-          api.setToken('');
-          return {};
-        });
+        await api.validateToken();
 
         if (WrappedComponent.getInitialProps) {
           ctx.authToken = c.authToken;
@@ -63,12 +63,19 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
         } catch (err2) {
           // ignore this error
         }
+        console.error(err);
         if (process.browser) {
           document.cookie = 'authToken=; path=/';
         }
-        redirectTo('/login', { res: ctx.res, status: 301 });
+        api.setToken('');
+
+        if (ctx.pathname !== '/login') {
+          // only redirect if we are not already going to the login page
+          console.log('redirect to login because users key did not validate properly on server end');
+          redirectTo('/login', { res: ctx.res, status: 301 });
+        }
+        return { ...pageProps };
       }
-      return { ...pageProps };
     }
 
     static propTypes = {
@@ -103,6 +110,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
       };
 
       if (!allowedRoles.includes(account.role)) {
+        console.log('redirect user to login if not authenticated, or redirect to home page because no access');
         Router.push(account.role === 'unauthenticated' ? '/login' : '/');
         return;
       }

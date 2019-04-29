@@ -1024,15 +1024,19 @@ export default class extends Component {
                           {value.caseNote}
                         </ListItemText>
                         <ListItemSecondaryAction>
-                          <IconButton onClick={() => {
-                            this.setState({ selectedCaseNote: { ...value } });
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.setState({ selectedCaseNote: { ...value } });
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Edit />
                           </IconButton>
-                          <IconButton onClick={() => {
-                            this.handleCaseNoteDelete(value);
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.handleCaseNoteDelete(value);
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Delete />
                           </IconButton>
@@ -1083,15 +1087,19 @@ export default class extends Component {
                           {value.prepNote}
                         </ListItemText>
                         <ListItemSecondaryAction>
-                          <IconButton onClick={() => {
-                            this.setState({ selectedPrepNote: { ...value } });
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.setState({ selectedPrepNote: { ...value } });
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Edit />
                           </IconButton>
-                          <IconButton onClick={() => {
-                            this.handlePrepNoteDelete(value);
-                          }}
+                          <IconButton
+                            onClick={() => {
+                              this.handlePrepNoteDelete(value);
+                            }}
+                            disabled={this.state.editDisabled}
                           >
                             <Delete />
                           </IconButton>

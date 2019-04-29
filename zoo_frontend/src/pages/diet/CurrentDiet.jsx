@@ -268,6 +268,7 @@ class CurrentDiet extends Component {
               }}
               style={{ margin: '10px' }}
               label="Number of Animals"
+              disabled={this.props.editDisabled}
             />
             <div style={{ display: 'flex' }}>
               <Button

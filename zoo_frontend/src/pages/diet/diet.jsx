@@ -802,6 +802,7 @@ export default class extends Component {
                 Select Diet
               </Button>
               <Button
+                style={{ paddingRight: this.state.selectedDiet ? '12px' : '0px' }}
                 onClick={() => {
                   this.setState({
                     newDietOpen: true,
@@ -817,6 +818,19 @@ export default class extends Component {
                 disabled={this.state.editDisabled}
               >
                 New Diet
+              </Button>
+              <Button
+                onClick={async () => {
+                  if (this.state.selectedDiet) {
+                    const { dietId } = this.state.selectedDiet;
+
+                    await this.clientDietAPI.downloadDietAnalysis(dietId);
+                  }
+                }}
+                color="secondary"
+                variant="outlined"
+              >
+                Download Diet Analysis
               </Button>
             </span>
             <span

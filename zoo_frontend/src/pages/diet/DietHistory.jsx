@@ -36,7 +36,6 @@ class DietHistory extends Component {
       unitLookup,
       historyLength: this.props.dietHistory.length,
     };
-    console.log(this.props.currentHistoryTime);
   }
 
   render() {

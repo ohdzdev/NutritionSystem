@@ -162,9 +162,7 @@ class FoodPage extends Component {
       return Promise.reject();
     }
     const prom = new Promise((r, rej) => {
-      console.log('in view page', payload);
       this.clientFoodAPI.createFood(payload).then((res) => {
-        console.log('from API', res);
         this.setState((prevState) => ({ newFoodOpen: false, newFood: { ...res.data }, foodItems: [...prevState.foodItems, res.data] }), () => {
           r();
         });
@@ -178,7 +176,6 @@ class FoodPage extends Component {
 
   async handleDelete(shouldDelete) {
     if (shouldDelete) {
-      console.log(this.state);
       if (this.state.dialogRow && this.state.dialogRow.foodId) {
         const { foodId } = this.state.dialogRow;
         try {
@@ -276,7 +273,6 @@ class FoodPage extends Component {
                 disabled: !hasAccess(this.props.account.role, [Roles.ADMIN]),
                 icon: () => <Delete />,
                 onClick: (evt, row) => {
-                  console.log(row);
                   this.setState({ deleteDialogOpen: true, dialogRow: row });
                 },
                 tooltip: 'Delete Food',

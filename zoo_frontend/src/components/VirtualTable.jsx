@@ -114,7 +114,6 @@ class MuiVirtualizedTable extends React.PureComponent {
               cellContentRenderer = null, className, dataKey, ...other
             }, index) => {
               let renderer;
-              // console.log(dataKey);
               if (cellContentRenderer != null) {
                 renderer = cellRendererProps => this.cellRenderer({
                   cellData: cellContentRenderer(cellRendererProps),
@@ -165,7 +164,7 @@ MuiVirtualizedTable.propTypes = {
 MuiVirtualizedTable.defaultProps = {
   headerHeight: 56,
   rowHeight: 56,
-  onRowClick: () => {},
+  onRowClick: () => { },
   rowClassName: '',
   sort: null,
 };
@@ -174,7 +173,6 @@ const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 const ReactVirtualizedTable = (props) => {
   const { cols, rows, height } = props;
-  // console.log(cols, input, height);
   return (
     <Paper style={{ height, width: '100%' }}>
       <WrappedVirtualizedTable

@@ -15,10 +15,6 @@ class Home extends Component {
     account: PropTypes.object.isRequired,
   };
 
-  static async getInitialProps(ctx) {
-    console.log(ctx.account);
-  }
-
   constructor(props) {
     super(props);
     this.state = {

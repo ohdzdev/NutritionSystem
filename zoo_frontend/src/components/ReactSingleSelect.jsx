@@ -234,7 +234,6 @@ const IntegrationReactSelect = (props) => {
   const {
     label, suggestions, onChange, classes, theme, field, form, helperText, error, value, disabled,
   } = props;
-  console.log(disabled);
   const [selected, setSelected] = useState(false);
 
   function handleChangeSingle(v) {

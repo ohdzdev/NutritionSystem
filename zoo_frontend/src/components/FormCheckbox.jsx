@@ -18,7 +18,6 @@ const styles = theme => ({
 
 const CustomFormCheckbox = (props) => {
   const { classes, disabled } = props;
-  console.log(disabled);
   return (
     <div className={classes.root}>
       <FormControl required error={props.error} component="fieldset" className={classes.formControl}>

@@ -95,7 +95,7 @@ class FoodWeightTable extends Component {
         });
         res();
       } catch (error) {
-        console.log(error);
+        console.error(error);
         rej();
       }
     }

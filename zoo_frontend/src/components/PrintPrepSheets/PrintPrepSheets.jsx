@@ -103,7 +103,6 @@ class PrintPrepSheets extends Component {
 
   render() {
     const { classes, date } = this.props;
-    console.log(date);
     return (
       <div className={classes.container}>
         <ReactToPrint
@@ -120,7 +119,7 @@ class PrintPrepSheets extends Component {
           pageStyle={printOutPageStyle}
         />
         <NativeSelect
-                // onChange={}
+          // onChange={}
           input={<Input name="report" id="report-native-helper" />}
           style={{ width: 300 }}
         >
@@ -132,7 +131,7 @@ class PrintPrepSheets extends Component {
           className={classes.printButton}
           onClick={this.handlePrint}
         >
-            Print Prep Sheet
+          Print Prep Sheet
         </Button>
         <div style={{ display: 'none' }}>
           <PrepSheetPrintOut

@@ -818,6 +818,21 @@ export default class extends Component {
               >
                 New Diet
               </Button>
+              {this.state.selectedDiet &&
+                <Button
+                  className={classes.newDietButton}
+                  onClick={async () => {
+                    if (this.state.selectedDiet) {
+                      const { dietId } = this.state.selectedDiet;
+                      await this.clientDietAPI.downloadDietAnalysis(dietId);
+                    }
+                  }}
+                  color="primary"
+                  variant="contained"
+                >
+                  Download Diet Analysis
+                </Button>
+              }
             </span>
             <span
               style={{

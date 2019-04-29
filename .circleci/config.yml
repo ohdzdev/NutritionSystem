@@ -13,7 +13,7 @@ jobs:
           command: ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
       - run:
           name: Deploy To VPS
-          command: ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git fetch --all; git reset --hard origin/develop; chmod 700 ./deploy.sh; ./deploy.sh;"
+          command: ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git fetch --all; git reset --hard origin/develop; cp ../appsettings.json ./zoo_api/lib/DietAnalysisExport/bin/appsettings.json; chmod 700 ./deploy.sh; ./deploy.sh;"
   test:
     docker:
       - image: circleci/node:10.15

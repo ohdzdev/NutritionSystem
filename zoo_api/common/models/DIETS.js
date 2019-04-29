@@ -38,7 +38,7 @@ module.exports = function(Diets) {
             cb(Util.createError('Error making shared temp file'));
           } else {
             const processResult = spawnSync('./ExcelApp', [`${diet.dietId}`, tmpWorkbook], {
-              cwd: './lib/DietAnalysisExport/bin',
+              cwd: './zoo_api/lib/DietAnalysisExport/bin',
             });
             if (!processResult || processResult.status !== 0) {
               cb(Util.createError('Error running export process'));

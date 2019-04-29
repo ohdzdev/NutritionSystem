@@ -41,7 +41,6 @@ module.exports = function(Diets) {
               cwd: './lib/DietAnalysisExport/bin',
             });
             if (!processResult || processResult.status !== 0) {
-              console.log(processResult);
               cb(Util.createError('Error running export process'));
             } else {
               res.download(tmpWorkbook, 'DietDataAnalysis.xlsm');

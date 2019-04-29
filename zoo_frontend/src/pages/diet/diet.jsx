@@ -206,7 +206,6 @@ export default class extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props.account);
 
     let editDisabled = false;
     if (this.props.account && this.props.account.role) {

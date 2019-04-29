@@ -115,7 +115,7 @@ export default class units extends Component {
         });
         res();
       } catch (error) {
-        console.log(error);
+        console.error(error);
         rej();
         return;
       }
@@ -141,7 +141,6 @@ export default class units extends Component {
   })
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <MaterialTable

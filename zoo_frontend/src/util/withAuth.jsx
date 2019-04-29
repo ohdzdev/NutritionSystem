@@ -45,7 +45,6 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
         console.log('redirect to login because user has no session token');
         // redirecting to login because current page does not support unauth users
         redirectTo('/login', { res: ctx.res, status: 302 });
-        console.log('success');
         return { ...pageProps };
       }
 

@@ -53,7 +53,7 @@ export default class extends Component {
         PrepDietsSub: AllFoodPrep.data.dietsSub,
       };
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return {
         error: true,
         FoodPrepTables: [],
@@ -142,7 +142,6 @@ export default class extends Component {
   // For entry in dietsSub where diet_id = dietID
   // food, group_amount
   getPrepFood(dietID) {
-    console.log(dietID);
     const items = this.props.PrepDietsSub.filter(item => item.diet_id === dietID);
     return items;
   }
@@ -207,12 +206,12 @@ export default class extends Component {
             >
               <option value="" />
               {/* value prop is the table_id of FOOD_PREP_TABLES */
-              FoodPrepTables ?
-                FoodPrepTables.map((item) => (
-                  <option value={item.tableId}>{item.description}</option>
-                ))
-                : null
-          }
+                FoodPrepTables ?
+                  FoodPrepTables.map((item) => (
+                    <option value={item.tableId}>{item.description}</option>
+                  ))
+                  : null
+              }
             </NativeSelect>
           </FormControl>
           <Fab

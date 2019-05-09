@@ -4,13 +4,11 @@
 
 ### Introduction
 
-```**this document is a work in process, please be gentle**```
-
-This Node.js application is the main worker between the MySQL database and any application that might need to interface with the Zoo's nutrition data.
+This Node.js application is the main connection between the MySQL database and any application that might need to interface with the Zoo's data. The APIs are generally CRUD geared, but there are a few helpful APIs that we've made for the Nutrition app.
 
 #### How does it work?
 
-As mentioned above, this is a Node.js application using a framework called Loopback made by IBM that serves an Express HTTP server. Loopback has models that are defined and related directly to a table in a MySQL database which Loopback connects to via a mysql connector. For optimal performance, the DB should be in the same network / machine as the API.
+As mentioned above, this is a Node.js application. This Node.js app uses an API framework called Loopback made by IBM that serves an Express HTTP server. Loopback has models that are defined and related directly to a table in a MySQL database which Loopback connects to via a mysql connector. For optimal performance, the DB should be in the same network / machine as the API.
 
 #### Why Loopback? 
 

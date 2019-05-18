@@ -40,7 +40,7 @@ export default class DietPlanChangeDialog extends Component {
           aria-labelledby="confirmation-dialog-title"
           open={this.props.open}
         >
-          <DialogTitle id="confirmation-dialog-title">asdf</DialogTitle>
+          <DialogTitle id="confirmation-dialog-title">Enter Diet Change Reason</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Please enter a reason why the diet was changed.

@@ -7,6 +7,11 @@
       "table": "CASE_NOTES"
     },
     "relations": {
+      "accountCaseNotes": {
+        "model": "Account",
+        "type": "belongsTo",
+        "foreignKey": "userId"
+      },
       "dietCaseNotes": {
         "model": "Diets",
         "type": "belongsTo",
@@ -88,6 +93,21 @@
         "dataLength": 4294967295,
         "dataPrecision": null,
         "dataScale": null,
+        "nullable": "Y"
+      }
+    },
+    "userId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "user_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     }

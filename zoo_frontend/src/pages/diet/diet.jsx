@@ -273,6 +273,14 @@ export default class extends Component {
     }
   }
 
+  getUserEmail = (userId) => {
+    const found = this.props.Users.find((user) => userId === user.id);
+    if (found) {
+      return found.email;
+    }
+    return '';
+  }
+
   grabDietRelatedRecords = async (selected) => {
     if (selected) {
       const { dietId } = selected;
@@ -506,6 +514,7 @@ export default class extends Component {
       const localPayload = { ...payload };
       localPayload.dietId = this.state.selectedDiet.dietId;
       localPayload.caseDate = new Date().toISOString(); // set to now
+      localPayload.userId = this.props.account.id;
 
       this.clientCaseNotesAPI.createCaseNotes(localPayload).then((result) => {
         this.setState((prevState) => ({
@@ -528,6 +537,8 @@ export default class extends Component {
       const localPayload = { ...this.state.selectedCaseNote, ...payload };
       // update the last touched time to now if description is changed
       localPayload.caseDate = new Date().toISOString();
+      localPayload.userId = this.props.account.id;
+
       if (!localPayload.caseNotesId) {
         rej();
         this.notificationBar.current.showNotification('error', 'Error updating prep note, id of prep note is missing');
@@ -1027,38 +1038,51 @@ export default class extends Component {
                 }
 
                 <List className={classes.overflowList}>
-                  {this.state.CaseNotes.map(value => (
-                    <div key={value.caseNotesId}>
-                      <ListItem>
-                        {/* add extra padding around the second action since it's not fully supported */}
-                        <ListItemText
-                          style={{ paddingRight: '32px' }}
-                          secondary={`BCS: ${value.bcs}  |  Date: ${moment(new Date(value.caseDate)).format('MM-DD-YYYY h:mm A')}`}
-                        >
-                          {value.caseNote}
-                        </ListItemText>
-                        <ListItemSecondaryAction>
-                          <IconButton
-                            onClick={() => {
-                              this.setState({ selectedCaseNote: { ...value } });
-                            }}
-                            disabled={this.state.editDisabled}
+                  {this.state.CaseNotes.map(value => {
+                    // helper func
+                    const getChangedByNoteText = () => {
+                      if (value.userId) {
+                        const userEmail = this.getUserEmail(value.userId);
+                        if (userEmail) {
+                          return ` by ${userEmail}`;
+                        }
+                      }
+                      return '';
+                    };
+
+                    return (
+                      <div key={value.caseNotesId}>
+                        <ListItem>
+                          {/* add extra padding around the second action since it's not fully supported */}
+                          <ListItemText
+                            style={{ paddingRight: '32px' }}
+                            secondary={`BCS: ${value.bcs} | ${moment(new Date(value.caseDate)).format('MM-DD-YYYY h:mm A')}${getChangedByNoteText()}`}
                           >
-                            <Edit />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => {
-                              this.handleCaseNoteDelete(value);
-                            }}
-                            disabled={this.state.editDisabled}
-                          >
-                            <Delete />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <Divider light />
-                    </div>
-                  ))}
+                            {value.caseNote}
+                          </ListItemText>
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              onClick={() => {
+                                this.setState({ selectedCaseNote: { ...value } });
+                              }}
+                              disabled={this.state.editDisabled}
+                            >
+                              <Edit />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => {
+                                this.handleCaseNoteDelete(value);
+                              }}
+                              disabled={this.state.editDisabled}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider light />
+                      </div>
+                    );
+                  })}
                 </List>
               </Card>
             </Grid>

@@ -26,11 +26,15 @@ const formikEnhancer = withFormik({
   enableReinitialize: true,
   validationSchema: Yup.object().shape({
     caseNote: Yup.string().required('Note is required'),
-    bcs: Yup.number(),
+    bcs: Yup
+      .number('Score must be a number')
+      .nullable(true)
+      .min(1, 'Must be greater or equal to 1')
+      .max(9, 'Must be less than or equal to 9'),
   }),
   mapPropsToValues: props => ({
     caseNote: props.caseNote ? props.caseNote : '',
-    bcs: props.bcs ? props.bcs : 0,
+    bcs: props.bcs ? props.bcs : null,
     submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
@@ -106,9 +110,9 @@ const Form = props => {
             id="bcs"
             name="bcs"
             type="number"
-            helperText={touched.bcs ? errors.bcs : ''}
+            helperText={touched.bcs ? errors.bcs : 'Blank or enter 1-9'}
             error={touched.bcs && Boolean(errors.bcs)}
-            label="BCS"
+            label="Body Condition Score"
             value={bcs}
             onChange={change.bind(null, 'bcs')}
             variant="outlined"

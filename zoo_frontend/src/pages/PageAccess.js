@@ -37,10 +37,10 @@ export const Admin = {
 
 export const Diet = {
   link: '/diet',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
   edit: {
     link: '/diet/edit',
-    roles: [Roles.ADMIN, Roles.NUTRITIONIST],
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHENPLUS],
   },
   new: {
     link: '/diet/new',
@@ -50,7 +50,7 @@ export const Diet = {
 
 export const Food = {
   link: '/food',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
   edit: {
     link: '/food/edit',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST],
@@ -61,7 +61,7 @@ export const Food = {
   },
   nicknames: {
     link: '/food/nicknames',
-    roles: [Roles.ADMIN, Roles.KITCHEN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+    roles: [Roles.ADMIN, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
   dataSrc: {
     link: '/food/dataSrc',
@@ -79,19 +79,19 @@ export const Food = {
 
 export const Home = {
   link: '/',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR, Roles.KEEPER],
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR, Roles.KEEPER],
 };
 
 export const Profile = {
   link: '/profile',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR, Roles.KEEPER],
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR, Roles.KEEPER],
 };
 
 export const Kitchen = {
   link: '/kitchen',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
   prep: {
     link: '/kitchen/prep',
-    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.SUPERVISOR],
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
   },
 };

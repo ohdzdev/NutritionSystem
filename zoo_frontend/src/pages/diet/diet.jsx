@@ -210,7 +210,7 @@ export default class extends Component {
     let editDisabled = false;
     if (this.props.account && this.props.account.role) {
       const { role } = this.props.account;
-      if (role !== Roles.ADMIN && role !== Roles.NUTRITIONIST) {
+      if (role !== Roles.ADMIN && role !== Roles.NUTRITIONIST && role !== Roles.KITCHENPLUS) {
         editDisabled = true;
       }
     }

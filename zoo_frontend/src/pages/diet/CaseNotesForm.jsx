@@ -27,10 +27,10 @@ const formikEnhancer = withFormik({
   validationSchema: Yup.object().shape({
     caseNote: Yup.string().required('Note is required'),
     bcs: Yup
-      .number()
+      .number('Score must be a number')
       .nullable(true)
-      .min(1)
-      .max(9),
+      .min(1, 'Must be greater or equal to 1')
+      .max(9, 'Must be less than or equal to 9'),
   }),
   mapPropsToValues: props => ({
     caseNote: props.caseNote ? props.caseNote : '',

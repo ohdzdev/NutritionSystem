@@ -55,6 +55,12 @@
       "accessType": "READ",
       "permission": "ALLOW",
       "property": "find"
+    }, {
+      "principalType": "ROLE",
+      "principalId": "kitchen-plus",
+      "accessType": "READ",
+      "permission": "ALLOW",
+      "property": "find"
     },
     {
       "principalType": "ROLE",

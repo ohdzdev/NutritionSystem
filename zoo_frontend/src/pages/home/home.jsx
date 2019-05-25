@@ -23,7 +23,7 @@ class Home extends Component {
 
     if (role === Roles.ADMIN) {
       Router.push(Admin.user.link);
-    } else if (role === Roles.KEEPER || role === Roles.KITCHEN) {
+    } else if (role === Roles.KEEPER || role === Roles.KITCHEN || role === Roles.KITCHENPLUS) {
       Router.push(Kitchen.link);
     } else if (role === Roles.SUPERVISOR) {
       Router.push(Kitchen.link);

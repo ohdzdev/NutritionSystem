@@ -5,7 +5,10 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
 
-import { Button, CircularProgress, TextField } from '@material-ui/core';
+import {
+  Button, CircularProgress, TextField, IconButton, Tooltip,
+} from '@material-ui/core';
+import Message from '@material-ui/icons/Message';
 import { theme } from '../../getPageContext';
 
 /**
@@ -189,6 +192,18 @@ class CurrentDiet extends Component {
         type: 'boolean',
       },
       {
+        title: 'Notes',
+        field: 'lineNotes',
+        sorting: false,
+        render: (rowData) => (
+          <Tooltip title={rowData.lineNotes || '-'} placement="left">
+            <IconButton>
+              <Message />
+            </IconButton>
+          </Tooltip>
+        ),
+      },
+      {
         title: 'Sort',
         field: 'sort',
         defaultSort: 'asc',
@@ -304,7 +319,6 @@ class CurrentDiet extends Component {
                 search: false,
                 emptyRowsWhenPaging: false,
                 addRowPosition: 'first',
-
               }}
             />
             :

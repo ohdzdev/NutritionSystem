@@ -4,8 +4,8 @@
   "description": "this is a stub",
   "main": "ecosystem.config.js",
   "scripts": {
-    "dev": "concurrently \"next zoo_frontend\" \"cd zoo_api && yarn start\" --kill-others",
-    "test": "concurrently \"yarn test:api\" \"yarn test:frontend\"",
+    "dev": "concurrently --prefix-colors \"bgBlue.bold,bgGreen.bold\" --prefix \"[{name}]\" --names \"frontend,api\" \"next zoo_frontend\" \"cd zoo_api && yarn start\" --kill-others",
+    "test": "concurrently --prefix-colors \"bgBlue.bold,bgGreen.bold\" --prefix \"[{name}]\" --names \"front:test,api:test\" \"yarn test:api\" \"yarn test:frontend\"",
     "test:eslint:frontend": "cd zoo_frontend && yarn test:eslint && cd ../",
     "test:eslint:api": "cd zoo_api && yarn test:eslint && cd ../",
     "build:frontend": "cd zoo_frontend && yarn build && cd ../",
@@ -15,24 +15,33 @@
     "test:frontend": "cd zoo_frontend && yarn test && cd ../",
     "powershell:prod": "powershell.exe $env:NODE_ENV='production'",
     "bash:prod": "export NODE_ENV=production",
+    "prepush": "concurrently --prefix-colors \"bgBlue.black.bold,bgGreen.black.bold,bgCyan.black.bold,bgYellow.black.bold\" --prefix \"[{name}]\" --names \"lint:api,lint:front,test:api,test:front\" \"yarn eslint:api\" \"yarn eslint:frontend\" \"yarn test:api\" \"yarn test:frontend\"",
     "docs": "echo \"run this in bash after npm install -g docco: docco zoo_frontend/{**/*,**/**/*,**/**/**/*,**/**/**/**/*,**/**/**/**/**/*,**/**/**/**/**/**/*,**/**/**/**/**/**/**/*}.{jsx,js}\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ColinKrist/OmahaZooNutrition.git"
+    "url": "git+https://github.com/ohdzdev/NutritionSystem.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ColinKrist/OmahaZooNutrition/issues"
+    "url": "https://github.com/Cohdzdev/NutritionSystem/issues"
   },
-  "homepage": "https://github.com/ColinKrist/OmahaZooNutrition#readme",
+  "homepage": "https://github.com/ohdzdev/NutritionSystem#readme",
   "private": true,
   "workspaces": [
     "zoo_frontend",
     "zoo_api"
   ],
   "devDependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "husky": "^2.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn prepush",
+      "post-merge": "yarn",
+      "post-checkout": "yarn"
+    }
   }
 }

@@ -28,13 +28,12 @@ const formikEnhancer = withFormik({
     caseNote: Yup.string().required('Note is required'),
     bcs: Yup
       .number('Score must be a number')
-      .nullable(true)
       .min(1, 'Must be greater or equal to 1')
       .max(9, 'Must be less than or equal to 9'),
   }),
   mapPropsToValues: props => ({
     caseNote: props.caseNote ? props.caseNote : '',
-    bcs: props.bcs ? props.bcs : null,
+    bcs: props.bcs ? props.bcs : '',
     submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
@@ -149,7 +148,7 @@ const Form = props => {
 Form.propTypes = {
   values: PropTypes.shape({
     caseNote: PropTypes.string,
-    bcs: PropTypes.number,
+    bcs: PropTypes.string,
   }),
   errors: PropTypes.object.isRequired,
   touched: PropTypes.object.isRequired,
@@ -165,7 +164,7 @@ Form.propTypes = {
 Form.defaultProps = {
   values: {
     caseNote: '',
-    bcs: 0,
+    bcs: '',
   },
   isSubmitting: false,
   submitButtonText: 'Submit',

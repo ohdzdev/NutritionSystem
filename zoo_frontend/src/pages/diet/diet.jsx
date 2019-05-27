@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { serialize } from 'uri-js';
 
 import Router from 'next/router';
 
 import Button from '@material-ui/core/Button';
-import classNames from 'classnames';
 
 import {
   Typography, Card, Grid, LinearProgress, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Divider,
@@ -30,6 +30,8 @@ import {
   Food,
   Units,
   Users,
+  Roles as RoleAPI,
+  // RoleMappings,
 } from '../../api';
 
 import { Notifications, ConfirmationDialog } from '../../components';
@@ -44,7 +46,8 @@ import CaseNotesForm from './CaseNotesForm';
 import DietChangeCard from './DietChangeCard';
 import DietHistoryTable from './DietHistory';
 import CurrentDietTable from './CurrentDiet';
-
+import DietMenu from './DietMenu';
+import NutritionistDialog from './NutritionistEmailDialog';
 import blankDietPlanJSON from './blankDietPlan.json';
 
 
@@ -63,6 +66,7 @@ export default class extends Component {
     Foods: PropTypes.arrayOf(PropTypes.object).isRequired,
     Units: PropTypes.arrayOf(PropTypes.object).isRequired,
     Users: PropTypes.arrayOf(PropTypes.object).isRequired,
+    Nutritionists: PropTypes.arrayOf(PropTypes.object).isRequired,
     selectedDiet: PropTypes.object,
     new: PropTypes.bool,
 
@@ -107,10 +111,13 @@ export default class extends Component {
     const serverFoodAPI = new Food(authToken);
     const serverUnitsAPI = new Units(authToken);
     const serverUserAPI = new Users(authToken);
+    const serverRolesAPI = new RoleAPI(authToken);
+    // const serverRoleMappingsAPI = new RoleMappings(authToken);
 
     // get base data that we know we will need to load
+    const nutritionFilter = { where: { name: 'nutritionist' } };
 
-    const [AllAnimals, AllDeliveryContainers, AllDiets, AllFoodPrepTables, AllLifeStages, AllSpecies, AllSubenclosures, AllFoods, AllUnits, AllUsers] = await Promise.all(
+    const [AllAnimals, AllDeliveryContainers, AllDiets, AllFoodPrepTables, AllLifeStages, AllSpecies, AllSubenclosures, AllFoods, AllUnits, AllUsers, nutritionistRole] = await Promise.all(
       [
         serverAnimalAPI.getAnimals(),
         serverDeliverContainersAPI.getDeliveryContainers(),
@@ -122,8 +129,27 @@ export default class extends Component {
         serverFoodAPI.getFood(),
         serverUnitsAPI.getUnits(),
         serverUserAPI.getUsers(),
+        serverRolesAPI.getRoles(nutritionFilter),
       ],
     );
+
+    let principals = [];
+    let nutritionists = [];
+    if (nutritionistRole.data) {
+      const filter = {
+        where: {
+          principalType: 'USER',
+        },
+      };
+      principals = await serverRolesAPI.getPrincipals(nutritionistRole.data[0].id, filter);
+
+      const principalFilter = {
+        where: {
+          or: principals.data.map((principal) => ({ id: Number(principal.principalId) })),
+        },
+      };
+      nutritionists = await serverUserAPI.getUsers(principalFilter);
+    }
 
     // if the id of a diet is present, then load its necessary information
     if (query.id) {
@@ -143,6 +169,7 @@ export default class extends Component {
             Foods: AllFoods.data,
             Units: AllUnits.data,
             Users: AllUsers.data,
+            Nutritionists: nutritionists.data,
             serverError: 'Diet in URL could not be found.',
           };
         }
@@ -174,6 +201,7 @@ export default class extends Component {
           Units: AllUnits.data,
           Users: AllUsers.data,
           selectedDiet: matchedDiet,
+          Nutritionists: nutritionists.data,
         };
       }
       return {
@@ -188,6 +216,7 @@ export default class extends Component {
         Units: AllUnits.data,
         Users: AllUsers.data,
         new: true,
+        Nutritionists: nutritionists.data,
       };
     }
     return {
@@ -201,6 +230,7 @@ export default class extends Component {
       Foods: AllFoods.data,
       Units: AllUnits.data,
       Users: AllUsers.data,
+      Nutritionists: nutritionists.data,
     };
   }
 
@@ -254,6 +284,9 @@ export default class extends Component {
 
       // DISABLE EDIT
       editDisabled,
+
+      // email dialog
+      nutritionistDialog: false,
     };
     this.clientDietAPI = new Diets(props.token);
 
@@ -623,6 +656,24 @@ export default class extends Component {
     });
   }
 
+  handleNutritionistSelect(selected) {
+    console.log(selected);
+    if (selected) {
+      this.setState({
+        nutritionistDialog: false,
+      }, () => {
+        // create mail handler here
+        const builtEmailURL = serialize({
+          scheme: 'mailto',
+          to: [selected.email],
+          subject: `Request About Diet: ${this.state.selectedDiet.dietId}`,
+          body: `${selected.firstName},\n\n *Message here*\n\n${window.location.href}\n\n- ${this.props.account.firstName} ${this.props.account.lastName}`,
+        });
+        window.open(builtEmailURL, '_blank'); // new tab
+      });
+    }
+  }
+
   handleNumAnimalsChange(newNumAnimals) {
     return new Promise((resolve) => {
       this.setState(prevState => ({
@@ -789,6 +840,7 @@ export default class extends Component {
   }
 
   render() {
+    console.log(this.props);
     const { classes } = this.props;
 
     return (
@@ -812,38 +864,6 @@ export default class extends Component {
               >
                 Select Diet
               </Button>
-              <Button
-                onClick={() => {
-                  this.setState({
-                    newDietOpen: true,
-                    selectedDiet: null,
-                  }, () => {
-                    const href = '/diet?id=new';
-                    Router.push(href, href, { shallow: true });
-                  });
-                }}
-                color="secondary"
-                variant="outlined"
-                className={classes.newDietButton}
-                disabled={this.state.editDisabled}
-              >
-                New Diet
-              </Button>
-              {this.state.selectedDiet &&
-                <Button
-                  className={classes.newDietButton}
-                  onClick={async () => {
-                    if (this.state.selectedDiet) {
-                      const { dietId } = this.state.selectedDiet;
-                      await this.clientDietAPI.downloadDietAnalysis(dietId);
-                    }
-                  }}
-                  color="primary"
-                  variant="contained"
-                >
-                  Download Diet Analysis
-                </Button>
-              }
             </span>
             <span
               style={{
@@ -853,16 +873,44 @@ export default class extends Component {
                 justifyContent: 'flex-end',
               }}
             >
-              {this.state.selectedDiet && (
-                <Button
-                  onClick={() => this.setState({ dietDeleteDialogOpen: true })}
-                  variant="contained"
-                  className={classNames(classes.newDietButton, classes.deleteDietButton)}
-                  disabled={this.state.editDisabled}
-                >
-                  Delete
-                </Button>
-              )}
+              <DietMenu
+                className={classes.dietActionsMenu}
+                mail={{
+                  enabled: !!this.state.selectedDiet,
+                  handler: () => {
+                    this.setState({
+                      nutritionistDialog: true,
+                    });
+                  },
+                }}
+                downloadDiet={{
+                  enabled: !!this.state.selectedDiet,
+                  handler: async () => {
+                    if (this.state.selectedDiet) {
+                      const { dietId } = this.state.selectedDiet;
+                      await this.clientDietAPI.downloadDietAnalysis(dietId);
+                    }
+                  },
+                }}
+                new={{
+                  enabled: !this.state.editDisabled,
+                  handler: () => {
+                    this.setState({
+                      newDietOpen: true,
+                      selectedDiet: null,
+                    }, () => {
+                      const href = '/diet?id=new';
+                      Router.push(href, href, { shallow: true });
+                    });
+                  },
+                }}
+                delete={{
+                  enabled: (!!this.state.selectedDiet && !this.state.editDisabled),
+                  handler: () => {
+                    this.setState({ dietDeleteDialogOpen: true });
+                  },
+                }}
+              />
             </span>
           </div>
           {(this.state.selectedDiet || this.state.newDietOpen) && (
@@ -1232,6 +1280,16 @@ export default class extends Component {
               });
             });
           }}
+        />
+        <NutritionistDialog
+          open={this.state.nutritionistDialog}
+          nutritionistList={this.props.Nutritionists}
+          onCancel={() => {
+            this.setState({
+              nutritionistDialog: false,
+            });
+          }}
+          onSave={(selected) => this.handleNutritionistSelect(selected)}
         />
       </div>
     );

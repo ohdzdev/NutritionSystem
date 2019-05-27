@@ -26,7 +26,6 @@ export const DisplayFormikState = props => (
 );
 
 const formikEnhancer = withFormik({
-  enableReinitialize: true,
   validationSchema: Yup.object().shape({
     speciesId: Yup.string().required('Species is required'),
     current: Yup.bool(),

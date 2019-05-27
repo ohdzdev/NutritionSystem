@@ -15,9 +15,6 @@ export default (theme) => ({
     margin: theme.spacing.unit,
     marginRight: theme.spacing.unit * 3,
   },
-  menuButton: {
-    marginRight: theme.spacing.unit * 3,
-  },
   card: {
     padding: theme.spacing.unit * 2,
     margin: theme.spacing.unit,
@@ -27,18 +24,7 @@ export default (theme) => ({
     margin: theme.spacing.unit,
     overflow: 'visible',
   },
-  newDietButton: {
-    marginLeft: theme.spacing.unit * 2,
-  },
-  exportDietButton: {
-    marginLeft: theme.spacing.unit * 2,
-  },
-  deleteDietButton: {
-    color: 'white',
-    backgroundColor: '#b71c1c',
-    '&:hover': {
-      backgroundColor: '#e53935',
-    },
+  dietActionsMenu: {
     alignContent: 'flex-end',
   },
   overflowList: {

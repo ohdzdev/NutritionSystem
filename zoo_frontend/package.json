@@ -38,6 +38,7 @@
     "react-virtualized": "^9.21.1",
     "recompose": "^0.30.0",
     "styled-jsx": "^3.2.1",
+    "uri-js": "^4.2.2",
     "yup": "^0.27.0"
   },
   "devDependencies": {

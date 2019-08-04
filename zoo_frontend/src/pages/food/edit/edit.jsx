@@ -67,6 +67,8 @@ export default class extends Component {
     id: PropTypes.string.isRequired,
     foodWeights: PropTypes.arrayOf(PropTypes.object).isRequired,
     allUnits: PropTypes.arrayOf(PropTypes.object).isRequired,
+    budgetCodes: PropTypes.array.isRequired,
+    foodCategories: PropTypes.array.isRequired,
   };
 
   static defaultProps = {

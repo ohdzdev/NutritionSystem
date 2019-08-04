@@ -17,8 +17,6 @@ const sslConfig = require('./ssl-config');
 
 const app = loopback();
 module.exports = app;
-// boot scripts mount components like REST API
-boot(app, __dirname);
 
 app.start = function(httpOnly) {
   if (httpOnly === undefined) {
@@ -47,7 +45,11 @@ app.start = function(httpOnly) {
   return server;
 };
 
-// start the server if `$ node server.js`
-if (require.main === module) {
-  app.start();
-}
+// boot scripts mount components like REST API
+boot(app, __dirname, (err) => {
+  if (err) throw err;
+  // start the server if `$ node server.js`
+  if (require.main === module) {
+    app.start();
+  }
+});

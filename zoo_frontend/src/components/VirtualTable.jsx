@@ -152,6 +152,8 @@ MuiVirtualizedTable.propTypes = {
       cellContentRenderer: PropTypes.func,
       dataKey: PropTypes.string.isRequired,
       width: PropTypes.number.isRequired,
+      numeric: PropTypes.bool.isRequired,
+      disableSort: PropTypes.bool.isRequired,
     }),
   ).isRequired,
   headerHeight: PropTypes.number,

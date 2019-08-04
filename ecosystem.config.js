@@ -19,7 +19,8 @@ module.exports = {
   },
   {
     name: 'zoo_frontend',
-    script: 'node_modules/next/dist/bin/next-start',
+    script: 'start.js',
+    cwd: './zoo_frontend/',
     args: 'zoo_frontend',
     env_production: {
       NODE_ENV: "production",

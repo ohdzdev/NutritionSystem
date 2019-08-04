@@ -116,4 +116,4 @@ DietSelectDialog.defaultProps = {
   defaultDiet: null,
 };
 
-export default withTheme()(DietSelectDialog);
+export default withTheme(DietSelectDialog);

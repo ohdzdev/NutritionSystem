@@ -320,4 +320,4 @@ IntegrationReactSelect.defaultProps = {
   disabled: false,
 };
 
-export default withTheme()(withStyles(styles, { withTheme: true })(IntegrationReactSelect));
+export default withTheme(withStyles(styles, { withTheme: true })(IntegrationReactSelect));

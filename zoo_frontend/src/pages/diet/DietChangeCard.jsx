@@ -5,7 +5,9 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 
 // UI imports
-import { Card, Typography, CardContent, withStyles } from '@material-ui/core';
+import {
+  Card, Typography, CardContent, withStyles,
+} from '@material-ui/core';
 import Person from '@material-ui/icons/Person';
 
 

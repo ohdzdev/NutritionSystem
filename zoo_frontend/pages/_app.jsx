@@ -3,11 +3,11 @@ import App, { Container } from 'next/app';
 import Head from 'next/head';
 import JssProvider from 'react-jss/lib/JssProvider';
 
+import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
 import getPageContext from '../src/getPageContext';
 import AuthProvider, { AuthContext } from '../src/util/AuthProvider';
 import PageLayout from '../src/util/PageLayout';
 
-import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
 
 class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {

@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactToPrint from 'react-to-print';
 
+import {
+  NativeSelect, Input, Button, withStyles,
+} from '@material-ui/core';
 import FoodAPI from '../../api/Food';
 
 import PrepSheetPrintOut from './PrepSheetPrintOut';
 
-import { NativeSelect, Input, Button, withStyles } from '@material-ui/core';
 
 const styles = (theme) => ({
   container: {

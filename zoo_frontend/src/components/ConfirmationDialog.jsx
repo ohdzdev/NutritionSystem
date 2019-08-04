@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DialogTitle, DialogContent, DialogActions, Dialog, Button } from '@material-ui/core';
+import {
+  DialogTitle, DialogContent, DialogActions, Dialog, Button,
+} from '@material-ui/core';
 
 /**
  * custom confirmation dialog that forces user to click cancel or ok

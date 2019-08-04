@@ -3,7 +3,9 @@ import Select from 'react-select';
 import { withTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
-import { withStyles, Typography, NoSsr, TextField, Paper, MenuItem } from '@material-ui/core';
+import {
+  withStyles, Typography, NoSsr, TextField, Paper, MenuItem,
+} from '@material-ui/core';
 
 const styles = theme => ({
   input: {

@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import moment from 'moment';
-import { Typography, Table, TableBody, TableCell, TableRow, withStyles } from '@material-ui/core';
+import {
+  Typography, Table, TableBody, TableCell, TableRow, withStyles,
+} from '@material-ui/core';
 
 const styles = theme => ({
   pageText: {

@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 import NextIcon from '@material-ui/icons/NavigateNext';
 import PrevIcon from '@material-ui/icons/NavigateBefore';
+import {
+  Fab, Input, InputLabel, FormControl, NativeSelect, Paper,
+} from '@material-ui/core';
 import KitchenView from '../../../components/KitchenView';
 
 
@@ -12,7 +15,6 @@ import {
   DeliveryContainers, DietChanges, Diets, FoodPrepTables, PrepNotes, Species,
 } from '../../../api';
 
-import { Fab, Input, InputLabel, FormControl, NativeSelect, Paper } from '@material-ui/core';
 
 export default class extends Component {
   static propTypes = {

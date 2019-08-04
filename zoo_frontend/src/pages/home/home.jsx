@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Router from 'next/router';
+import { CircularProgress as CircProgress } from '@material-ui/core';
 import Roles from '../../static/Roles';
 
 
 import { Admin, Kitchen } from '../PageAccess';
-
-import { CircularProgress as CircProgress } from '@material-ui/core';
 
 
 class Home extends Component {

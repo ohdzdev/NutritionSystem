@@ -10,7 +10,9 @@ import Close from '@material-ui/icons/Close';
 
 import { green, amber } from '@material-ui/core/colors';
 
-import { Snackbar, IconButton, SnackbarContent, withStyles } from '@material-ui/core';
+import {
+  Snackbar, IconButton, SnackbarContent, withStyles,
+} from '@material-ui/core';
 
 const icons = {
   error: ErrorIcon,

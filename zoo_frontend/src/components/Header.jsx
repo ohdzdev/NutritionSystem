@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
-import { Button, withStyles, AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+import {
+  Button, withStyles, AppBar, Toolbar, Typography, IconButton,
+} from '@material-ui/core';
 import Link from 'next/link';
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from 'classnames';

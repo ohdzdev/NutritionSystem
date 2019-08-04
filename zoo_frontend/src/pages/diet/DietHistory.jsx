@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 import moment from 'moment';
 
-import { theme } from '../../getPageContext';
 import { MuiThemeProvider } from '@material-ui/core';
+import { theme } from '../../getPageContext';
 
 
 class DietHistory extends Component {

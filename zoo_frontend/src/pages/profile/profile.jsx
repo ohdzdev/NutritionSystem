@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import UsersApi from '../../api/Users';
-
-import Notifications from '../../components/Notifications';
-
 import {
   Button,
   Paper,
@@ -16,6 +12,10 @@ import {
   InputLabel,
   CircularProgress,
 } from '@material-ui/core';
+import UsersApi from '../../api/Users';
+
+import Notifications from '../../components/Notifications';
+
 
 class Profile extends Component {
   static propTypes = {

@@ -6,10 +6,10 @@ import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
 
 import moment from 'moment';
 import MomentUtils from '@date-io/moment';
+import { Button } from '@material-ui/core';
 import PrintPrepSheets from '../../components/PrintPrepSheets';
 
 import { Kitchen } from '../PageAccess';
-import { Button } from '@material-ui/core';
 
 class KitchenHome extends Component {
   static propTypes = {

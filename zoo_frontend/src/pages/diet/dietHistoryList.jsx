@@ -6,8 +6,6 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-import { theme } from '../../getPageContext';
-
 import {
   withStyles,
   ListSubheader,
@@ -17,6 +15,8 @@ import {
   ListItemText,
   Collapse,
 } from '@material-ui/core';
+import { theme } from '../../getPageContext';
+
 
 const styles = t => ({
   root: {

@@ -1,4 +1,5 @@
 import { compose } from 'recompose';
+import { withStyles } from '@material-ui/core';
 import withAuth from '../../../util/withAuth';
 
 import { Admin } from '../../PageAccess';
@@ -6,7 +7,7 @@ import { Admin } from '../../PageAccess';
 import page from './groupDiets';
 
 import styles from './groupDiets.styles';
-import { withStyles } from '@material-ui/core';
+
 
 export default compose(
   withAuth(Admin.groupDiets.roles),

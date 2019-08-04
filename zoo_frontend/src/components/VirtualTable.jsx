@@ -9,7 +9,9 @@ import {
   AutoSizer, Column, SortDirection, Table,
 } from 'react-virtualized';
 
-import { withStyles, TableCell, TableSortLabel, Paper } from '@material-ui/core';
+import {
+  withStyles, TableCell, TableSortLabel, Paper,
+} from '@material-ui/core';
 
 const styles = theme => ({
   table: {

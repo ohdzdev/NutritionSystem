@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 
-import LocalStorage from '../../static/LocalStorage';
-
-import Notifications from '../../components/Notifications';
-
 import {
   Button,
   CssBaseline,
@@ -18,6 +14,10 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import LocalStorage from '../../static/LocalStorage';
+
+import Notifications from '../../components/Notifications';
+
 
 class Login extends Component {
   static propTypes = {

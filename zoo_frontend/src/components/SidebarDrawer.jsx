@@ -28,6 +28,17 @@ import {
 
 import Link from 'next/link';
 
+import {
+  withStyles,
+  Drawer,
+  List,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+} from '@material-ui/core';
 import { AuthContext } from '../util/AuthProvider';
 
 import {
@@ -40,17 +51,6 @@ import {
   Kitchen,
 } from '../pages/PageAccess';
 
-import {
-  withStyles,
-  Drawer,
-  List,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
-} from '@material-ui/core';
 
 const drawerWidth = 240;
 

@@ -7,7 +7,9 @@ import Download from '@material-ui/icons/CloudDownload';
 import Mail from '@material-ui/icons/Mail';
 import Delete from '@material-ui/icons/Delete';
 
-import { Button, Menu, MenuItem, ListItemIcon, withStyles } from '@material-ui/core';
+import {
+  Button, Menu, MenuItem, ListItemIcon, withStyles,
+} from '@material-ui/core';
 
 const styles = theme => ({
   rightIcon: {

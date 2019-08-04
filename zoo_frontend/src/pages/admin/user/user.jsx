@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 
+import {
+  FormControl, Input, InputLabel, Button, Dialog, Typography, FormHelperText,
+} from '@material-ui/core';
 import ErrorPage from '../../../components/ErrorPage';
 import Notifications from '../../../components/Notifications';
 
@@ -10,7 +13,6 @@ import DepartmentAPI from '../../../api/Departments';
 import RolesAPI from '../../../api/Roles';
 import RoleMappingsAPI from '../../../api/RoleMappings';
 
-import { FormControl, Input, InputLabel, Button, Dialog, Typography, FormHelperText } from '@material-ui/core';
 
 const generateStateData = (users, locations, roles, roleMappings) => {
   let locationLookupIds = {};

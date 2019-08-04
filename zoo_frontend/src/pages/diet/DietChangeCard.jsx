@@ -57,7 +57,7 @@ const DietChangeCard = (props) => {
           <Typography variant="h6" className={props.classes.reasonTitle}>
           Reason
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body2">
             {props.dietChangeReason}
           </Typography>
           <div className={props.classes.changedByDiv}>

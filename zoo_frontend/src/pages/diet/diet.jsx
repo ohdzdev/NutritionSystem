@@ -862,7 +862,7 @@ export default class extends Component {
         <Card className={classes.card}>
           <div style={{ display: 'flex' }}>
             <span style={{ alignItems: 'center', display: 'flex' }}>
-              <Typography inline variant="h3" style={{ paddingRight: this.state.selectedDiet ? '12px' : '0px' }} color="textSecondary">
+              <Typography inline="true" variant="h3" style={{ paddingRight: this.state.selectedDiet ? '12px' : '0px' }} color="textSecondary">
                 {this.state.selectedDiet ? this.state.selectedDiet.dietId : ''}
               </Typography>
               <Button

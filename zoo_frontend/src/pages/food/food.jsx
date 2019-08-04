@@ -107,13 +107,13 @@ class FoodPage extends Component {
         case 'budgetId':
           return (
             <Grid item xs={12} sm={6} lg={3} key={key}>
-              <Card className={this.props.classes.paper}><Typography variant="body1" inline>{camelToNorm(key)}: </Typography><Typography inline variant="body1" color="primary">{String(relatedRecords[key])}</Typography></Card>
+              <Card className={this.props.classes.paper}><Typography variant="body2" inline="true">{camelToNorm(key)}: </Typography><Typography inline="true" variant="body2" color="primary">{String(relatedRecords[key])}</Typography></Card>
             </Grid>
           );
         default:
           return (
             <Grid item xs={12} sm={6} lg={3} key={key}>
-              <Card className={this.props.classes.paper}><Typography variant="body1" inline>{camelToNorm(key)}: </Typography><Typography inline variant="body1" color="primary">{String(copy[key])}</Typography></Card>
+              <Card className={this.props.classes.paper}><Typography variant="body2" inline="true">{camelToNorm(key)}: </Typography><Typography inline="true" variant="body2" color="primary">{String(copy[key])}</Typography></Card>
             </Grid>
           );
       }
@@ -125,13 +125,13 @@ class FoodPage extends Component {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>
               <Typography inline variant="h5">{rowData.food}</Typography>
-              <Typography inline variant="subtitle1" color="textSecondary"> {rowData.ohdzName} </Typography>
+              <Typography inline variant="body1" color="textSecondary"> {rowData.ohdzName} </Typography>
               <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <Typography inline variant="subtitle1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Active: {rowData.active === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
-                <Typography inline variant="subtitle1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Dry: {rowData.dry === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
-                <Typography inline variant="subtitle1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Meat: {rowData.meat === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
-                <Typography inline variant="subtitle1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Pre Chop: {rowData.preChop === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
-                <Typography inline variant="subtitle1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Pre Bag: {rowData.preBag === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
+                <Typography inline variant="body1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Active: {rowData.active === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
+                <Typography inline variant="body1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Dry: {rowData.dry === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
+                <Typography inline variant="body1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Meat: {rowData.meat === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
+                <Typography inline variant="body1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Pre Chop: {rowData.preChop === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
+                <Typography inline variant="body1" color="textSecondary" style={{ marginLeft: '5px', marginRight: '5px' }}>Pre Bag: {rowData.preBag === 1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}</Typography>
               </div>
             </div>
             <div style={{ flexGrow: 1 }} />
@@ -147,7 +147,7 @@ class FoodPage extends Component {
             </div>
           </div>
           <Divider variant="middle" style={{ margin: '10px' }} />
-          <Grid container spacing={16}>
+          <Grid container spacing={2}>
             {data}
           </Grid>
         </Paper>

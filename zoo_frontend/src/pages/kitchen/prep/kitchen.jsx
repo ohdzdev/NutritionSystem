@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Fab from '@material-ui/core/Fab';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import NextIcon from '@material-ui/icons/NavigateNext';
 import PrevIcon from '@material-ui/icons/NavigateBefore';
-import Paper from '@material-ui/core/Paper';
 import KitchenView from '../../../components/KitchenView';
 
 
@@ -17,6 +11,8 @@ import KitchenView from '../../../components/KitchenView';
 import {
   DeliveryContainers, DietChanges, Diets, FoodPrepTables, PrepNotes, Species,
 } from '../../../api';
+
+import { Fab, Input, InputLabel, FormControl, NativeSelect, Paper } from '@material-ui/core';
 
 export default class extends Component {
   static propTypes = {

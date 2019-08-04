@@ -5,13 +5,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
 import {
   AutoSizer, Column, SortDirection, Table,
 } from 'react-virtualized';
+
+import { withStyles, TableCell, TableSortLabel, Paper } from '@material-ui/core';
 
 const styles = theme => ({
   table: {

@@ -1,8 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import React, { Fragment } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import { Grid, LinearProgress } from '@material-ui/core';
+import { Grid, LinearProgress, Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';

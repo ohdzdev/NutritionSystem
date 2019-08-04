@@ -2,14 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import Typography from '@material-ui/core/Typography';
-import FormHelperText from '@material-ui/core/FormHelperText';
-
 import ErrorPage from '../../../components/ErrorPage';
 import Notifications from '../../../components/Notifications';
 
@@ -17,6 +9,8 @@ import UsersAPI from '../../../api/Users';
 import DepartmentAPI from '../../../api/Departments';
 import RolesAPI from '../../../api/Roles';
 import RoleMappingsAPI from '../../../api/RoleMappings';
+
+import { FormControl, Input, InputLabel, Button, Dialog, Typography, FormHelperText } from '@material-ui/core';
 
 const generateStateData = (users, locations, roles, roleMappings) => {
   let locationLookupIds = {};

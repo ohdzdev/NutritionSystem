@@ -6,7 +6,7 @@ import { Food } from '../../PageAccess';
 import page from './nutrDef';
 
 import styles from './nutrDef.styles';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 
 export default compose(
   withAuth(Food.roles),

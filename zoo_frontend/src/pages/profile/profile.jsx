@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import UsersApi from '../../api/Users';
 
 import Notifications from '../../components/Notifications';
+
+import {
+  Button,
+  Paper,
+  Typography,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+  CircularProgress,
+} from '@material-ui/core';
 
 class Profile extends Component {
   static propTypes = {

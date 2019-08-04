@@ -1,18 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import History from '@material-ui/icons/History';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import { theme } from '../../getPageContext';
+
+import {
+  withStyles,
+  ListSubheader,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+} from '@material-ui/core';
 
 const styles = t => ({
   root: {

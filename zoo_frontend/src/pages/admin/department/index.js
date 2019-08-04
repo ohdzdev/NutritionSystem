@@ -6,7 +6,7 @@ import { Admin } from '../../PageAccess';
 import page from './department';
 
 import styles from './department.styles';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 
 export default compose(
   withAuth(Admin.department.roles),

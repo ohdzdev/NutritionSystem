@@ -6,7 +6,7 @@ import { Kitchen } from '../PageAccess';
 import page from './kitchenHome';
 
 import styles from './kitchenHome.styles';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 
 export default compose(
   withAuth(Kitchen.roles),

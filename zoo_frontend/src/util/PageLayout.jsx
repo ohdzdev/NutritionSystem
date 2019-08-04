@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-
 import Header from '../components/Header';
+
 import Drawer from '../components/SidebarDrawer';
+import { withStyles } from '@material-ui/core';
 
 const drawerWidth = 240;
 

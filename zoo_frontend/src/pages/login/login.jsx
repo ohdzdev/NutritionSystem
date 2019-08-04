@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 import LocalStorage from '../../static/LocalStorage';
 
 import Notifications from '../../components/Notifications';
+
+import {
+  Button,
+  CssBaseline,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Checkbox,
+  Input,
+  InputLabel,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 
 class Login extends Component {
   static propTypes = {

@@ -1,16 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
-
 import AdminIcon from '@material-ui/icons/Security';
 import AssIcon from '@material-ui/icons/Assignment';
 import BookIcon from '@material-ui/icons/Book';
@@ -49,6 +39,18 @@ import {
   Profile,
   Kitchen,
 } from '../pages/PageAccess';
+
+import {
+  withStyles,
+  Drawer,
+  List,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+} from '@material-ui/core';
 
 const drawerWidth = 240;
 

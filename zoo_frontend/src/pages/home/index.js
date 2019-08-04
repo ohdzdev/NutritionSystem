@@ -6,7 +6,7 @@ import { Home } from '../PageAccess';
 import page from './home';
 
 import styles from './home.styles';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 
 export default compose(
   withAuth(Home.roles),

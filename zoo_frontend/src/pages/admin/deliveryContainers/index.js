@@ -6,7 +6,7 @@ import { Admin } from '../../PageAccess';
 import page from './deliveryContainers';
 
 import styles from './deliveryContainers.styles';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 
 export default compose(
   withAuth(Admin.deliveryContainers.roles),

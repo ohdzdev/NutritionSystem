@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { withStyles, withTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import NoSsr from '@material-ui/core/NoSsr';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
+import { withTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+
+import { withStyles, Typography, NoSsr, TextField, Paper, MenuItem } from '@material-ui/core';
 
 const styles = theme => ({
   input: {

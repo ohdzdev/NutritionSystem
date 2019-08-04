@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import MaterialTable from 'material-table';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-
 import PropTypes from 'prop-types';
 
 import moment from 'moment';
+
 import { theme } from '../../getPageContext';
+import { MuiThemeProvider } from '@material-ui/core';
 
 
 class DietHistory extends Component {

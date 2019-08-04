@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import MaterialTable from 'material-table';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-
 import PropTypes from 'prop-types';
 
-import {
-  Button, CircularProgress, TextField, IconButton, Tooltip,
-} from '@material-ui/core';
+import { Button, CircularProgress, TextField, IconButton, Tooltip, MuiThemeProvider } from '@material-ui/core';
 import Message from '@material-ui/icons/Message';
 import { theme } from '../../getPageContext';
 

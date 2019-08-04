@@ -1,16 +1,13 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import AddBox from '@material-ui/icons/AddBox';
 import Download from '@material-ui/icons/CloudDownload';
 import Mail from '@material-ui/icons/Mail';
 import Delete from '@material-ui/icons/Delete';
+
+import { Button, Menu, MenuItem, ListItemIcon, withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   rightIcon: {

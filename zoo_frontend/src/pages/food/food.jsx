@@ -5,11 +5,7 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import Router from 'next/router';
 
-// material
-import Typography from '@material-ui/core/Typography';
-import {
-  Button, Grid, Paper, Divider, Card,
-} from '@material-ui/core';
+import { Button, Grid, Paper, Divider, Card, Typography } from '@material-ui/core';
 
 // material plugins
 import MaterialTable from 'material-table';

@@ -1,13 +1,13 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import Head from 'next/head';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 
 import getPageContext from '../src/getPageContext';
 import AuthProvider, { AuthContext } from '../src/util/AuthProvider';
 import PageLayout from '../src/util/PageLayout';
+
+import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
 
 class MyApp extends App {
   static async getInitialProps({ ctx, Component }) {

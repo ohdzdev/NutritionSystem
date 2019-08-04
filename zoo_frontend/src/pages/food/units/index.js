@@ -6,7 +6,7 @@ import { Food } from '../../PageAccess';
 import page from './units';
 
 import styles from './units.styles';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 
 export default compose(
   withAuth(Food.units.roles),

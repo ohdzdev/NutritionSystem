@@ -24,7 +24,7 @@ const icons = {
 const styles = theme => ({
   icon: {
     opacity: 0.9,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     fontSize: 20,
   },
   success: {

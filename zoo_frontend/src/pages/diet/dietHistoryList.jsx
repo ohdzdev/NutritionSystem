@@ -18,18 +18,18 @@ const styles = t => ({
   root: {
     backgroundColor: t.palette.background.paper,
     borderColor: t.palette.primary.main,
-    borderWidth: t.spacing.unit / 2,
+    borderWidth: t.spacing(0.5),
     borderStyle: 'solid',
     overflow: 'auto',
     maxHeight: 400, // change this for height of list
-    borderRadius: `${t.spacing.unit / 2}px 0px 0px 0px`,
+    borderRadius: `${t.spacing(0.5)}px 0px 0px 0px`,
   },
   ListSubheader: {
     backgroundColor: t.palette.primary.main,
     color: '#FFF',
   },
   nested: {
-    paddingLeft: t.spacing.unit * 2,
+    paddingLeft: t.spacing(2),
   },
 });
 
@@ -52,8 +52,8 @@ class NestedList extends React.Component {
         overrides: {
           MuiListItem: {
             gutters: {
-              paddingLeft: theme.spacing.unit,
-              paddingRight: theme.spacing.unit / 2,
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(0.5),
             },
           },
           MuiListItemIcon: {
@@ -63,8 +63,8 @@ class NestedList extends React.Component {
           },
           MuiListItemText: {
             root: {
-              paddingLeft: theme.spacing.unit,
-              paddingRight: theme.spacing.unit,
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
             },
           },
         },

@@ -1,32 +1,31 @@
 export default (theme) => ({
   root: {
-    marginLeft: theme.spacing.unit * 4,
-    marginRight: theme.spacing.unit * 4,
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
   },
   row: {
     display: 'flex',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   column: {
     flex: '100%',
   },
   button: {
-    margin: theme.spacing.unit,
-    marginRight: theme.spacing.unit * 3,
+    margin: theme.spacing(1),
+    marginRight: theme.spacing(3),
   },
   menuButton: {
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing(3),
   },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
   faIcon: {
     fontSize: 18,
-    // padding if needed (e.g., theme.spacing.unit * 2)
-    margin: theme.spacing.unit * 0.5,
+    margin: theme.spacing(0.5),
     // margin if needed
   },
   activeIcon: {

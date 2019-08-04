@@ -68,7 +68,7 @@ const styles = theme => ({
     justifyContent: 'flex-end',
   },
   nested: {
-    paddingLeft: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing(4),
   },
 });
 

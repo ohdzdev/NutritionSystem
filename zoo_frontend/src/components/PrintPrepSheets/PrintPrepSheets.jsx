@@ -16,10 +16,10 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
   },
   printButton: {
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
   },
 });
 

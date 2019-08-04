@@ -12,7 +12,7 @@ import Person from '@material-ui/icons/Person';
 
 const styles = (theme) => ({
   card: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
   reasonTitle: {
     color: theme.palette.primary.main,
@@ -26,7 +26,7 @@ const styles = (theme) => ({
     fontSize: '20px',
   },
   icon: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     fontSize: 20,
   },
   changedByText: {

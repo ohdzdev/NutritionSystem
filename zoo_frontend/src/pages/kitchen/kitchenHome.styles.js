@@ -1,24 +1,24 @@
 export default (theme) => ({
   root: {
-    marginLeft: theme.spacing.unit * 4,
-    marginRight: theme.spacing.unit * 4,
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   row: {
     display: 'flex',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   item: {
-    marginTop: theme.spacing.unit * 8,
+    marginTop: theme.spacing(8),
   },
   button: {
-    margin: theme.spacing.unit,
-    marginRight: theme.spacing.unit * 3,
+    margin: theme.spacing(1),
+    marginRight: theme.spacing(3),
   },
   menuButton: {
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing(3),
   },
 });

@@ -1,27 +1,27 @@
 export default (theme) => ({
   root: {
-    marginLeft: theme.spacing.unit * 4,
-    marginRight: theme.spacing.unit * 4,
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
   },
   row: {
     display: 'flex',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   column: {
     flex: '100%',
   },
   button: {
-    margin: theme.spacing.unit,
-    marginRight: theme.spacing.unit * 3,
+    margin: theme.spacing(1),
+    marginRight: theme.spacing(3),
   },
   card: {
-    padding: theme.spacing.unit * 2,
-    margin: theme.spacing.unit,
+    padding: theme.spacing(2),
+    margin: theme.spacing(1),
     overflow: 'visible',
   },
   dietPlanCard: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     overflow: 'visible',
   },
   dietActionsMenu: {

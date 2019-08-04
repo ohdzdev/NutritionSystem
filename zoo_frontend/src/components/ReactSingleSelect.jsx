@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 const styles = theme => ({
   input: {
     display: 'flex',
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
   },
   valueContainer: {
     display: 'flex',
@@ -21,7 +21,7 @@ const styles = theme => ({
     overflow: 'hidden',
   },
   noOptionsMessage: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
   },
   singleValue: {
     fontSize: 16,
@@ -34,7 +34,7 @@ const styles = theme => ({
   paper: {
     position: 'absolute',
     zIndex: 999,
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     left: 0,
     right: 0,
   },

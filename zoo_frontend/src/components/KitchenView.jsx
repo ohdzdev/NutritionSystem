@@ -12,14 +12,14 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
   pageText: {
     textAlign: 'right',
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
   },
   topMargin: {
-    marginTop: theme.spacing.unit * 7,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(7),
+    marginBottom: theme.spacing(1),
   },
   bottomMargin: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
   },
   container: {
     display: 'flex',
@@ -27,10 +27,10 @@ const styles = theme => ({
   },
   leftContainer: {
     flex: 1,
-    paddingRight: theme.spacing.unit * 3,
+    paddingRight: theme.spacing(3),
   },
   table: {
-    marginTop: theme.spacing.unit * 9,
+    marginTop: theme.spacing(9),
   },
 });
 

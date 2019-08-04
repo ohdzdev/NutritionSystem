@@ -1,13 +1,13 @@
 export default (theme) => ({
   container: {
-    margin: theme.spacing.unit * 3,
+    margin: theme.spacing(3),
   },
   paper: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
   },
   divider: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   formContainer: {
     display: 'flex',
@@ -21,7 +21,7 @@ export default (theme) => ({
   },
   wrapper: {
     position: 'relative',
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
   },
   buttonProgress: {
     color: theme.palette.primary.main,

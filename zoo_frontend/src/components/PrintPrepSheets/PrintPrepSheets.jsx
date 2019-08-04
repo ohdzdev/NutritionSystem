@@ -5,11 +5,11 @@ import ReactToPrint from 'react-to-print';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
-import withStyles from '@material-ui/core/styles/withStyles';
-
 import FoodAPI from '../../api/Food';
 
 import PrepSheetPrintOut from './PrepSheetPrintOut';
+
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = (theme) => ({
   container: {

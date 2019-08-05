@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import propTypes from 'prop-types';
 
 import {
@@ -18,17 +18,13 @@ const applyCellHighlightIfSelected = (data, selected, rowSelected, selectedStyle
   return null;
 };
 
-const DietSelectDialog = (props) => {
+const DietSelectDialog = ({ onSelect, ...props }) => {
   // state
   const [selected, setSelected] = useState(props.defaultDiet);
 
-  const handleDialogEvent = (cancelled) => {
-    if (cancelled) {
-      props.onCancel();
-    } else {
-      props.onSave(selected);
-    }
-  };
+  const handleSelect = useCallback(() => {
+    onSelect(selected);
+  }, [onSelect, selected]);
 
   const speciesLookup = {};
   props.species.slice(0).reduce((acc, species) => {
@@ -65,7 +61,7 @@ const DietSelectDialog = (props) => {
       <Dialog
         open={props.open}
         maxWidth={false}
-        onClose={() => handleDialogEvent(true)}
+        onClose={props.onCancel}
       >
         <DialogTitle>
           Select Diet
@@ -88,11 +84,11 @@ const DietSelectDialog = (props) => {
 
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleDialogEvent(true)} color="primary">
+          <Button onClick={props.onCancel} color="primary">
               Cancel
           </Button>
-          <Button onClick={() => handleDialogEvent(false)} color="primary" disabled={selected === null || (props.defaultDiet && selected && props.defaultDiet.dietId === selected.dietId)}>
-              Save
+          <Button onClick={handleSelect} color="primary" disabled={selected === null || (props.defaultDiet && selected && props.defaultDiet.dietId === selected.dietId)}>
+              Select
           </Button>
         </DialogActions>
       </Dialog>
@@ -108,7 +104,7 @@ DietSelectDialog.propTypes = {
   species: propTypes.arrayOf(propTypes.object).isRequired,
   defaultDiet: propTypes.object,
   onCancel: propTypes.func.isRequired,
-  onSave: propTypes.func.isRequired,
+  onSelect: propTypes.func.isRequired,
   theme: propTypes.object.isRequired,
 };
 

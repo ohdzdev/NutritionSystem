@@ -23,6 +23,7 @@ import DietIcon from '@material-ui/icons/FormatListBulleted';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import FoodIcon from '@material-ui/icons/Restaurant';
+import FoodPrepTableIcon from '@material-ui/icons/TableChart';
 import HomeIcon from '@material-ui/icons/Home';
 import KitchenIcon from '@material-ui/icons/Kitchen';
 import ProfileIcon from '@material-ui/icons/AccountCircle';
@@ -159,6 +160,14 @@ const SidebarDrawer = (props) => {
                           <ListItem button className={classes.nested}>
                             <ListItemIcon><BookIcon /></ListItemIcon>
                             <ListItemText inset primary="References" />
+                          </ListItem>
+                        </Link>
+                      }
+                      {hasAccess(role, Food.prepTables.roles) &&
+                        <Link href={Food.prepTables.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon><FoodPrepTableIcon /></ListItemIcon>
+                            <ListItemText inset primary="Food Prep Tables" />
                           </ListItem>
                         </Link>
                       }

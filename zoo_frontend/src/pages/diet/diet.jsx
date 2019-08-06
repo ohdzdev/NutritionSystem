@@ -942,7 +942,7 @@ export default class extends Component {
           deliveryContainers={this.props.DeliveryContainers}
           species={this.props.Species}
           onCancel={() => this.setState({ dietSelectDialogOpen: false })}
-          onSave={(diet) => this.setState({
+          onSelect={(diet) => this.setState({
             selectedDiet: diet,
             numAnimals: diet.numAnimals,
             dietSelectDialogOpen: false,

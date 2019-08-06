@@ -67,6 +67,10 @@ export const Food = {
     link: '/food/dataSrc',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST],
   },
+  prepTables: {
+    link: '/food/prepTables',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST],
+  },
   nutrDef: {
     link: '/food/nutrDef',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST],

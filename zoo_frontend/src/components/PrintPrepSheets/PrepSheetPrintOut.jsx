@@ -5,8 +5,8 @@ import { Typography } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 
 // This component must be a class as react-to-print requires a reference to it
+// eslint-disable-next-line react/prefer-stateless-function
 class PrepSheetPrintOut extends Component {
-  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     date: PropTypes.object.isRequired,
     prepSheetData: PropTypes.arrayOf(PropTypes.object).isRequired,

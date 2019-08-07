@@ -57,6 +57,7 @@ import DietHistoryTable from './DietHistory';
 import CurrentDietTable from './CurrentDiet';
 import DietMenu from './DietMenu';
 import NutritionistDialog from './NutritionistEmailDialog';
+
 import blankDietPlanJSON from './blankDietPlan.json';
 
 import Roles from '../../static/Roles';
@@ -126,7 +127,6 @@ export default class extends Component {
     const nutritionFilter = { where: { name: 'nutritionist' } };
 
     const [
-      AllAnimals,
       AllDeliveryContainers,
       AllDiets,
       AllFoodPrepTables,
@@ -138,7 +138,6 @@ export default class extends Component {
       AllUsers,
       nutritionistRole,
     ] = await Promise.all([
-      serverAnimalAPI.getAnimals(),
       serverDeliverContainersAPI.getDeliveryContainers(),
       serverDietsAPI.getDiets(),
       serverFoodPrepTablesAPI.getFoodPrepTables(),
@@ -177,7 +176,7 @@ export default class extends Component {
 
         if (!matchedDiet) {
           return {
-            Animals: AllAnimals.data,
+            Animals: [],
             DeliveryContainers: AllDeliveryContainers.data,
             Diets: AllDiets.data,
             FoodPrepTables: AllFoodPrepTables.data,
@@ -194,12 +193,14 @@ export default class extends Component {
         const serverMatchedDietQuery = { where: { dietId } };
 
         const [
+          matchedAnimals,
           matchedCaseNotes,
           matchedDietChanges,
           matchedDietHistory,
           matchedDietPlans,
           matchedPrepNotes,
         ] = await Promise.all([
+          serverAnimalAPI.getAnimals(serverMatchedDietQuery),
           serverCaseNotesAPI.getCaseNotes(serverMatchedDietQuery),
           serverDietChangesAPI.getDietChanges(serverMatchedDietQuery),
           serverDietHistoryAPI.getDietHistories(serverMatchedDietQuery),
@@ -208,7 +209,7 @@ export default class extends Component {
         ]);
 
         return {
-          Animals: AllAnimals.data,
+          Animals: matchedAnimals.data,
           CaseNotes: matchedCaseNotes.data,
           DeliveryContainers: AllDeliveryContainers.data,
           DietChanges: matchedDietChanges.data,
@@ -229,7 +230,7 @@ export default class extends Component {
         };
       }
       return {
-        Animals: AllAnimals.data,
+        Animals: [],
         DeliveryContainers: AllDeliveryContainers.data,
         Diets: AllDiets.data,
         FoodPrepTables: AllFoodPrepTables.data,
@@ -244,7 +245,7 @@ export default class extends Component {
       };
     }
     return {
-      Animals: AllAnimals.data,
+      Animals: [],
       DeliveryContainers: AllDeliveryContainers.data,
       Diets: AllDiets.data,
       FoodPrepTables: AllFoodPrepTables.data,
@@ -333,6 +334,7 @@ export default class extends Component {
     this.notificationBar = React.createRef();
     this.currentDietRef = React.createRef();
 
+    this.clientAnimalAPI = new Animals(props.token);
     this.clientCaseNotesAPI = new CaseNotes(props.token);
     this.clientDietChangesAPI = new DietChanges(props.token);
     this.clientDietHistoryAPI = new DietHistory(props.token);
@@ -363,12 +365,14 @@ export default class extends Component {
       const serverMatchedDietQuery = { where: { dietId } };
 
       const [
+        matchedAnimals,
         matchedCaseNotes,
         matchedDietChanges,
         matchedDietHistory,
         matchedDietPlans,
         matchedPrepNotes,
       ] = await Promise.all([
+        this.clientAnimalAPI.getAnimals(serverMatchedDietQuery),
         this.clientCaseNotesAPI.getCaseNotes(serverMatchedDietQuery),
         this.clientDietChangesAPI.getDietChanges(serverMatchedDietQuery),
         this.clientDietHistoryAPI.getDietHistories(serverMatchedDietQuery),
@@ -376,6 +380,7 @@ export default class extends Component {
         this.clientPrepNotesAPI.getPrepNotes(serverMatchedDietQuery),
       ]);
       return Promise.resolve({
+        matchedAnimals: matchedAnimals.data,
         matchedCaseNotes: matchedCaseNotes.data,
         matchedDietChanges: matchedDietChanges.data,
         matchedDietHistory: matchedDietHistory.data,
@@ -1164,6 +1169,7 @@ export default class extends Component {
                     (results) => {
                       this.setState({
                         loading: false,
+                        Animals: results.matchedAnimals || [],
                         CaseNotes: results.matchedCaseNotes || [],
                         DietChanges: results.matchedDietChanges || [],
                         DietHistory: results.matchedDietHistory || [],

@@ -205,7 +205,7 @@ export default class extends Component {
               {/* value prop is the table_id of FOOD_PREP_TABLES */
               FoodPrepTables
                 ? FoodPrepTables.map((item) => (
-                    <option value={item.tableId}>{item.description}</option>
+                  <option value={item.tableId}>{item.description}</option>
                   ))
                 : null}
             </NativeSelect>

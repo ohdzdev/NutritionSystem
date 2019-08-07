@@ -145,6 +145,7 @@ export default class extends Component {
     super(props);
     const {
       // remove things we don't want passed to state here
+      /* eslint-disable */
       api,
       account,
       router,
@@ -153,7 +154,8 @@ export default class extends Component {
       budgetCodes,
       foodCategories,
       allUnits,
-      ...rest // eslint-disable-line react/prop-types
+      ...rest
+      /* eslint-enable */
     } = props;
 
     this.state = {

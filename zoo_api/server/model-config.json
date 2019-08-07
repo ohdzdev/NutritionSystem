@@ -20,8 +20,7 @@
   "AccessToken": {
     "dataSource": "zoo_mysql",
     "public": true,
-    "acls": [
-      {
+    "acls": [{
         "principalType": "ROLE",
         "principalId": "$unauthenticated",
         "permission": "DENY",
@@ -45,8 +44,7 @@
     "options": {
       "strictObjectIDCoercion": true
     },
-    "acls": [
-      {
+    "acls": [{
         "principalType": "ROLE",
         "principalId": "$unauthenticated",
         "permission": "DENY",
@@ -63,8 +61,7 @@
   "Role": {
     "dataSource": "zoo_mysql",
     "public": true,
-    "acls": [
-      {
+    "acls": [{
         "principalType": "ROLE",
         "principalId": "$unauthenticated",
         "permission": "DENY",

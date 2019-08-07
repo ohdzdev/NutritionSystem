@@ -20,10 +20,13 @@ const generateStateData = (deliveryContainers, locations) => {
   let locationLookup = {};
   locationLookup.None = 'None';
 
-  locationLookup = locations.slice(0).sort((a, b) => (a.location > b.location ? 1 : -1)).reduce((acc, location) => {
-    acc[location.location] = location.location;
-    return acc;
-  }, locationLookup);
+  locationLookup = locations
+    .slice(0)
+    .sort((a, b) => (a.location > b.location ? 1 : -1))
+    .reduce((acc, location) => {
+      acc[location.location] = location.location;
+      return acc;
+    }, locationLookup);
 
   const deliveryContainersData = deliveryContainers.map((deliveryContainer) => ({
     ...deliveryContainer,
@@ -74,7 +77,7 @@ class DeliveryContainers extends Component {
     error: false,
     errorMessage: '',
     token: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -85,78 +88,21 @@ class DeliveryContainers extends Component {
     this.notificationsRef = React.createRef();
   }
 
-  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    // Reject the new user if there is no firstname, lastname, email, role, or location
-    if (!newData.dc || !newData.sortOrder || !newData.locationName) {
-      this.notificationsRef.current.showNotification('error', 'Please fill out all of the fields to create a new delivery container.');
-      reject();
-      return;
-    }
-
-    const deliveryContainersApi = new DeliveryContainersAPI(this.props.token);
-
-    // Find the selected location
-    let location = this.props.locations.find((l) => l.location === newData.locationName);
-
-    if (!location) {
-      if (newData.locationName === 'None') {
-        location = { locationId: null };
-      } else {
+  onRowAdd = (newData) =>
+    new Promise(async (resolve, reject) => {
+      // Reject the new user if there is no firstname, lastname, email, role, or location
+      if (!newData.dc || !newData.sortOrder || !newData.locationName) {
+        this.notificationsRef.current.showNotification(
+          'error',
+          'Please fill out all of the fields to create a new delivery container.',
+        );
         reject();
         return;
       }
-    }
 
-    let sortOrder = Number(newData.sortOrder);
+      const deliveryContainersApi = new DeliveryContainersAPI(this.props.token);
 
-    if (Number.isNaN(sortOrder)) {
-      this.notificationsRef.current.showNotification('error', 'Sort order must be a number!');
-      reject();
-      return;
-    }
-
-    sortOrder = Math.trunc(sortOrder);
-
-    try {
-      // Create the department
-      await deliveryContainersApi.createDeliveryContainer(newData.dc, sortOrder, location.locationId);
-    } catch (err) {
-      reject();
-      return;
-    }
-
-    // Refresh data
-    try {
-      const deliveryContainerRes = await deliveryContainersApi.getDeliveryContainers();
-      this.setState({ ...generateStateData(deliveryContainerRes.data, this.props.locations) });
-      resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-
-    resolve();
-  })
-
-  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const deliveryContainersApi = new DeliveryContainersAPI(this.props.token);
-
-    // Determine if we need to update and what to update
-    let fieldUpdated = false;
-    const updatedFields = {};
-
-    if (newData.dc !== oldData.dc) {
-      fieldUpdated = true;
-      updatedFields.dc = newData.dc;
-    }
-
-    if (newData.sortOrder !== oldData.sortOrder) {
-      fieldUpdated = true;
-      updatedFields.sortOrder = newData.sortOrder;
-    }
-
-    if (newData.locationName !== oldData.locationName) {
-      fieldUpdated = true;
+      // Find the selected location
       let location = this.props.locations.find((l) => l.location === newData.locationName);
 
       if (!location) {
@@ -168,59 +114,126 @@ class DeliveryContainers extends Component {
         }
       }
 
-      updatedFields.locationId = location.locationId;
-    }
+      let sortOrder = Number(newData.sortOrder);
 
-    if (fieldUpdated) {
-      // Update the delivery container with the new information
+      if (Number.isNaN(sortOrder)) {
+        this.notificationsRef.current.showNotification('error', 'Sort order must be a number!');
+        reject();
+        return;
+      }
+
+      sortOrder = Math.trunc(sortOrder);
+
       try {
-        await deliveryContainersApi.updateDeliveryContainer(newData.dcId, updatedFields);
+        // Create the department
+        await deliveryContainersApi.createDeliveryContainer(
+          newData.dc,
+          sortOrder,
+          location.locationId,
+        );
       } catch (err) {
         reject();
         return;
       }
-    }
 
-    // Refresh data
-    try {
-      const deliveryContainerRes = await deliveryContainersApi.getDeliveryContainers();
-      this.setState({ ...generateStateData(deliveryContainerRes.data, this.props.locations) });
+      // Refresh data
+      try {
+        const deliveryContainerRes = await deliveryContainersApi.getDeliveryContainers();
+        this.setState({ ...generateStateData(deliveryContainerRes.data, this.props.locations) });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
+
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
+    });
 
-    resolve();
-  })
+  onRowUpdate = (newData, oldData) =>
+    new Promise(async (resolve, reject) => {
+      const deliveryContainersApi = new DeliveryContainersAPI(this.props.token);
 
-  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const deliveryContainersApi = new DeliveryContainersAPI(this.props.token);
+      // Determine if we need to update and what to update
+      let fieldUpdated = false;
+      const updatedFields = {};
 
-    try {
-      // Delete the department
-      await deliveryContainersApi.deleteDeliveryContainer(oldData.dcId);
-    } catch (err) {
-      reject();
-      return;
-    }
+      if (newData.dc !== oldData.dc) {
+        fieldUpdated = true;
+        updatedFields.dc = newData.dc;
+      }
 
-    // Refresh data
-    try {
-      const deliveryContainerRes = await deliveryContainersApi.getDeliveryContainers();
-      this.setState({ ...generateStateData(deliveryContainerRes.data, this.props.locations) });
+      if (newData.sortOrder !== oldData.sortOrder) {
+        fieldUpdated = true;
+        updatedFields.sortOrder = newData.sortOrder;
+      }
+
+      if (newData.locationName !== oldData.locationName) {
+        fieldUpdated = true;
+        let location = this.props.locations.find((l) => l.location === newData.locationName);
+
+        if (!location) {
+          if (newData.locationName === 'None') {
+            location = { locationId: null };
+          } else {
+            reject();
+            return;
+          }
+        }
+
+        updatedFields.locationId = location.locationId;
+      }
+
+      if (fieldUpdated) {
+        // Update the delivery container with the new information
+        try {
+          await deliveryContainersApi.updateDeliveryContainer(newData.dcId, updatedFields);
+        } catch (err) {
+          reject();
+          return;
+        }
+      }
+
+      // Refresh data
+      try {
+        const deliveryContainerRes = await deliveryContainersApi.getDeliveryContainers();
+        this.setState({ ...generateStateData(deliveryContainerRes.data, this.props.locations) });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
+
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
+    });
 
-    resolve();
-  })
+  onRowDelete = (oldData) =>
+    new Promise(async (resolve, reject) => {
+      const deliveryContainersApi = new DeliveryContainersAPI(this.props.token);
+
+      try {
+        // Delete the department
+        await deliveryContainersApi.deleteDeliveryContainer(oldData.dcId);
+      } catch (err) {
+        reject();
+        return;
+      }
+
+      // Refresh data
+      try {
+        const deliveryContainerRes = await deliveryContainersApi.getDeliveryContainers();
+        this.setState({ ...generateStateData(deliveryContainerRes.data, this.props.locations) });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
+
+      resolve();
+    });
 
   render() {
     if (this.props.error) {
-      return (<ErrorPage message={this.props.errorMessage} />);
+      return <ErrorPage message={this.props.errorMessage} />;
     }
 
     const { classes } = this.props;

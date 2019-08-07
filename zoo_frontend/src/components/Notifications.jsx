@@ -21,7 +21,7 @@ const icons = {
   warning: WarningIcon,
 };
 
-const styles = theme => ({
+const styles = (theme) => ({
   icon: {
     opacity: 0.9,
     marginRight: theme.spacing.unit,
@@ -63,7 +63,7 @@ class Notifications extends Component {
       type,
       open: true,
     });
-  }
+  };
 
   onClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -71,7 +71,7 @@ class Notifications extends Component {
     }
 
     this.setState({ open: false });
-  }
+  };
 
   renderContent = (type) => {
     const Icon = icons[type];
@@ -102,7 +102,7 @@ class Notifications extends Component {
         aria-describedby="client-snackbar"
       />
     );
-  }
+  };
 
   render() {
     return (
@@ -128,9 +128,7 @@ Notifications.propTypes = {
 /* eslint-disable react/no-multi-comp */
 const passAroundRef = React.forwardRef((props, ref) => {
   const Comp = withStyles(styles)(withProps({ ref, ...props })(Notifications));
-  return (
-    <Comp />
-  );
+  return <Comp />;
 });
 
 export default passAroundRef;

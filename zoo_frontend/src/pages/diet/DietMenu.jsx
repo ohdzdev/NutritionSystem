@@ -12,7 +12,7 @@ import Download from '@material-ui/icons/CloudDownload';
 import Mail from '@material-ui/icons/Mail';
 import Delete from '@material-ui/icons/Delete';
 
-const styles = theme => ({
+const styles = (theme) => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
@@ -31,12 +31,10 @@ function DietMenu(props) {
 
   return (
     <>
-      { (
-        props.mail.enabled
-        || props.new.enabled
-        || props.downloadDiet.enabled
-        || props.delete.enabled
-      ) &&
+      {(props.mail.enabled ||
+        props.new.enabled ||
+        props.downloadDiet.enabled ||
+        props.delete.enabled) && (
         <>
           <Button
             aria-owns={anchorEl ? 'simple-menu' : undefined}
@@ -48,57 +46,61 @@ function DietMenu(props) {
             <MenuIcon className={props.classes.rightIcon} />
           </Button>
           <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-            { props.mail.enabled &&
-              <MenuItem onClick={() => {
-                handleClose();
-                props.mail.handler();
-              }}
+            {props.mail.enabled && (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  props.mail.handler();
+                }}
               >
                 <ListItemIcon>
                   <Mail />
                 </ListItemIcon>
-              Ask Nutritionist About Diet
+                Ask Nutritionist About Diet
               </MenuItem>
-            }
-            { props.downloadDiet.enabled &&
-              <MenuItem onClick={() => {
-                handleClose();
-                props.downloadDiet.handler();
-              }}
+            )}
+            {props.downloadDiet.enabled && (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  props.downloadDiet.handler();
+                }}
               >
                 <ListItemIcon>
                   <Download />
                 </ListItemIcon>
-              Download Diet Analysis
+                Download Diet Analysis
               </MenuItem>
-            }
-            { props.new.enabled &&
-              <MenuItem onClick={() => {
-                handleClose();
-                props.new.handler();
-              }}
+            )}
+            {props.new.enabled && (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  props.new.handler();
+                }}
               >
                 <ListItemIcon>
                   <AddBox />
                 </ListItemIcon>
-              Create New Diet
+                Create New Diet
               </MenuItem>
-            }
-            { props.delete.enabled &&
-              <MenuItem onClick={() => {
-                handleClose();
-                props.delete.handler();
-              }}
+            )}
+            {props.delete.enabled && (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  props.delete.handler();
+                }}
               >
                 <ListItemIcon>
                   <Delete />
                 </ListItemIcon>
-              Delete Diet
+                Delete Diet
               </MenuItem>
-            }
+            )}
           </Menu>
         </>
-      }
+      )}
     </>
   );
 }
@@ -122,6 +124,5 @@ DietMenu.propTypes = {
   }).isRequired,
   classes: PropTypes.object.isRequired,
 };
-
 
 export default withStyles(styles)(DietMenu);

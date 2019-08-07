@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, Paper,
+  TextField,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  Paper,
 } from '@material-ui/core';
 import MaterialTable from 'material-table';
 
@@ -73,7 +80,7 @@ export default class extends Component {
 
   static defaultProps = {
     token: '',
-  }
+  };
 
   static async getInitialProps({ query, authToken }) {
     if (!query.id) {
@@ -96,10 +103,12 @@ export default class extends Component {
       const budgetCode = await serverFoodAPI.getRelatedBudgetCode(query.id).catch(() => []);
 
       const nutData = await serverNutDataAPI.getNutData({ where: { foodId: query.id } });
-      const foodWeights = await serverFoodWeightsAPI.getFoodWeight({ where: { foodId: query.id } }).catch((err) => {
-        console.error(err);
-        return [];
-      });
+      const foodWeights = await serverFoodWeightsAPI
+        .getFoodWeight({ where: { foodId: query.id } })
+        .catch((err) => {
+          console.error(err);
+          return [];
+        });
 
       const allNutrients = await serverNutrDataAPI.getNutrDef().catch((err) => {
         console.error(err);
@@ -136,15 +145,31 @@ export default class extends Component {
     super(props);
     const {
       // remove things we don't want passed to state here
-      api, account, router, pageContext, classes, budgetCodes, foodCategories, allUnits, ...rest // eslint-disable-line react/prop-types
+      /* eslint-disable */
+      api,
+      account,
+      router,
+      pageContext,
+      classes,
+      budgetCodes,
+      foodCategories,
+      allUnits,
+      ...rest
+      /* eslint-enable */
     } = props;
 
     this.state = {
       ...rest,
       // react select options for budgets
-      budgetCodeOptions: budgetCodes.map((item) => ({ label: item.budgetCode, value: item.budgetId })),
+      budgetCodeOptions: budgetCodes.map((item) => ({
+        label: item.budgetCode,
+        value: item.budgetId,
+      })),
       // react select options for food categories
-      foodCategoryOptions: foodCategories.map((item) => ({ label: item.foodCategory, value: item.categoryId })),
+      foodCategoryOptions: foodCategories.map((item) => ({
+        label: item.foodCategory,
+        value: item.categoryId,
+      })),
       customNutEditDialogOpen: false,
       deleteNutDataDialogOpen: false,
       newNutDataDialogOpen: false,
@@ -161,7 +186,7 @@ export default class extends Component {
     this.notificationBar = React.createRef();
   }
 
-  handleNutrientFormChange = fieldName => evt => {
+  handleNutrientFormChange = (fieldName) => (evt) => {
     let newVal = null;
     if (typeof evt === 'object' && 'target' in evt && 'value' in evt.target) {
       newVal = evt.target.value;
@@ -180,7 +205,7 @@ export default class extends Component {
         dirty: true,
       }));
     }
-  }
+  };
 
   handleNutrientSave() {
     if (this.state.dialogRow && this.state.dirty) {
@@ -203,42 +228,48 @@ export default class extends Component {
       });
 
       if (this.state.dialogRow.meta && row.meta.index > -1) {
-        this.setState((prevState) => {
-          const newNutritionData = [...prevState.nutritionData.map((item, dex) => {
-            if (dex !== tableRow) {
-              return item;
+        this.setState(
+          (prevState) => {
+            const newNutritionData = [
+              ...prevState.nutritionData.map((item, dex) => {
+                if (dex !== tableRow) {
+                  return item;
+                }
+                const updatedRow = item;
+                Object.assign(updatedRow, row);
+                return updatedRow;
+              }),
+            ];
+            return {
+              nutritionData: newNutritionData,
+              customNutEditDialogOpen: false,
+              dialogRow: {},
+              dirty: false,
+            };
+          },
+          () => {
+            // update api here
+            const localRow = { ...this.state.nutritionData[tableRow] };
+            const APIColumns = Object.keys(nutDataAPIModel.properties);
+            // clean all nonAPI colums out of localrow
+            Object.keys(localRow).forEach((key) => {
+              if (APIColumns.indexOf(key) === -1) {
+                delete localRow[key];
+              }
+            });
+            try {
+              this.clientNutDataAPI.updateNutData(localRow.dataId, localRow);
+              this.notificationBar.showNotification('info', 'Successfully edited!');
+            } catch (error) {
+              this.notificationBar.showNotification('error', error.message);
+              console.error(error);
             }
-            const updatedRow = item;
-            Object.assign(updatedRow, row);
-            return updatedRow;
-          })];
-          return {
-            nutritionData: newNutritionData,
-            customNutEditDialogOpen: false,
-            dialogRow: {},
-            dirty: false,
-          };
-        }, () => {
-          // update api here
-          const localRow = { ...this.state.nutritionData[tableRow] };
-          const APIColumns = Object.keys(nutDataAPIModel.properties);
-          // clean all nonAPI colums out of localrow
-          Object.keys(localRow).forEach((key) => {
-            if (APIColumns.indexOf(key) === -1) {
-              delete localRow[key];
-            }
-          });
-          try {
-            this.clientNutDataAPI.updateNutData(localRow.dataId, localRow);
-            this.notificationBar.showNotification('info', 'Successfully edited!');
-          } catch (error) {
-            this.notificationBar.showNotification('error', error.message);
-            console.error(error);
-          }
-        });
+          },
+        );
       }
       // if fail present error from api to user
-    } else { // no edits
+    } else {
+      // no edits
       this.setState({ customNutEditDialogOpen: false, dialogRow: {}, dirty: false });
     }
   }
@@ -249,11 +280,18 @@ export default class extends Component {
 
   async handleNutDataDelete(shouldDelete) {
     if (shouldDelete) {
-      if (this.state.dialogRow && this.state.dialogRow.meta && this.state.dialogRow.meta.relatedIds.dataId) {
+      if (
+        this.state.dialogRow &&
+        this.state.dialogRow.meta &&
+        this.state.dialogRow.meta.relatedIds.dataId
+      ) {
         const { dataId } = this.state.dialogRow.meta.relatedIds;
         try {
           await this.clientNutDataAPI.deleteNutData(dataId);
-          this.setState((prevState) => ({ deleteNutDataDialogOpen: false, nutritionData: prevState.nutritionData.filter((item) => item.dataId !== dataId) }));
+          this.setState((prevState) => ({
+            deleteNutDataDialogOpen: false,
+            nutritionData: prevState.nutritionData.filter((item) => item.dataId !== dataId),
+          }));
         } catch (error) {
           this.setState({ deleteNutDataDialogOpen: false, dialogRow: {} });
         }
@@ -279,7 +317,10 @@ export default class extends Component {
         newRow.foodId = this.state.food[0].foodId;
         const res = await this.clientNutDataAPI.createNutData(newRow);
         this.setState((prevState) => ({
-          newNutDataDialogOpen: false, nutritionData: [...prevState.nutritionData, res.data], dialgoRow: {}, dirty: false,
+          newNutDataDialogOpen: false,
+          nutritionData: [...prevState.nutritionData, res.data],
+          dialgoRow: {},
+          dirty: false,
         }));
       } catch (error) {
         this.setState({
@@ -295,22 +336,29 @@ export default class extends Component {
 
   handleFoodUpdate(payload) {
     const prom = new Promise((r, rej) => {
-      this.clientFoodAPI.updateFood(this.state.food[0].foodId, { ...payload, foodId: this.state.food[0].foodId }).then((res) => {
-        this.setState({ food: [{ ...res.data }] }, () => {
-          r();
-        });
-      }, (rejected) => {
-        console.err(rejected.message);
-        rej();
-      });
+      this.clientFoodAPI
+        .updateFood(this.state.food[0].foodId, { ...payload, foodId: this.state.food[0].foodId })
+        .then(
+          (res) => {
+            this.setState({ food: [{ ...res.data }] }, () => {
+              r();
+            });
+          },
+          (rejected) => {
+            console.err(rejected.message);
+            rej();
+          },
+        );
     });
     return prom;
   }
 
   render() {
     const composedData = this.state.nutritionData.map((val, index) => {
-      const { shortForm, dataSrcId } = this.state.allSources.find((source) => source.dataSrcId === val.dataSrcId) || {};
-      const { nutrDesc, units, nutrNo } = this.state.allNutrients.find((def) => def.nutrNo === val.nutrNo) || {};
+      const { shortForm, dataSrcId } =
+        this.state.allSources.find((source) => source.dataSrcId === val.dataSrcId) || {};
+      const { nutrDesc, units, nutrNo } =
+        this.state.allNutrients.find((def) => def.nutrNo === val.nutrNo) || {};
       return {
         meta: {
           index,
@@ -321,13 +369,21 @@ export default class extends Component {
           },
           types: {
             nutrDesc: {
-              type: 'picklist', dataSource: 'allNutrients', labelKey: 'nutrDesc', valueKey: 'nutrNo', stateSourceKey: 'nutrNo',
+              type: 'picklist',
+              dataSource: 'allNutrients',
+              labelKey: 'nutrDesc',
+              valueKey: 'nutrNo',
+              stateSourceKey: 'nutrNo',
             },
             addModDate: 'disabled',
             nutrVal: 'number',
             units: 'disabled',
             shortForm: {
-              type: 'picklist', dataSource: 'allSources', labelKey: 'shortForm', valueKey: 'dataSrcId', stateSourceKey: 'dataSrcId',
+              type: 'picklist',
+              dataSource: 'allSources',
+              labelKey: 'shortForm',
+              valueKey: 'dataSrcId',
+              stateSourceKey: 'dataSrcId',
             },
           },
         },
@@ -341,10 +397,9 @@ export default class extends Component {
       };
     });
 
-
     return (
       <div>
-        {this.state.customNutEditDialogOpen &&
+        {this.state.customNutEditDialogOpen && (
           <Dialog
             key="editDialog"
             open={this.state.customNutEditDialogOpen}
@@ -384,11 +439,14 @@ export default class extends Component {
                     <FormControl fullWidth className={this.props.classes.formControl}>
                       <SingleSelect
                         label={field.title}
-                        suggestions={[...[{ label: 'None', val: null }], ...picklistSource.map((val) => ({
-                          ...val,
-                          label: val[fieldType.labelKey],
-                          value: val[fieldType.valueKey],
-                        }))]}
+                        suggestions={[
+                          ...[{ label: 'None', val: null }],
+                          ...picklistSource.map((val) => ({
+                            ...val,
+                            label: val[fieldType.labelKey],
+                            value: val[fieldType.valueKey],
+                          })),
+                        ]}
                         defaultValue={this.state.dialogRow[fieldType.valueKey]}
                         onChange={(val) => this.handleNutrientFormChange(stateUpdateField)(val)}
                       />
@@ -407,8 +465,8 @@ export default class extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-        }
-        {this.state.newNutDataDialogOpen &&
+        )}
+        {this.state.newNutDataDialogOpen && (
           <Dialog
             key="newDialog"
             open={this.state.newNutDataDialogOpen}
@@ -421,11 +479,14 @@ export default class extends Component {
               <FormControl fullWidth className={this.props.classes.formControl}>
                 <SingleSelect
                   label="Nutrient"
-                  suggestions={[...[{ label: 'None', val: null }], ...this.state.allNutrients.map((val) => ({
-                    ...val,
-                    label: val.nutrDesc,
-                    value: val.nutrNo,
-                  }))]}
+                  suggestions={[
+                    ...[{ label: 'None', val: null }],
+                    ...this.state.allNutrients.map((val) => ({
+                      ...val,
+                      label: val.nutrDesc,
+                      value: val.nutrNo,
+                    })),
+                  ]}
                   onChange={(val) => this.handleNutrientFormChange('nutrNo')(val)}
                 />
               </FormControl>
@@ -440,11 +501,14 @@ export default class extends Component {
               <FormControl fullWidth className={this.props.classes.formControl}>
                 <SingleSelect
                   label="Reference"
-                  suggestions={[...[{ label: 'None', val: null }], ...this.state.allSources.map((val) => ({
-                    ...val,
-                    label: val.shortForm,
-                    value: val.dataSrcId,
-                  }))]}
+                  suggestions={[
+                    ...[{ label: 'None', val: null }],
+                    ...this.state.allSources.map((val) => ({
+                      ...val,
+                      label: val.shortForm,
+                      value: val.dataSrcId,
+                    })),
+                  ]}
                   onChange={(val) => this.handleNutrientFormChange('dataSrcId')(val)}
                 />
               </FormControl>
@@ -453,12 +517,15 @@ export default class extends Component {
               <Button onClick={() => this.handleNewNutrientDialogClose(true)} color="primary">
                 Cancel
               </Button>
-              <Button onClick={() => this.handleNewNutrientDialogClose(false, this.state.dialogRow)} color="primary">
+              <Button
+                onClick={() => this.handleNewNutrientDialogClose(false, this.state.dialogRow)}
+                color="primary"
+              >
                 Save
               </Button>
             </DialogActions>
           </Dialog>
-        }
+        )}
 
         <div className={this.props.classes.foodBox}>
           <Paper style={{ padding: '8px' }}>
@@ -508,8 +575,7 @@ export default class extends Component {
               },
               tooltip: 'Delete Nutrient',
             },
-          ]
-          }
+          ]}
           options={{
             pageSize: 10,
             pageSizeOptions: [10, 30, this.state.nutritionData.length],
@@ -523,11 +589,8 @@ export default class extends Component {
           onClose={(close) => this.handleNutDataDelete(close)}
           title="Are you sure you want to delete this nutrient record?"
         />
-        <Notifications
-          ref={this.notificationBar}
-        />
+        <Notifications ref={this.notificationBar} />
       </div>
-
     );
   }
 }

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from '@material-ui/core';
 
 import SingleSelect from '../../components/ReactSingleSelect';
@@ -12,7 +17,7 @@ export default class DietPlanChangeDialog extends Component {
     nutritionistList: PropTypes.arrayOf(PropTypes.object).isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -41,18 +46,14 @@ export default class DietPlanChangeDialog extends Component {
               overflow: 'visible',
             }}
           >
-            <DialogContentText>
-              *Required*
-            </DialogContentText>
+            <DialogContentText>*Required*</DialogContentText>
             <SingleSelect
               value={this.state.selectedValue}
-              suggestions={
-                this.props.nutritionistList.map((val) => ({
-                  ...val,
-                  label: `${val.firstName} ${val.lastName}`,
-                  value: val.id,
-                }))
-              }
+              suggestions={this.props.nutritionistList.map((val) => ({
+                ...val,
+                label: `${val.firstName} ${val.lastName}`,
+                value: val.id,
+              }))}
               onChange={(select) => {
                 console.log(select);
                 this.setState({

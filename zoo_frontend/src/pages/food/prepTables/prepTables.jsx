@@ -14,7 +14,9 @@ class PrepTables extends Component {
   static async getInitialProps({ authToken }) {
     const api = new FoodPrepTablesApi(authToken);
     try {
-      const res = await api.getFoodPrepTables().catch((err) => ({ data: [{ err: true, msg: err }] }));
+      const res = await api
+        .getFoodPrepTables()
+        .catch((err) => ({ data: [{ err: true, msg: err }] }));
       return { prepTables: res.data };
     } catch (err) {
       return {
@@ -37,7 +39,7 @@ class PrepTables extends Component {
     token: '',
     error: false,
     errorMessage: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -47,89 +49,92 @@ class PrepTables extends Component {
     this.notificationsRef = React.createRef();
   }
 
-  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    const api = new FoodPrepTablesApi(this.props.token);
-    // Reject if no short form
-    if (!newData.description) {
-      this.notificationsRef.current.showNotification('error', 'Please fill out "Table Name".');
-      reject();
-      return;
-    }
+  onRowAdd = (newData) =>
+    new Promise(async (resolve, reject) => {
+      const api = new FoodPrepTablesApi(this.props.token);
+      // Reject if no short form
+      if (!newData.description) {
+        this.notificationsRef.current.showNotification('error', 'Please fill out "Table Name".');
+        reject();
+        return;
+      }
 
-    try {
-      // Create the prep table entry
-      await api.createFoodPrepTables(newData);
-    } catch (err) {
-      reject();
-    }
+      try {
+        // Create the prep table entry
+        await api.createFoodPrepTables(newData);
+      } catch (err) {
+        reject();
+      }
 
-    // Refresh Data
-    try {
-      const res = await api.getFoodPrepTables();
-      this.setState({ prepTables: res.data });
+      // Refresh Data
+      try {
+        const res = await api.getFoodPrepTables();
+        this.setState({ prepTables: res.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const api = new FoodPrepTablesApi(this.props.token);
+  onRowUpdate = (newData, oldData) =>
+    new Promise(async (resolve, reject) => {
+      const api = new FoodPrepTablesApi(this.props.token);
 
-    // Determine if we need to update and what to update
-    let fieldUpdated = false;
-    const updatedFields = {};
+      // Determine if we need to update and what to update
+      let fieldUpdated = false;
+      const updatedFields = {};
 
-    if (newData.description !== oldData.description) {
-      fieldUpdated = true;
-      updatedFields.description = newData.description;
-    }
+      if (newData.description !== oldData.description) {
+        fieldUpdated = true;
+        updatedFields.description = newData.description;
+      }
 
-    if (fieldUpdated) {
-      await api.updateFoodPrepTables(newData.tableId, updatedFields);
-    } else {
-      reject();
-      return;
-    }
+      if (fieldUpdated) {
+        await api.updateFoodPrepTables(newData.tableId, updatedFields);
+      } else {
+        reject();
+        return;
+      }
 
-    // Refresh Data
-    try {
-      const res = await api.getFoodPrepTables();
-      this.setState({ prepTables: res.data });
+      // Refresh Data
+      try {
+        const res = await api.getFoodPrepTables();
+        this.setState({ prepTables: res.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const api = new FoodPrepTablesApi(this.props.token);
-    try {
-      // Delete the prep table
-      await api.deleteFoodPrepTables(oldData.tableId);
-    } catch (err) {
-      reject();
-      return;
-    }
-    // Refresh Data
-    try {
-      const res = await api.getFoodPrepTables();
-      this.setState({ prepTables: res.data });
+  onRowDelete = (oldData) =>
+    new Promise(async (resolve, reject) => {
+      const api = new FoodPrepTablesApi(this.props.token);
+      try {
+        // Delete the prep table
+        await api.deleteFoodPrepTables(oldData.tableId);
+      } catch (err) {
+        reject();
+        return;
+      }
+      // Refresh Data
+      try {
+        const res = await api.getFoodPrepTables();
+        this.setState({ prepTables: res.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
   render() {
     if (this.props.error) {
-      return (<ErrorPage message={this.props.errorMessage} />);
+      return <ErrorPage message={this.props.errorMessage} />;
     }
     return (
       <div
@@ -149,9 +154,7 @@ class PrepTables extends Component {
               addRowPosition: 'first',
               emptyRowsWhenPaging: false,
             }}
-            columns={[
-              { title: 'Table Name', field: 'description' },
-            ]}
+            columns={[{ title: 'Table Name', field: 'description' }]}
             editable={{
               onRowAdd: this.onRowAdd,
               onRowUpdate: this.onRowUpdate,

@@ -37,7 +37,6 @@ class Subenclosures {
     return res;
   }
 
-
   /**
    * Update certain values on a Subenclosures record. Must send in an id
    * @param {string|number} id required
@@ -48,7 +47,11 @@ class Subenclosures {
       return Promise.reject(new Error('must have id send into patchSubenclosures()'));
     }
     if (Object.keys(updates) === undefined || Object.keys(updates).length < 1) {
-      return Promise.reject(new Error('must have object with some keys that will be updated. If meant to delete use deleteSubenclosures()'));
+      return Promise.reject(
+        new Error(
+          'must have object with some keys that will be updated. If meant to delete use deleteSubenclosures()',
+        ),
+      );
     }
 
     const uri = `${API_BASE_URL}/api/Subenclosures/${id}?access_token=${this.token}`;
@@ -77,7 +80,9 @@ class Subenclosures {
    */
   async createSubenclosures(params, createBlank) {
     if (!params && !createBlank) {
-      return Promise.reject(new Error('createBlank was false and no params were sent in, invalid config'));
+      return Promise.reject(
+        new Error('createBlank was false and no params were sent in, invalid config'),
+      );
     }
     const uri = `${API_BASE_URL}/api/Subenclosures/?access_token=${this.token}`;
     if (createBlank && !params) {

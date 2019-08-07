@@ -71,7 +71,9 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
 
         if (ctx.pathname !== '/login') {
           // only redirect if we are not already going to the login page
-          console.log('redirect to login because users key did not validate properly on server end');
+          console.log(
+            'redirect to login because users key did not validate properly on server end',
+          );
           redirectTo('/login', { res: ctx.res, status: 301 });
         }
         return { ...pageProps };
@@ -80,11 +82,11 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
 
     static propTypes = {
       token: PropTypes.string,
-    }
+    };
 
     static defaultProps = {
       token: '',
-    }
+    };
 
     constructor(props, context) {
       super(props, context);
@@ -110,7 +112,9 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
       };
 
       if (!allowedRoles.includes(account.role)) {
-        console.log('redirect user to login if not authenticated, or redirect to home page because no access');
+        console.log(
+          'redirect user to login if not authenticated, or redirect to home page because no access',
+        );
         Router.push(account.role === 'unauthenticated' ? '/login' : '/');
         return;
       }
@@ -122,13 +126,7 @@ export default (allowedRoles = ['authenticated']) => (WrappedComponent) => {
 
     render() {
       if (!this.state.loading) {
-        return (
-          <WrappedComponent
-            {...this.props}
-            account={this.state.account}
-            api={this.api}
-          />
-        );
+        return <WrappedComponent {...this.props} account={this.state.account} api={this.api} />;
       }
       return null;
     }

@@ -89,7 +89,11 @@ class Food {
       return Promise.reject(new Error('must have id send into patchNutData()'));
     }
     if (Object.keys(updates) === undefined || Object.keys(updates).length < 1) {
-      return Promise.reject(new Error('must have object with some keys that will be updated. If meant to delete use deleteNutData()'));
+      return Promise.reject(
+        new Error(
+          'must have object with some keys that will be updated. If meant to delete use deleteNutData()',
+        ),
+      );
     }
 
     const uri = `${API_BASE_URL}/api/NutData/${id}?access_token=${this.token}`;
@@ -118,7 +122,9 @@ class Food {
    */
   async createNutData(params, createBlank) {
     if (!params && !createBlank) {
-      return Promise.reject(new Error('createBlank was false and no params were sent in, invalid config'));
+      return Promise.reject(
+        new Error('createBlank was false and no params were sent in, invalid config'),
+      );
     }
     const uri = `${API_BASE_URL}/api/NutData/?access_token=${this.token}`;
     if (createBlank && !params) {

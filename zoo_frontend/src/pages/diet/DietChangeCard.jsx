@@ -9,7 +9,6 @@ import { Card, Typography, CardContent } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Person from '@material-ui/icons/Person';
 
-
 const styles = (theme) => ({
   card: {
     margin: theme.spacing.unit,
@@ -54,16 +53,12 @@ const DietChangeCard = (props) => {
             {moment(new Date(props.dietChangeDate)).format(' MM-DD-YYYY h:mm A')}
           </Typography>
           <Typography variant="h6" className={props.classes.reasonTitle}>
-          Reason
+            Reason
           </Typography>
-          <Typography variant="body1">
-            {props.dietChangeReason}
-          </Typography>
+          <Typography variant="body1">{props.dietChangeReason}</Typography>
           <div className={props.classes.changedByDiv}>
             <Person className={props.classes.icon} />
-            <Typography className={props.classes.changedByText}>
-              {changedBy}
-            </Typography>
+            <Typography className={props.classes.changedByText}>{changedBy}</Typography>
           </div>
         </CardContent>
       </Card>

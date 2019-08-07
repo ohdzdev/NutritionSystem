@@ -75,7 +75,11 @@ class DietPlan {
       return Promise.reject(new Error('must have id send into patchDietPlans()'));
     }
     if (Object.keys(updates) === undefined || Object.keys(updates).length < 1) {
-      return Promise.reject(new Error('must have object with some keys that will be updated. If meant to delete use deleteDietPlans()'));
+      return Promise.reject(
+        new Error(
+          'must have object with some keys that will be updated. If meant to delete use deleteDietPlans()',
+        ),
+      );
     }
 
     const uri = `${API_BASE_URL}/api/DietPlans/${id}?access_token=${this.token}`;
@@ -104,7 +108,9 @@ class DietPlan {
    */
   async createDietPlans(params, createBlank) {
     if (!params && !createBlank) {
-      return Promise.reject(new Error('createBlank was false and no params were sent in, invalid config'));
+      return Promise.reject(
+        new Error('createBlank was false and no params were sent in, invalid config'),
+      );
     }
     const uri = `${API_BASE_URL}/api/DietPlans/?access_token=${this.token}`;
     if (createBlank && !params) {

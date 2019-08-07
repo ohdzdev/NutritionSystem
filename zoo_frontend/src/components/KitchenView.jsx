@@ -9,7 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const styles = (theme) => ({
   pageText: {
     textAlign: 'right',
     marginBottom: theme.spacing.unit,
@@ -40,40 +40,69 @@ const formatDate = (d) => {
 };
 
 const KitchenView = ({
-  classes, currentPage, pageLength, noteId, species, prepNotes, dc, dietChanges, foodPrep,
+  classes,
+  currentPage,
+  pageLength,
+  noteId,
+  species,
+  prepNotes,
+  dc,
+  dietChanges,
+  foodPrep,
 }) => (
   <div>
     <div className={classes.pageText}>
-      <Typography> Page {currentPage}/{pageLength}</Typography>
+      <Typography>
+        {' '}
+        Page {currentPage}/{pageLength}
+      </Typography>
     </div>
     <div className={classes.container}>
       <div className={classes.leftContainer}>
-        <Typography variant="h1" style={{ fontSize: 30 }} className={classes.bottomMargin}>{species}</Typography>
-        <Typography variant="h2" style={{ fontSize: 22 }}>{noteId}
+        <Typography variant="h1" style={{ fontSize: 30 }} className={classes.bottomMargin}>
+          {species}
         </Typography>
-        <Typography className={classes.topMargin} variant="h3" style={{ fontSize: 22, color: 'grey' }}>Prep Notes</Typography>
+        <Typography variant="h2" style={{ fontSize: 22 }}>
+          {noteId}
+        </Typography>
+        <Typography
+          className={classes.topMargin}
+          variant="h3"
+          style={{ fontSize: 22, color: 'grey' }}
+        >
+          Prep Notes
+        </Typography>
         <div style={{ marginTop: 10 }}>
-          {prepNotes.map(txt => <Typography style={{ fontSize: 18 }}>{txt.prepNote}</Typography>)}
+          {prepNotes.map((txt) => (
+            <Typography style={{ fontSize: 18 }}>{txt.prepNote}</Typography>
+          ))}
         </div>
         <div>
-          <Typography variant="h3" style={{ fontSize: 22, marginTop: 30, color: 'grey' }}>History</Typography>
+          <Typography variant="h3" style={{ fontSize: 22, marginTop: 30, color: 'grey' }}>
+            History
+          </Typography>
           <div>
-            {dietChanges.map(txt =>
+            {dietChanges.map((txt) => (
               // eslint-disable-next-line implicit-arrow-linebreak
               <div style={{ marginTop: 10 }}>
-                <Typography variant="h4" style={{ fontSize: 14 }}>{formatDate(txt.dietChangeDate)}</Typography>
+                <Typography variant="h4" style={{ fontSize: 14 }}>
+                  {formatDate(txt.dietChangeDate)}
+                </Typography>
                 <Typography style={{ fontSize: 18 }}>{txt.dietChangeReason}</Typography>
-              </div>)}
+              </div>
+            ))}
           </div>
         </div>
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ textAlign: 'right' }}>
-          <Typography variant="h2" style={{ fontSize: 22 }}>{dc}</Typography>
+          <Typography variant="h2" style={{ fontSize: 22 }}>
+            {dc}
+          </Typography>
         </div>
         <Table className={classes.table}>
           <TableBody>
-            {foodPrep.map(row => (
+            {foodPrep.map((row) => (
               <TableRow key={row.id}>
                 <TableCell align="left">{row.group_amount + row.unit}</TableCell>
                 <TableCell align="left">{row.food}</TableCell>
@@ -82,7 +111,6 @@ const KitchenView = ({
           </TableBody>
         </Table>
       </div>
-
     </div>
   </div>
 );
@@ -109,6 +137,5 @@ KitchenView.defaultProps = {
   dietChanges: ['none'],
   foodPrep: [],
 };
-
 
 export default withStyles(styles)(KitchenView);

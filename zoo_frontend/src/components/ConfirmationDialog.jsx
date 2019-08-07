@@ -19,9 +19,7 @@ const ConfirmationDialogRaw = (props) => {
     props.onClose(true);
   };
 
-  const {
-    title, message, cancelButtonText, okButtonText, ...other
-  } = props;
+  const { title, message, cancelButtonText, okButtonText, ...other } = props;
   return (
     <Dialog
       disableBackdropClick
@@ -31,9 +29,7 @@ const ConfirmationDialogRaw = (props) => {
       {...other}
     >
       <DialogTitle id="confirmation-dialog-title">{title}</DialogTitle>
-      <DialogContent>
-        {message}
-      </DialogContent>
+      <DialogContent>{message}</DialogContent>
       <DialogActions>
         <Button onClick={handleCancel} color="primary">
           {cancelButtonText}

@@ -23,14 +23,15 @@ const styles = (theme) => ({
   },
 });
 
-const printOutPageStyle = '@page { size: auto;  margin: 6% 5%; } @media print { body { -webkit-print-color-adjust: exact; } }';
+const printOutPageStyle =
+  '@page { size: auto;  margin: 6% 5%; } @media print { body { -webkit-print-color-adjust: exact; } }';
 
 class PrintPrepSheets extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
     date: PropTypes.object.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -88,18 +89,20 @@ class PrintPrepSheets extends Component {
       }
     });
 
-    this.setState({
-      meatPrepSheetData: meatSums,
-      veggiePrepSheetData: veggieSums,
-    }, () => {
-      this.printerMeat.current.handlePrint();
-    });
-  }
+    this.setState(
+      {
+        meatPrepSheetData: meatSums,
+        veggiePrepSheetData: veggieSums,
+      },
+      () => {
+        this.printerMeat.current.handlePrint();
+      },
+    );
+  };
 
   onAfterMeatPrint = () => {
     this.printerVeggie.current.handlePrint();
-  }
-
+  };
 
   render() {
     const { classes, date } = this.props;

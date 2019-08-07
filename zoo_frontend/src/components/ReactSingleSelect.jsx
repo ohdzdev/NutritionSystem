@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
-const styles = theme => ({
+const styles = (theme) => ({
   input: {
     display: 'flex',
     padding: theme.spacing.unit,
@@ -188,7 +188,9 @@ SingleValue.defaultProps = {
   innerProps: {},
 };
 
-const ValueContainer = (props) => <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
+const ValueContainer = (props) => (
+  <div className={props.selectProps.classes.valueContainer}>{props.children}</div>
+);
 
 ValueContainer.propTypes = {
   selectProps: PropTypes.shape({
@@ -232,7 +234,17 @@ const components = {
 
 const IntegrationReactSelect = (props) => {
   const {
-    label, suggestions, onChange, classes, theme, field, form, helperText, error, value, disabled,
+    label,
+    suggestions,
+    onChange,
+    classes,
+    theme,
+    field,
+    form,
+    helperText,
+    error,
+    value,
+    disabled,
   } = props;
   const [selected, setSelected] = useState(false);
 
@@ -245,7 +257,7 @@ const IntegrationReactSelect = (props) => {
   }
 
   const selectStyles = {
-    input: base => ({
+    input: (base) => ({
       ...base,
       color: theme.palette.text.primary,
       '& input': {
@@ -255,11 +267,7 @@ const IntegrationReactSelect = (props) => {
   };
   return (
     <NoSsr>
-      {label &&
-        <Typography color={selected ? 'primary' : 'textPrimary'}>
-          {label}
-        </Typography>
-      }
+      {label && <Typography color={selected ? 'primary' : 'textPrimary'}>{label}</Typography>}
       <Select
         classes={classes}
         styles={selectStyles}
@@ -279,20 +287,20 @@ const IntegrationReactSelect = (props) => {
         id={props.id}
         isDisabled={disabled}
       />
-      {(error || helperText) &&
-        <Typography color={error ? 'error' : 'textPrimary'}>
-          {helperText}
-        </Typography>
-      }
+      {(error || helperText) && (
+        <Typography color={error ? 'error' : 'textPrimary'}>{helperText}</Typography>
+      )}
     </NoSsr>
   );
 };
 
 IntegrationReactSelect.propTypes = {
-  suggestions: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.number.isRequired]),
-  })).isRequired,
+  suggestions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.number.isRequired]),
+    }),
+  ).isRequired,
   onChange: PropTypes.func,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   label: PropTypes.string,
@@ -309,7 +317,7 @@ IntegrationReactSelect.propTypes = {
 };
 
 IntegrationReactSelect.defaultProps = {
-  onChange: () => { },
+  onChange: () => {},
   value: '',
   label: '',
   id: Math.random(1000),

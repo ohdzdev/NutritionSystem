@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import Router from 'next/router';
 import CircProgress from '@material-ui/core/CircularProgress';
 
-
 import Roles from '../../static/Roles';
 
 import { Admin, Kitchen } from '../PageAccess';
-
 
 class Home extends Component {
   static propTypes = {
@@ -17,8 +15,7 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
     const { role = '' } = props.account;
 
     if (role === Roles.ADMIN) {

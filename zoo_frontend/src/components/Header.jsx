@@ -17,7 +17,7 @@ import { Home } from '../pages/PageAccess';
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = (theme) => ({
   grow: {
     flexGrow: 1,
   },
@@ -61,7 +61,7 @@ const Header = ({ classes, drawerOpen, handleDrawerOpen }) => (
           })}
         >
           <Toolbar disableGutters>
-            { account.loggedIn &&
+            {account.loggedIn && (
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
@@ -70,19 +70,19 @@ const Header = ({ classes, drawerOpen, handleDrawerOpen }) => (
               >
                 <MenuIcon />
               </IconButton>
-            }
-            { !account.loggedIn && <div style={{ width: '15px' }} /> }
-            { drawerOpen && <div style={{ width: '20px' }} /> }
+            )}
+            {!account.loggedIn && <div style={{ width: '15px' }} />}
+            {drawerOpen && <div style={{ width: '20px' }} />}
             <Link href={Home.link}>
               <Typography variant="h6" color="inherit" style={{ cursor: 'pointer' }}>
-                  Nutritional Assistant
+                Nutritional Assistant
               </Typography>
             </Link>
             <div className={classes.grow} />
             <Typography style={{ paddingLeft: '10px', paddingRight: '10px' }}>
               Hello {account.loggedIn ? `${account.firstName} ${account.lastName}` : 'Guest'}!
             </Typography>
-            { account.loggedIn &&
+            {account.loggedIn && (
               <Button
                 color="inherit"
                 onClick={async () => {
@@ -95,7 +95,7 @@ const Header = ({ classes, drawerOpen, handleDrawerOpen }) => (
               >
                 Logout
               </Button>
-            }
+            )}
           </Toolbar>
         </AppBar>
       )}

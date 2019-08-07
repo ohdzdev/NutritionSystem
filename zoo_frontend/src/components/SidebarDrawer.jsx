@@ -32,28 +32,17 @@ import SpeciesIcon from '@material-ui/icons/Pets';
 import UsersIcon from '@material-ui/icons/SupervisorAccount';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faRulerCombined,
-  faCrow,
-} from '@fortawesome/free-solid-svg-icons';
+import { faRulerCombined, faCrow } from '@fortawesome/free-solid-svg-icons';
 
 import Link from 'next/link';
 
 import { AuthContext } from '../util/AuthProvider';
 
-import {
-  hasAccess,
-  Home,
-  Food,
-  Diet,
-  Admin,
-  Profile,
-  Kitchen,
-} from '../pages/PageAccess';
+import { hasAccess, Home, Food, Diet, Admin, Profile, Kitchen } from '../pages/PageAccess';
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = (theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -74,13 +63,10 @@ const styles = theme => ({
 });
 
 const SidebarDrawer = (props) => {
-  const {
-    classes, drawerOpen, theme, handleDrawerClose,
-  } = props;
+  const { classes, drawerOpen, theme, handleDrawerClose } = props;
 
   const [adminCollapse, setAdminCollapse] = useState(false);
   const [foodCollapse, setFoodCollapse] = useState(false);
-
 
   return (
     <AuthContext.Consumer>
@@ -102,162 +88,188 @@ const SidebarDrawer = (props) => {
             </div>
             <Divider />
             <List disablePadding>
-              {hasAccess(role, Home.roles) &&
+              {hasAccess(role, Home.roles) && (
                 <Link href={Home.link}>
                   <ListItem button key="home" divider>
-                    <ListItemIcon><HomeIcon /></ListItemIcon>
+                    <ListItemIcon>
+                      <HomeIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Home" />
                   </ListItem>
                 </Link>
-              }
-              {hasAccess(role, Diet.roles) &&
+              )}
+              {hasAccess(role, Diet.roles) && (
                 <Link href={Diet.link}>
                   <ListItem button key="diet" divider>
-                    <ListItemIcon><DietIcon /></ListItemIcon>
+                    <ListItemIcon>
+                      <DietIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Diets" />
                   </ListItem>
                 </Link>
-              }
-              {hasAccess(role, Kitchen.roles) &&
+              )}
+              {hasAccess(role, Kitchen.roles) && (
                 <Link href={Kitchen.link}>
                   <ListItem button key="kitchen" divider>
-                    <ListItemIcon><KitchenIcon /></ListItemIcon>
+                    <ListItemIcon>
+                      <KitchenIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Kitchen" />
                   </ListItem>
                 </Link>
-              }
-              {hasAccess(role, Food.roles) &&
+              )}
+              {hasAccess(role, Food.roles) && (
                 <Fragment>
-                  <ListItem
-                    button
-                    key="foodMenu"
-                    onClick={() => setFoodCollapse(!foodCollapse)}
-                  >
-                    <ListItemIcon><SettingsIcon /></ListItemIcon>
+                  <ListItem button key="foodMenu" onClick={() => setFoodCollapse(!foodCollapse)}>
+                    <ListItemIcon>
+                      <SettingsIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Nutrition Setup" />
                     {foodCollapse ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse in={foodCollapse} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                      {hasAccess(role, Food.roles) &&
+                      {hasAccess(role, Food.roles) && (
                         <Link href={Food.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><FoodIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <FoodIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="Food" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Food.nutrDef.roles) &&
+                      )}
+                      {hasAccess(role, Food.nutrDef.roles) && (
                         <Link href={Food.nutrDef.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><AssIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <AssIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="Nutrient Definitions" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Food.dataSrc.roles) &&
+                      )}
+                      {hasAccess(role, Food.dataSrc.roles) && (
                         <Link href={Food.dataSrc.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><BookIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <BookIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="References" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Food.prepTables.roles) &&
+                      )}
+                      {hasAccess(role, Food.prepTables.roles) && (
                         <Link href={Food.prepTables.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><FoodPrepTableIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <FoodPrepTableIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="Food Prep Tables" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Food.units.roles) &&
+                      )}
+                      {hasAccess(role, Food.units.roles) && (
                         <Link href={Food.units.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon style={{ paddingLeft: '6px' }}><FontAwesomeIcon icon={faRulerCombined} /></ListItemIcon>
+                            <ListItemIcon style={{ paddingLeft: '6px' }}>
+                              <FontAwesomeIcon icon={faRulerCombined} />
+                            </ListItemIcon>
                             <ListItemText inset primary="Units" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Food.nicknames.roles) &&
+                      )}
+                      {hasAccess(role, Food.nicknames.roles) && (
                         <Link href={Food.nicknames.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><Chat /></ListItemIcon>
+                            <ListItemIcon>
+                              <Chat />
+                            </ListItemIcon>
                             <ListItemText inset primary="Food Nicknames" />
                           </ListItem>
                         </Link>
-                      }
+                      )}
                     </List>
                   </Collapse>
                   <Divider />
                 </Fragment>
-              }
-              {hasAccess(role, Admin.roles) &&
+              )}
+              {hasAccess(role, Admin.roles) && (
                 <Fragment>
-                  <ListItem
-                    button
-                    key="admin"
-                    onClick={() => setAdminCollapse(!adminCollapse)}
-                  >
-                    <ListItemIcon><AdminIcon /></ListItemIcon>
+                  <ListItem button key="admin" onClick={() => setAdminCollapse(!adminCollapse)}>
+                    <ListItemIcon>
+                      <AdminIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Admin" />
                     {adminCollapse ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse in={adminCollapse} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                      {hasAccess(role, Admin.deliveryContainers.roles) &&
+                      {hasAccess(role, Admin.deliveryContainers.roles) && (
                         <Link href={Admin.deliveryContainers.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><DeliveryContainersIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <DeliveryContainersIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="Delivery Containers" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Admin.department.roles) &&
+                      )}
+                      {hasAccess(role, Admin.department.roles) && (
                         <Link href={Admin.department.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><DepartmentIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <DepartmentIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="Departments" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Admin.groupDiets.roles) &&
+                      )}
+                      {hasAccess(role, Admin.groupDiets.roles) && (
                         <Link href={Admin.groupDiets.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon style={{ marginLeft: -2.6 }}><FontAwesomeIcon icon={faCrow} size="lg" /></ListItemIcon>
+                            <ListItemIcon style={{ marginLeft: -2.6 }}>
+                              <FontAwesomeIcon icon={faCrow} size="lg" />
+                            </ListItemIcon>
                             <ListItemText inset primary="Group Diets" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Admin.species.roles) &&
+                      )}
+                      {hasAccess(role, Admin.species.roles) && (
                         <Link href={Admin.species.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><SpeciesIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <SpeciesIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="Species" />
                           </ListItem>
                         </Link>
-                      }
-                      {hasAccess(role, Admin.user.roles) &&
+                      )}
+                      {hasAccess(role, Admin.user.roles) && (
                         <Link href={Admin.user.link}>
                           <ListItem button className={classes.nested}>
-                            <ListItemIcon><UsersIcon /></ListItemIcon>
+                            <ListItemIcon>
+                              <UsersIcon />
+                            </ListItemIcon>
                             <ListItemText inset primary="Users" />
                           </ListItem>
                         </Link>
-                      }
+                      )}
                     </List>
                   </Collapse>
                   <Divider />
                 </Fragment>
-              }
-              {hasAccess(role, Profile.roles) &&
+              )}
+              {hasAccess(role, Profile.roles) && (
                 <Link href={Profile.link}>
                   <ListItem button key="profile" divider>
-                    <ListItemIcon><ProfileIcon /></ListItemIcon>
+                    <ListItemIcon>
+                      <ProfileIcon />
+                    </ListItemIcon>
                     <ListItemText primary="My Profile" />
                   </ListItem>
                 </Link>
-              }
+              )}
             </List>
           </Drawer>
         </div>

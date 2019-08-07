@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  Button,
 } from '@material-ui/core';
 
 export default class DietPlanChangeDialog extends Component {
@@ -10,11 +16,11 @@ export default class DietPlanChangeDialog extends Component {
     defaultChangeNotes: PropTypes.string,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-  }
+  };
 
   static defaultProps = {
     defaultChangeNotes: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -43,8 +49,7 @@ export default class DietPlanChangeDialog extends Component {
           <DialogTitle id="confirmation-dialog-title">Enter Diet Change Reason</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Please enter a reason why the diet was changed.
-              *Required*
+              Please enter a reason why the diet was changed. *Required*
             </DialogContentText>
             <TextField
               autoFocus

@@ -22,7 +22,9 @@ class Roles {
     let query = `${API_BASE_URL}/api/Roles/`;
 
     if (!RoleId) {
-      return Promise.reject(new Error('Must include roleId of a role to be able to get list of principles'));
+      return Promise.reject(
+        new Error('Must include roleId of a role to be able to get list of principles'),
+      );
     }
 
     if (filter) {

@@ -23,7 +23,11 @@ class FoodWeights {
       return Promise.reject(new Error('must have id send into updateUnits()'));
     }
     if (Object.keys(updates) === undefined || Object.keys(updates).length < 1) {
-      return Promise.reject(new Error('must have object with some keys that will be updated. If meant to delete use deleteUnit()'));
+      return Promise.reject(
+        new Error(
+          'must have object with some keys that will be updated. If meant to delete use deleteUnit()',
+        ),
+      );
     }
     const uri = `${API_BASE_URL}/api/FoodWeights/${weightId}?access_token=${this.token}`;
     const res = await axios.patch(uri, updates);
@@ -32,7 +36,11 @@ class FoodWeights {
 
   async addFoodWeight(newData) {
     if (Object.keys(newData) === undefined || Object.keys(newData).length < 1) {
-      return Promise.reject(new Error('must have data in order to create record. please send a json with relevant keys'));
+      return Promise.reject(
+        new Error(
+          'must have data in order to create record. please send a json with relevant keys',
+        ),
+      );
     }
     const uri = `${API_BASE_URL}/api/FoodWeights/replaceOrCreate?access_token=${this.token}`;
     const res = await axios.post(uri, newData);

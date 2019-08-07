@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
 
-export const DisplayFormikState = props => (
+export const DisplayFormikState = (props) => (
   <div style={{ margin: '1rem 0' }}>
     <pre
       style={{
@@ -16,8 +16,7 @@ export const DisplayFormikState = props => (
         padding: '.5rem',
       }}
     >
-      <strong>props</strong> ={' '}
-      {JSON.stringify(props, null, 2)}
+      <strong>props</strong> = {JSON.stringify(props, null, 2)}
     </pre>
   </div>
 );
@@ -26,37 +25,33 @@ const formikEnhancer = withFormik({
   enableReinitialize: true,
   validationSchema: Yup.object().shape({
     caseNote: Yup.string().required('Note is required'),
-    bcs: Yup
-      .number('Score must be a number')
+    bcs: Yup.number('Score must be a number')
       .min(1, 'Must be greater or equal to 1')
       .max(9, 'Must be less than or equal to 9'),
   }),
-  mapPropsToValues: props => ({
+  mapPropsToValues: (props) => ({
     caseNote: props.caseNote ? props.caseNote : '',
     bcs: props.bcs ? props.bcs : '',
     submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
-    const {
-      submitForm, ...rest
-    } = values;
+    const { submitForm, ...rest } = values;
 
-    submitForm(rest).then(() => {
-      setSubmitting(false);
-    }, () => {
-      setSubmitting(false);
-    });
+    submitForm(rest).then(
+      () => {
+        setSubmitting(false);
+      },
+      () => {
+        setSubmitting(false);
+      },
+    );
   },
   displayName: 'MyForm',
 });
 
-
-const Form = props => {
+const Form = (props) => {
   const {
-    values: {
-      caseNote,
-      bcs,
-    },
+    values: { caseNote, bcs },
     errors,
     touched,
     handleChange,
@@ -122,21 +117,15 @@ const Form = props => {
           />
         </Grid>
       </Grid>
-      {isSubmitting &&
+      {isSubmitting && (
         <Fragment>
           <br />
           <LinearProgress />
           <br />
         </Fragment>
-      }
+      )}
       <Grid item xs={12} style={{ paddingTop: '10px', paddingBottom: '10px' }}>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={!isValid}
-        >
+        <Button type="submit" fullWidth variant="contained" color="primary" disabled={!isValid}>
           {props.submitButtonText}
         </Button>
       </Grid>

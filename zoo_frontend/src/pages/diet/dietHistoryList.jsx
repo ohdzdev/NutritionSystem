@@ -14,7 +14,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import { theme } from '../../getPageContext';
 
-const styles = t => ({
+const styles = (t) => ({
   root: {
     backgroundColor: t.palette.background.paper,
     borderColor: t.palette.primary.main,
@@ -33,52 +33,52 @@ const styles = t => ({
   },
 });
 
-
 class NestedList extends React.Component {
   state = {
     open: true,
   };
 
   handleClick = () => {
-    this.setState(state => ({ open: !state.open }));
+    this.setState((state) => ({ open: !state.open }));
   };
 
   render() {
     const { classes } = this.props;
 
     return (
-      <MuiThemeProvider theme={{
-        ...theme,
-        overrides: {
-          MuiListItem: {
-            gutters: {
-              paddingLeft: theme.spacing.unit,
-              paddingRight: theme.spacing.unit / 2,
+      <MuiThemeProvider
+        theme={{
+          ...theme,
+          overrides: {
+            MuiListItem: {
+              gutters: {
+                paddingLeft: theme.spacing.unit,
+                paddingRight: theme.spacing.unit / 2,
+              },
+            },
+            MuiListItemIcon: {
+              root: {
+                marginRight: '0px',
+              },
+            },
+            MuiListItemText: {
+              root: {
+                paddingLeft: theme.spacing.unit,
+                paddingRight: theme.spacing.unit,
+              },
             },
           },
-          MuiListItemIcon: {
-            root: {
-              marginRight: '0px',
-            },
-          },
-          MuiListItemText: {
-            root: {
-              paddingLeft: theme.spacing.unit,
-              paddingRight: theme.spacing.unit,
-            },
-          },
-        },
-      }}
+        }}
       >
         <List
-          subheader={<ListSubheader className={classes.ListSubheader} component="div">Diet History</ListSubheader>}
+          subheader={
+            <ListSubheader className={classes.ListSubheader} component="div">
+              Diet History
+            </ListSubheader>
+          }
           className={classes.root}
         >
-          <ListItem
-            button
-            onClick={this.props.currentClick}
-            selected={this.props.currentSelected}
-          >
+          <ListItem button onClick={this.props.currentClick} selected={this.props.currentSelected}>
             <ListItemIcon>
               <PlayArrow />
             </ListItemIcon>
@@ -91,7 +91,7 @@ class NestedList extends React.Component {
             <ListItemText primary="History" />
             {this.state.open ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          {this.props.history &&
+          {this.props.history && (
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 {this.props.history.map((entry) => (
@@ -109,8 +109,7 @@ class NestedList extends React.Component {
                 ))}
               </List>
             </Collapse>
-          }
-
+          )}
         </List>
       </MuiThemeProvider>
     );
@@ -119,10 +118,12 @@ class NestedList extends React.Component {
 
 NestedList.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.any.isRequired,
-    text: PropTypes.string.isRequired,
-  })),
+  history: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.any.isRequired,
+      text: PropTypes.string.isRequired,
+    }),
+  ),
   historyClick: PropTypes.func,
   currentClick: PropTypes.func,
   currentSelected: PropTypes.bool,
@@ -130,11 +131,10 @@ NestedList.propTypes = {
 };
 
 NestedList.defaultProps = {
-  history: [
-  ],
+  history: [],
   currentSelected: false,
-  historyClick: () => { },
-  currentClick: () => { },
+  historyClick: () => {},
+  currentClick: () => {},
   selectedHistory: '',
 };
 

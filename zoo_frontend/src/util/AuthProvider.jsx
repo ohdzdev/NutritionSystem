@@ -10,11 +10,8 @@ const AuthContext = React.createContext({
 
 class AuthProvider extends Component {
   static propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node,
-    ]).isRequired,
-  }
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+  };
 
   constructor(props) {
     super(props);
@@ -35,11 +32,7 @@ class AuthProvider extends Component {
   }
 
   render() {
-    return (
-      <AuthContext.Provider value={this.state}>
-        {this.props.children}
-      </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={this.state}>{this.props.children}</AuthContext.Provider>;
   }
 }
 

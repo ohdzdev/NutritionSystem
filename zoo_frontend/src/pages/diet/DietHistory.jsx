@@ -8,14 +8,13 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { theme } from '../../getPageContext';
 
-
 class DietHistory extends Component {
   static propTypes = {
     allFoods: PropTypes.arrayOf(PropTypes.object).isRequired,
     allUnits: PropTypes.arrayOf(PropTypes.object).isRequired,
     dietHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
     currentHistoryTime: PropTypes.string.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -41,44 +40,46 @@ class DietHistory extends Component {
   render() {
     return (
       <>
-        <MuiThemeProvider theme={{
-          ...theme,
-          overrides: {
-            MuiTableCell: {
-              root: {
-                textAlign: 'center',
-                padding: '0px 4px 0px 4px',
+        <MuiThemeProvider
+          theme={{
+            ...theme,
+            overrides: {
+              MuiTableCell: {
+                root: {
+                  textAlign: 'center',
+                  padding: '0px 4px 0px 4px',
+                },
+                paddingCheckbox: {
+                  padding: '0px 2px 0px 2px',
+                },
               },
-              paddingCheckbox: {
-                padding: '0px 2px 0px 2px',
+              MuiSelect: {
+                select: {
+                  maxWidth: '100px',
+                },
+              },
+              MuiIconButton: {
+                root: {
+                  padding: '5px 5px 5px 5px',
+                },
+              },
+              MuiTableSortLabel: {
+                icon: {
+                  display: 'none',
+                },
+              },
+              MuiIcon: {
+                root: {
+                  width: '1em !important',
+                },
               },
             },
-            MuiSelect: {
-              select: {
-                maxWidth: '100px',
-              },
-            },
-            MuiIconButton: {
-              root: {
-                padding: '5px 5px 5px 5px',
-              },
-            },
-            MuiTableSortLabel: {
-              icon: {
-                display: 'none',
-              },
-            },
-            MuiIcon: {
-              root: {
-                width: '1em !important',
-              },
-            },
-          },
-        }
-        }
+          }}
         >
           <MaterialTable
-            title={`${moment(new Date(this.props.currentHistoryTime)).format(' MM-DD-YYYY h:mm A')} Diet Changes`}
+            title={`${moment(new Date(this.props.currentHistoryTime)).format(
+              ' MM-DD-YYYY h:mm A',
+            )} Diet Changes`}
             columns={[
               {
                 title: 'Food',
@@ -165,7 +166,6 @@ class DietHistory extends Component {
             }}
           />
         </MuiThemeProvider>
-
       </>
     );
   }

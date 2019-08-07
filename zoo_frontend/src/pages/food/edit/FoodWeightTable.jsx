@@ -28,7 +28,9 @@ class FoodWeightTable extends Component {
 
     const keys = Object.keys(foodWeightsAPIModel.properties);
     const foodWeightColumns = {};
-    keys.forEach((key) => { foodWeightColumns[key] = null; });
+    keys.forEach((key) => {
+      foodWeightColumns[key] = null;
+    });
     const ignoredFoodWeightColumns = ['weightId', 'foodId'];
     const renamedFoodWeightColumns = {
       weightAmount: 'Amount of Food',
@@ -36,88 +38,117 @@ class FoodWeightTable extends Component {
       gmWeight: 'Weight in Grams',
     };
 
-    this.preppedFoodWeightColumns = TableColumnHelper([foodWeightColumns], ignoredFoodWeightColumns, renamedFoodWeightColumns);
+    this.preppedFoodWeightColumns = TableColumnHelper(
+      [foodWeightColumns],
+      ignoredFoodWeightColumns,
+      renamedFoodWeightColumns,
+    );
     this.preppedFoodWeightColumns[1].lookup = unitLookup;
 
     this.clientFoodWeightsAPI = new FoodWeights(props.token);
     this.notificationBar = React.createRef();
   }
 
-  onFoodWeightAdd = (row) => new Promise(async (res, rej) => {
-    if (!row.weightAmount || !row.unitIdNum || !row.gmWeight) {
-      this.notificationBar.showNotification('error', 'Please fill out all fields in table in order to submit a new entry.');
-      rej();
-      return;
-    }
-    try {
-      const preppedRow = { ...row, foodId: this.props.currentFoodId };
-      const r = await this.clientFoodWeightsAPI.addFoodWeight(preppedRow);
-      if (r.data) {
-        this.setState((prevState) => ({ foodWeights: [...prevState.foodWeights, r.data] }));
+  onFoodWeightAdd = (row) =>
+    new Promise(async (res, rej) => {
+      if (!row.weightAmount || !row.unitIdNum || !row.gmWeight) {
+        this.notificationBar.showNotification(
+          'error',
+          'Please fill out all fields in table in order to submit a new entry.',
+        );
+        rej();
+        return;
       }
-
-      res();
-      return;
-    } catch (error) {
-      console.error(error);
-      this.notificationBar.showNotification('error', 'Submitting new Food Weight failed!');
-      rej();
-    }
-  })
-
-  onFoodWeightUdpate = (rowUpdated, prevRow) => new Promise(async (res, rej) => {
-    if (!rowUpdated.weightAmount || !rowUpdated.unitIdNum || !rowUpdated.gmWeight) {
-      this.notificationBar.showNotification('error', 'All fields required, please fill out all fields.');
-      rej();
-      return;
-    }
-    const updatedCopy = { ...rowUpdated };
-    let fieldUpdated = false;
-    const updatedFields = Object.entries(updatedCopy).filter((column) => prevRow[column[0]] !== column[1]).map((entry) => entry[0]);
-    if (updatedFields && updatedFields.length > 0) {
-      fieldUpdated = true;
-    }
-    if (fieldUpdated) {
       try {
-        const updatedFieldsToServer = {};
-        updatedFields.forEach((fieldToKeep) => { updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep]; });
-        await this.clientFoodWeightsAPI.updateFoodWeight(updatedCopy.weightId, updatedFieldsToServer);
-        this.setState((prevState) => {
-          const newFoodWeights = [...prevState.foodWeights.map((item) => {
-            if (item.weightId !== rowUpdated.weightId) {
-              return item;
-            }
-            const updatedRow = item;
-            Object.assign(updatedRow, updatedFieldsToServer);
-            return updatedRow;
-          })];
-          return { foodWeights: newFoodWeights };
-        });
+        const preppedRow = { ...row, foodId: this.props.currentFoodId };
+        const r = await this.clientFoodWeightsAPI.addFoodWeight(preppedRow);
+        if (r.data) {
+          this.setState((prevState) => ({ foodWeights: [...prevState.foodWeights, r.data] }));
+        }
+
         res();
+        return;
+      } catch (error) {
+        console.error(error);
+        this.notificationBar.showNotification('error', 'Submitting new Food Weight failed!');
+        rej();
+      }
+    });
+
+  onFoodWeightUdpate = (rowUpdated, prevRow) =>
+    new Promise(async (res, rej) => {
+      if (!rowUpdated.weightAmount || !rowUpdated.unitIdNum || !rowUpdated.gmWeight) {
+        this.notificationBar.showNotification(
+          'error',
+          'All fields required, please fill out all fields.',
+        );
+        rej();
+        return;
+      }
+      const updatedCopy = { ...rowUpdated };
+      let fieldUpdated = false;
+      const updatedFields = Object.entries(updatedCopy)
+        .filter((column) => prevRow[column[0]] !== column[1])
+        .map((entry) => entry[0]);
+      if (updatedFields && updatedFields.length > 0) {
+        fieldUpdated = true;
+      }
+      if (fieldUpdated) {
+        try {
+          const updatedFieldsToServer = {};
+          updatedFields.forEach((fieldToKeep) => {
+            updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep];
+          });
+          await this.clientFoodWeightsAPI.updateFoodWeight(
+            updatedCopy.weightId,
+            updatedFieldsToServer,
+          );
+          this.setState((prevState) => {
+            const newFoodWeights = [
+              ...prevState.foodWeights.map((item) => {
+                if (item.weightId !== rowUpdated.weightId) {
+                  return item;
+                }
+                const updatedRow = item;
+                Object.assign(updatedRow, updatedFieldsToServer);
+                return updatedRow;
+              }),
+            ];
+            return { foodWeights: newFoodWeights };
+          });
+          res();
+        } catch (error) {
+          console.error(error);
+          rej();
+        }
+      }
+      res();
+    });
+
+  onFoodWeightDelete = (row) =>
+    new Promise(async (res, rej) => {
+      try {
+        if (row.weightId) {
+          await this.clientFoodWeightsAPI.deleteFoodWeight(row.weightId);
+          this.setState((prevState) => ({
+            foodWeights: [
+              ...prevState.foodWeights.filter((item) => item.weightId !== row.weightId),
+            ],
+          }));
+          res();
+        } else {
+          this.notificationBar.showNotification(
+            'error',
+            'Error Deleting weight on server. Please contact server admin',
+          );
+          rej();
+          return;
+        }
       } catch (error) {
         console.error(error);
         rej();
       }
-    }
-    res();
-  })
-
-  onFoodWeightDelete = (row) => new Promise(async (res, rej) => {
-    try {
-      if (row.weightId) {
-        await this.clientFoodWeightsAPI.deleteFoodWeight(row.weightId);
-        this.setState((prevState) => ({ foodWeights: [...prevState.foodWeights.filter((item) => item.weightId !== row.weightId)] }));
-        res();
-      } else {
-        this.notificationBar.showNotification('error', 'Error Deleting weight on server. Please contact server admin');
-        rej();
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-      rej();
-    }
-  })
+    });
 
   render() {
     return (
@@ -136,9 +167,7 @@ class FoodWeightTable extends Component {
             addRowPosition: 'first',
           }}
         />
-        <Notifications
-          ref={this.notificationBar}
-        />
+        <Notifications ref={this.notificationBar} />
       </div>
     );
   }

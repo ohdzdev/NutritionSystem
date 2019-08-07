@@ -5,11 +5,12 @@ import { Typography } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 
 // This component must be a class as react-to-print requires a reference to it
-class PrepSheetPrintOut extends Component { // eslint-disable-line react/prefer-stateless-function
+class PrepSheetPrintOut extends Component {
+  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     date: PropTypes.object.isRequired,
     prepSheetData: PropTypes.arrayOf(PropTypes.object).isRequired,
-  }
+  };
 
   render() {
     const { date, prepSheetData } = this.props;
@@ -44,17 +45,16 @@ class PrepSheetPrintOut extends Component { // eslint-disable-line react/prefer-
 
     return (
       <div>
-        <Typography
-          variant="h4"
-          color="secondary"
-        >
+        <Typography variant="h4" color="secondary">
           PREP AHEAD {date.format('M/D/YYYY')}
         </Typography>
-        <Typography
-          variant="h6"
-          color="secondary"
-        >
-          Prep {date.format('dddd')} (for {date.clone().add(1, 'day').format('dddd')} diet prep)
+        <Typography variant="h6" color="secondary">
+          Prep {date.format('dddd')} (for{' '}
+          {date
+            .clone()
+            .add(1, 'day')
+            .format('dddd')}{' '}
+          diet prep)
         </Typography>
         <table style={styles.table}>
           <tbody>

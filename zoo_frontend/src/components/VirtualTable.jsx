@@ -9,11 +9,9 @@ import { withStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
-import {
-  AutoSizer, Column, SortDirection, Table,
-} from 'react-virtualized';
+import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 
-const styles = theme => ({
+const styles = (theme) => ({
   table: {
     fontFamily: theme.typography.fontFamily,
   },
@@ -48,9 +46,7 @@ class MuiVirtualizedTable extends React.PureComponent {
   };
 
   cellRenderer = ({ cellData, columnIndex = null }) => {
-    const {
-      columns, classes, rowHeight, onRowClick,
-    } = this.props;
+    const { columns, classes, rowHeight, onRowClick } = this.props;
     return (
       <TableCell
         component="div"
@@ -66,24 +62,21 @@ class MuiVirtualizedTable extends React.PureComponent {
     );
   };
 
-  headerRenderer = ({
-    label, columnIndex, dataKey, sortBy, sortDirection,
-  }) => {
-    const {
-      headerHeight, columns, classes, sort,
-    } = this.props;
+  headerRenderer = ({ label, columnIndex, dataKey, sortBy, sortDirection }) => {
+    const { headerHeight, columns, classes, sort } = this.props;
     const direction = {
       [SortDirection.ASC]: 'asc',
       [SortDirection.DESC]: 'desc',
     };
 
-    const inner = !columns[columnIndex].disableSort && sort != null ? (
-      <TableSortLabel active={dataKey === sortBy} direction={direction[sortDirection]}>
-        {label}
-      </TableSortLabel>
-    ) : (
-      label
-    );
+    const inner =
+      !columns[columnIndex].disableSort && sort != null ? (
+        <TableSortLabel active={dataKey === sortBy} direction={direction[sortDirection]}>
+          {label}
+        </TableSortLabel>
+      ) : (
+        label
+      );
 
     return (
       <TableCell
@@ -110,15 +103,14 @@ class MuiVirtualizedTable extends React.PureComponent {
             {...tableProps}
             rowClassName={this.getRowClassName}
           >
-            {columns.map(({
-              cellContentRenderer = null, className, dataKey, ...other
-            }, index) => {
+            {columns.map(({ cellContentRenderer = null, className, dataKey, ...other }, index) => {
               let renderer;
               if (cellContentRenderer != null) {
-                renderer = cellRendererProps => this.cellRenderer({
-                  cellData: cellContentRenderer(cellRendererProps),
-                  columnIndex: index,
-                });
+                renderer = (cellRendererProps) =>
+                  this.cellRenderer({
+                    cellData: cellContentRenderer(cellRendererProps),
+                    columnIndex: index,
+                  });
               } else {
                 renderer = this.cellRenderer;
               }
@@ -126,10 +118,11 @@ class MuiVirtualizedTable extends React.PureComponent {
               return (
                 <Column
                   key={dataKey}
-                  headerRenderer={headerProps => this.headerRenderer({
-                    ...headerProps,
-                    columnIndex: index,
-                  })
+                  headerRenderer={(headerProps) =>
+                    this.headerRenderer({
+                      ...headerProps,
+                      columnIndex: index,
+                    })
                   }
                   className={classNames(classes.flexContainer, className)}
                   cellRenderer={renderer}
@@ -166,7 +159,7 @@ MuiVirtualizedTable.propTypes = {
 MuiVirtualizedTable.defaultProps = {
   headerHeight: 56,
   rowHeight: 56,
-  onRowClick: () => { },
+  onRowClick: () => {},
   rowClassName: '',
   sort: null,
 };
@@ -180,7 +173,7 @@ const ReactVirtualizedTable = (props) => {
       <WrappedVirtualizedTable
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}
-        onRowClick={event => console.log(event)}
+        onRowClick={(event) => console.log(event)}
         columns={cols}
       />
     </Paper>

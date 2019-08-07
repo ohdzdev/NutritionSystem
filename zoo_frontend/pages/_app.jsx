@@ -70,10 +70,7 @@ class MyApp extends App {
                   <PageLayout
                     account={account} // needs to know for sidebar initial drawer position in constructor
                   >
-                    <Component
-                      pageContext={this.pageContext}
-                      {...rest}
-                    />
+                    <Component pageContext={this.pageContext} {...rest} />
                   </PageLayout>
                 )}
               </AuthContext.Consumer>

@@ -11,11 +11,15 @@ import PrevIcon from '@material-ui/icons/NavigateBefore';
 import Paper from '@material-ui/core/Paper';
 import KitchenView from '../../../components/KitchenView';
 
-
 // import { hasAccess, Home, Diet } from '../PageAccess';
 
 import {
-  DeliveryContainers, DietChanges, Diets, FoodPrepTables, PrepNotes, Species,
+  DeliveryContainers,
+  DietChanges,
+  Diets,
+  FoodPrepTables,
+  PrepNotes,
+  Species,
 } from '../../../api';
 
 export default class extends Component {
@@ -32,17 +36,14 @@ export default class extends Component {
 
   static defaultProps = {
     token: '',
-  }
+  };
 
   static async getInitialProps({ query, authToken }) {
     const serverFoodPrepTablesAPI = new FoodPrepTables(authToken);
     const serverDietsAPI = new Diets(authToken);
 
     try {
-      const [
-        AllFoodPrepTables,
-        AllFoodPrep,
-      ] = await Promise.all([
+      const [AllFoodPrepTables, AllFoodPrep] = await Promise.all([
         serverFoodPrepTablesAPI.getFoodPrepTables(),
         serverDietsAPI.getAnimalPrep(query.date), // this.props.date !!!!!!!!!!
       ]);
@@ -85,9 +86,7 @@ export default class extends Component {
   }
 
   async getDietsData(tableID) {
-    const [
-      diets,
-    ] = await Promise.all([
+    const [diets] = await Promise.all([
       this.serverDietsAPI.getDiets({
         where: {
           tableId: tableID,
@@ -101,12 +100,7 @@ export default class extends Component {
 
   /* Data to send as props to KitchenView */
   async getKitchenData(speciesID, dietID, dcID) {
-    const [
-      species,
-      prepNotes,
-      dc,
-      dietChanges,
-    ] = await Promise.all([
+    const [species, prepNotes, dc, dietChanges] = await Promise.all([
       this.serverSpeciesAPI.getSpecies({
         where: {
           speciesId: speciesID,
@@ -142,12 +136,12 @@ export default class extends Component {
   // For entry in dietsSub where diet_id = dietID
   // food, group_amount
   getPrepFood(dietID) {
-    const items = this.props.PrepDietsSub.filter(item => item.diet_id === dietID);
+    const items = this.props.PrepDietsSub.filter((item) => item.diet_id === dietID);
     return items;
   }
 
   /* Handle table change !! */
-  handleChange = name => event => {
+  handleChange = (name) => (event) => {
     const e = event.target.value;
     this.setState({ [name]: e, currentIndex: 0 });
     this.getDietsData(e).then(() => {
@@ -160,21 +154,22 @@ export default class extends Component {
       currentIndex: prevState.currentIndex + 1,
     }));
     this.updateState();
-  }
+  };
 
   handlePrev = () => {
     this.setState((prevState) => ({
       currentIndex: prevState.currentIndex - 1,
     }));
     this.updateState();
-  }
+  };
 
-  updateState = () => this.getKitchenData(
-    this.state.diets[this.state.currentIndex].speciesId, // speciesID
-    this.state.diets[this.state.currentIndex].dietId, // dietID
-    this.state.diets[this.state.currentIndex].dcId, // dcID
-    this.props.date,
-  );
+  updateState = () =>
+    this.getKitchenData(
+      this.state.diets[this.state.currentIndex].speciesId, // speciesID
+      this.state.diets[this.state.currentIndex].dietId, // dietID
+      this.state.diets[this.state.currentIndex].dcId, // dcID
+      this.props.date,
+    );
 
   render() {
     // const { role } = this.props.account;
@@ -182,11 +177,12 @@ export default class extends Component {
     const { FoodPrepTables, date } = this.props;
 
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
       >
         <div className={this.props.classes.root}>
           <Fab
@@ -196,7 +192,8 @@ export default class extends Component {
             onClick={() => this.handlePrev()}
             disabled={this.state.currentIndex === 0}
           >
-            <PrevIcon className={this.props.classes.extendedIcon} />Prev
+            <PrevIcon className={this.props.classes.extendedIcon} />
+            Prev
           </Fab>
           <FormControl className={this.props.classes.formControl}>
             <InputLabel htmlFor="table-native-simple">Prep Table</InputLabel>
@@ -206,12 +203,11 @@ export default class extends Component {
             >
               <option value="" />
               {/* value prop is the table_id of FOOD_PREP_TABLES */
-                FoodPrepTables ?
-                  FoodPrepTables.map((item) => (
+              FoodPrepTables
+                ? FoodPrepTables.map((item) => (
                     <option value={item.tableId}>{item.description}</option>
                   ))
-                  : null
-              }
+                : null}
             </NativeSelect>
           </FormControl>
           <Fab
@@ -221,13 +217,13 @@ export default class extends Component {
             className={this.props.classes.fab}
             onClick={() => this.handleNext()}
             disabled={this.state.currentIndex + 1 >= this.state.diets.length}
-
           >
-            Next<NextIcon className={this.props.classes.extendedIcon} />
+            Next
+            <NextIcon className={this.props.classes.extendedIcon} />
           </Fab>
         </div>
         <Paper className={this.props.classes.paper}>
-          {this.state.table && this.state.diets && this.state.diets.length > 0 ?
+          {this.state.table && this.state.diets && this.state.diets.length > 0 ? (
             <KitchenView
               pageLength={this.state.diets.length}
               currentPage={this.state.currentIndex + 1}
@@ -239,8 +235,7 @@ export default class extends Component {
               foodPrep={this.state.foodPrep}
               date={date}
             />
-            : null
-          }
+          ) : null}
         </Paper>
       </div>
     );

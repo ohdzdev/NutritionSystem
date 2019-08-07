@@ -16,7 +16,9 @@ export default class units extends Component {
   static async getInitialProps({ authToken }) {
     const serverUnitsAPI = new UnitsAPI(authToken);
     try {
-      const res = await serverUnitsAPI.getUnits().catch((err) => ({ data: [{ err: true, msg: err }] }));
+      const res = await serverUnitsAPI
+        .getUnits()
+        .catch((err) => ({ data: [{ err: true, msg: err }] }));
       return { allUnits: res.data };
     } catch (err) {
       return {
@@ -33,20 +35,26 @@ export default class units extends Component {
 
   static defaultProps = {
     token: '',
-  }
+  };
 
   constructor(props) {
     super(props);
 
     const keys = Object.keys(UnitsAPIModel.properties);
     const UnitsColumns = {};
-    keys.forEach((key) => { UnitsColumns[key] = null; });
+    keys.forEach((key) => {
+      UnitsColumns[key] = null;
+    });
     const ignoredFoodWeightColumns = ['unitId'];
     const renamedFoodWeightColumns = {
       conversionToG: 'Conversion to Grams',
     };
 
-    this.preppedUnitColumns = TableColumnHelper([UnitsColumns], ignoredFoodWeightColumns, renamedFoodWeightColumns);
+    this.preppedUnitColumns = TableColumnHelper(
+      [UnitsColumns],
+      ignoredFoodWeightColumns,
+      renamedFoodWeightColumns,
+    );
     this.preppedUnitColumns[1].lookup = {
       Volume: 'Volume',
       Weight: 'Weight',
@@ -60,85 +68,104 @@ export default class units extends Component {
     this.notificationBar = React.createRef();
   }
 
-  onRowAdd = (row) => new Promise(async (res, rej) => {
-    // required rows check
-    if (!row.unit || !row.unitType) {
-      this.notificationBar.showNotification('error', 'Please fill out "Unit" and "Unit Type" in order to submit a new entry.');
-      rej();
-      return;
-    }
-
-    try {
-      const r = await this.clientUnitAPI.addUnit(row);
-      // apply new row to current view
-      if (r.data) {
-        this.setState((prevState) => ({ allUnits: [...prevState.allUnits, r.data] }));
-      }
-      res();
-    } catch (error) {
-      console.error(error);
-      this.notificationBar.showNotification('error', 'Submitting new Unit failed!');
-      rej();
-    }
-  })
-
-  onRowUpdate = (rowUpdated, prevRow) => new Promise(async (res, rej) => {
-    // required rows check
-    if (!rowUpdated.unit || !rowUpdated.unitType) {
-      this.notificationBar.showNotification('error', 'Fields "Unit" and "Unit Type" are required, please fill them out.');
-      rej();
-      return;
-    }
-
-
-    const updatedCopy = { ...rowUpdated };
-    let fieldUpdated = false;
-    const updatedFields = Object.entries(updatedCopy).filter((column) => prevRow[column[0]] !== column[1]).map((entry) => entry[0]);
-    if (updatedFields && updatedFields.length > 0) {
-      fieldUpdated = true;
-    }
-    if (fieldUpdated) {
-      try {
-        const updatedFieldsToServer = {};
-        updatedFields.forEach((fieldToKeep) => { updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep]; });
-        await this.clientUnitAPI.updateUnits(updatedCopy.unitId, updatedFieldsToServer);
-        this.setState((prevState) => {
-          const newUnits = [...prevState.allUnits.map((item) => {
-            if (item.unitId !== rowUpdated.unitId) {
-              return item;
-            }
-            const updatedRow = item;
-            Object.assign(updatedRow, updatedFieldsToServer);
-            return updatedRow;
-          })];
-          return { allUnits: newUnits };
-        });
-        res();
-      } catch (error) {
-        console.error(error);
+  onRowAdd = (row) =>
+    new Promise(async (res, rej) => {
+      // required rows check
+      if (!row.unit || !row.unitType) {
+        this.notificationBar.showNotification(
+          'error',
+          'Please fill out "Unit" and "Unit Type" in order to submit a new entry.',
+        );
         rej();
         return;
       }
-    }
-    res();
-  })
 
-  onRowDelete = (row) => new Promise(async (res, rej) => {
-    try {
-      if (row.unitId) {
-        await this.clientUnitAPI.deleteUnit(row.unitId);
-        this.setState((prevState) => ({ allUnits: [...prevState.allUnits.filter((item) => item.unitId !== row.unitId)] }));
+      try {
+        const r = await this.clientUnitAPI.addUnit(row);
+        // apply new row to current view
+        if (r.data) {
+          this.setState((prevState) => ({ allUnits: [...prevState.allUnits, r.data] }));
+        }
         res();
+      } catch (error) {
+        console.error(error);
+        this.notificationBar.showNotification('error', 'Submitting new Unit failed!');
+        rej();
+      }
+    });
+
+  onRowUpdate = (rowUpdated, prevRow) =>
+    new Promise(async (res, rej) => {
+      // required rows check
+      if (!rowUpdated.unit || !rowUpdated.unitType) {
+        this.notificationBar.showNotification(
+          'error',
+          'Fields "Unit" and "Unit Type" are required, please fill them out.',
+        );
+        rej();
         return;
       }
-      this.notificationBar.showNotification('error', 'Error Deleting Unit on server. Please contact server admin');
-      rej();
-      return;
-    } catch (error) {
-      console.error(error);
-      rej();
-    }
-  })
+
+      const updatedCopy = { ...rowUpdated };
+      let fieldUpdated = false;
+      const updatedFields = Object.entries(updatedCopy)
+        .filter((column) => prevRow[column[0]] !== column[1])
+        .map((entry) => entry[0]);
+      if (updatedFields && updatedFields.length > 0) {
+        fieldUpdated = true;
+      }
+      if (fieldUpdated) {
+        try {
+          const updatedFieldsToServer = {};
+          updatedFields.forEach((fieldToKeep) => {
+            updatedFieldsToServer[fieldToKeep] = updatedCopy[fieldToKeep];
+          });
+          await this.clientUnitAPI.updateUnits(updatedCopy.unitId, updatedFieldsToServer);
+          this.setState((prevState) => {
+            const newUnits = [
+              ...prevState.allUnits.map((item) => {
+                if (item.unitId !== rowUpdated.unitId) {
+                  return item;
+                }
+                const updatedRow = item;
+                Object.assign(updatedRow, updatedFieldsToServer);
+                return updatedRow;
+              }),
+            ];
+            return { allUnits: newUnits };
+          });
+          res();
+        } catch (error) {
+          console.error(error);
+          rej();
+          return;
+        }
+      }
+      res();
+    });
+
+  onRowDelete = (row) =>
+    new Promise(async (res, rej) => {
+      try {
+        if (row.unitId) {
+          await this.clientUnitAPI.deleteUnit(row.unitId);
+          this.setState((prevState) => ({
+            allUnits: [...prevState.allUnits.filter((item) => item.unitId !== row.unitId)],
+          }));
+          res();
+          return;
+        }
+        this.notificationBar.showNotification(
+          'error',
+          'Error Deleting Unit on server. Please contact server admin',
+        );
+        rej();
+        return;
+      } catch (error) {
+        console.error(error);
+        rej();
+      }
+    });
 
   render() {
     return (
@@ -159,9 +186,7 @@ export default class units extends Component {
             onRowDelete: this.onRowDelete,
           }}
         />
-        <Notifications
-          ref={this.notificationBar}
-        />
+        <Notifications ref={this.notificationBar} />
       </div>
     );
   }

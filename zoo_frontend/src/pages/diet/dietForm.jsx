@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 
 import { FormCheckbox, SingleSelect } from '../../components';
 
-export const DisplayFormikState = props => (
+export const DisplayFormikState = (props) => (
   <div style={{ margin: '1rem 0' }}>
     <pre
       style={{
@@ -19,8 +19,7 @@ export const DisplayFormikState = props => (
         padding: '.5rem',
       }}
     >
-      <strong>props</strong> ={' '}
-      {JSON.stringify(props, null, 2)}
+      <strong>props</strong> = {JSON.stringify(props, null, 2)}
     </pre>
   </div>
 );
@@ -38,7 +37,7 @@ const formikEnhancer = withFormik({
     groupId: Yup.string().required('Group Diet is required, if no group diet. set to "NONE"'),
     analyzed: Yup.bool(),
   }),
-  mapPropsToValues: props => ({
+  mapPropsToValues: (props) => ({
     speciesId: props.speciesId ? String(props.speciesId) : '',
     current: props.current != null ? props.current === 1 : true, // default true
     tableId: props.tableId ? String(props.tableId) : '',
@@ -51,9 +50,7 @@ const formikEnhancer = withFormik({
     submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
-    const {
-      current, label, ncPrepares, analyzed, submitForm, ...rest
-    } = values;
+    const { current, label, ncPrepares, analyzed, submitForm, ...rest } = values;
     const payload = {
       current: current ? 1 : 0,
       label: label ? 1 : 0,
@@ -61,29 +58,21 @@ const formikEnhancer = withFormik({
       analyzed: analyzed ? 1 : 0,
       ...rest,
     };
-    submitForm(payload).then(() => {
-      setSubmitting(false);
-    }, () => {
-      setSubmitting(false);
-    });
+    submitForm(payload).then(
+      () => {
+        setSubmitting(false);
+      },
+      () => {
+        setSubmitting(false);
+      },
+    );
   },
   displayName: 'MyForm',
 });
 
-
-const Form = props => {
+const Form = (props) => {
   const {
-    values: {
-      speciesId,
-      current,
-      tableId,
-      noteId,
-      label,
-      dcId,
-      ncPrepares,
-      groupId,
-      analyzed,
-    },
+    values: { speciesId, current, tableId, noteId, label, dcId, ncPrepares, groupId, analyzed },
     errors,
     touched,
     handleChange,
@@ -247,21 +236,15 @@ const Form = props => {
           </Grid>
         </Grid>
       </Grid>
-      {isSubmitting &&
+      {isSubmitting && (
         <Fragment>
           <br />
           <LinearProgress />
           <br />
         </Fragment>
-      }
+      )}
       <Grid item xs={12} sm={3} style={{ padding: '10px' }}>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={!isValid}
-        >
+        <Button type="submit" fullWidth variant="contained" color="primary" disabled={!isValid}>
           {props.submitButtonText}
         </Button>
       </Grid>
@@ -288,22 +271,30 @@ Form.propTypes = {
   isValid: PropTypes.bool.isRequired,
   setFieldTouched: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  speciesCodes: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.number,
-  })).isRequired,
-  tableCodes: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.number,
-  })).isRequired,
-  deliveryContainerCodes: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.number,
-  })).isRequired,
-  groupDietCodes: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.number,
-  })).isRequired,
+  speciesCodes: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+    }),
+  ).isRequired,
+  tableCodes: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+    }),
+  ).isRequired,
+  deliveryContainerCodes: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+    }),
+  ).isRequired,
+  groupDietCodes: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+    }),
+  ).isRequired,
   isSubmitting: PropTypes.bool,
   submitButtonText: PropTypes.string,
   editDisabled: PropTypes.bool,
@@ -327,7 +318,7 @@ Form.defaultProps = {
 };
 
 class FormikSelect extends React.Component {
-  handleChange = value => {
+  handleChange = (value) => {
     // this is going to call setFieldValue and manually update values.topcis
     this.props.onChange('topics', value);
   };
@@ -349,9 +340,8 @@ class FormikSelect extends React.Component {
           onBlur={this.handleBlur}
           value={this.props.value}
         />
-        {!!this.props.error &&
-          this.props.touched && (
-            <div style={{ color: 'red', marginTop: '.5rem' }}>{this.props.error}</div>
+        {!!this.props.error && this.props.touched && (
+          <div style={{ color: 'red', marginTop: '.5rem' }}>{this.props.error}</div>
         )}
       </div>
     );
@@ -369,10 +359,12 @@ FormikSelect.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   }).isRequired,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  })).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    }),
+  ).isRequired,
 };
 
 FormikSelect.defaultProps = {

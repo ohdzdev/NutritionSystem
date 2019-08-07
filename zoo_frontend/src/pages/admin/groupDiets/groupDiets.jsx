@@ -20,10 +20,13 @@ const generateStateData = (subenclosures, locations) => {
   let locationLookup = {};
   locationLookup.None = 'None';
 
-  locationLookup = locations.slice(0).sort((a, b) => (a.location > b.location ? 1 : -1)).reduce((acc, location) => {
-    acc[location.location] = location.location;
-    return acc;
-  }, locationLookup);
+  locationLookup = locations
+    .slice(0)
+    .sort((a, b) => (a.location > b.location ? 1 : -1))
+    .reduce((acc, location) => {
+      acc[location.location] = location.location;
+      return acc;
+    }, locationLookup);
 
   const subenclosuresData = subenclosures.map((sub) => ({
     ...sub,
@@ -76,7 +79,7 @@ class GroupDiets extends Component {
     token: '',
     error: false,
     errorMessage: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -87,61 +90,19 @@ class GroupDiets extends Component {
     this.subenclosuresApi = new SubenclosuresAPI(props.token);
   }
 
-  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    // Reject if a field is not filled out
-    if (!newData.subenclosure || !newData.locationName) {
-      this.notificationsRef.current.showNotification('error', 'Please fill out all of the "Species" and "Scientific Name".');
-      reject();
-      return;
-    }
-
-    // Find the selected location
-    let location = this.props.locations.find((l) => l.location === newData.locationName);
-
-    if (!location) {
-      if (newData.locationName === 'None') {
-        location = { locationId: null };
-      } else {
+  onRowAdd = (newData) =>
+    new Promise(async (resolve, reject) => {
+      // Reject if a field is not filled out
+      if (!newData.subenclosure || !newData.locationName) {
+        this.notificationsRef.current.showNotification(
+          'error',
+          'Please fill out all of the "Species" and "Scientific Name".',
+        );
         reject();
         return;
       }
-    }
 
-    try {
-      // Create the group diet entry
-      await this.subenclosuresApi.createSubenclosures({
-        subenclosure: newData.subenclosure,
-        locationId: location.locationId,
-      });
-    } catch (err) {
-      reject();
-    }
-
-    // Refresh Data
-    try {
-      const subRes = await this.subenclosuresApi.getSubenclosures();
-      this.setState({ ...generateStateData(subRes.data, this.props.locations) });
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
-
-  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const subenclosuresApi = new SubenclosuresAPI(this.props.token);
-
-    // Determine if we need to update and what to update
-    let fieldUpdated = false;
-    const updatedFields = {};
-
-    if (newData.subenclosure !== oldData.subenclosure) {
-      fieldUpdated = true;
-      updatedFields.subenclosure = newData.subenclosure;
-    }
-
-    if (newData.locationName !== oldData.locationName) {
-      fieldUpdated = true;
+      // Find the selected location
       let location = this.props.locations.find((l) => l.location === newData.locationName);
 
       if (!location) {
@@ -153,49 +114,97 @@ class GroupDiets extends Component {
         }
       }
 
-      updatedFields.locationId = location.locationId;
-    }
+      try {
+        // Create the group diet entry
+        await this.subenclosuresApi.createSubenclosures({
+          subenclosure: newData.subenclosure,
+          locationId: location.locationId,
+        });
+      } catch (err) {
+        reject();
+      }
 
-    if (fieldUpdated) {
-      await subenclosuresApi.updateSubenclosures(newData.seId, updatedFields);
-    } else {
-      reject();
-      return;
-    }
+      // Refresh Data
+      try {
+        const subRes = await this.subenclosuresApi.getSubenclosures();
+        this.setState({ ...generateStateData(subRes.data, this.props.locations) });
+      } catch (err) {
+        reject();
+        return;
+      }
+      resolve();
+    });
 
-    // Refresh Data
-    try {
-      const subRes = await subenclosuresApi.getSubenclosures();
-      this.setState({ ...generateStateData(subRes.data, this.props.locations) });
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+  onRowUpdate = (newData, oldData) =>
+    new Promise(async (resolve, reject) => {
+      const subenclosuresApi = new SubenclosuresAPI(this.props.token);
 
-  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    try {
-      // Delete the group diet
-      await this.subenclosuresApi.deleteSubenclosures(oldData.seId);
-    } catch (err) {
-      reject();
-      return;
-    }
-    // Refresh Data
-    try {
-      const subRes = await this.subenclosuresApi.getSubenclosures();
-      this.setState({ ...generateStateData(subRes.data, this.props.locations) });
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+      // Determine if we need to update and what to update
+      let fieldUpdated = false;
+      const updatedFields = {};
+
+      if (newData.subenclosure !== oldData.subenclosure) {
+        fieldUpdated = true;
+        updatedFields.subenclosure = newData.subenclosure;
+      }
+
+      if (newData.locationName !== oldData.locationName) {
+        fieldUpdated = true;
+        let location = this.props.locations.find((l) => l.location === newData.locationName);
+
+        if (!location) {
+          if (newData.locationName === 'None') {
+            location = { locationId: null };
+          } else {
+            reject();
+            return;
+          }
+        }
+
+        updatedFields.locationId = location.locationId;
+      }
+
+      if (fieldUpdated) {
+        await subenclosuresApi.updateSubenclosures(newData.seId, updatedFields);
+      } else {
+        reject();
+        return;
+      }
+
+      // Refresh Data
+      try {
+        const subRes = await subenclosuresApi.getSubenclosures();
+        this.setState({ ...generateStateData(subRes.data, this.props.locations) });
+      } catch (err) {
+        reject();
+        return;
+      }
+      resolve();
+    });
+
+  onRowDelete = (oldData) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        // Delete the group diet
+        await this.subenclosuresApi.deleteSubenclosures(oldData.seId);
+      } catch (err) {
+        reject();
+        return;
+      }
+      // Refresh Data
+      try {
+        const subRes = await this.subenclosuresApi.getSubenclosures();
+        this.setState({ ...generateStateData(subRes.data, this.props.locations) });
+      } catch (err) {
+        reject();
+        return;
+      }
+      resolve();
+    });
 
   render() {
     if (this.props.error) {
-      return (<ErrorPage message={this.props.errorMessage} />);
+      return <ErrorPage message={this.props.errorMessage} />;
     }
 
     const { classes } = this.props;

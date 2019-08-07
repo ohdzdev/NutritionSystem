@@ -37,7 +37,7 @@ class Home extends Component {
     token: '',
     error: false,
     errorMessage: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -47,104 +47,107 @@ class Home extends Component {
     this.notificationsRef = React.createRef();
   }
 
-  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    const dataSrcApi = new DataSrcApi(this.props.token);
-    // Reject if no short form
-    if (!newData.shortForm) {
-      this.notificationsRef.current.showNotification('error', 'Please fill out "Short Form".');
-      reject();
-      return;
-    }
+  onRowAdd = (newData) =>
+    new Promise(async (resolve, reject) => {
+      const dataSrcApi = new DataSrcApi(this.props.token);
+      // Reject if no short form
+      if (!newData.shortForm) {
+        this.notificationsRef.current.showNotification('error', 'Please fill out "Short Form".');
+        reject();
+        return;
+      }
 
-    try {
-      // Create the dataSrc entry
-      await dataSrcApi.createDataSrc(newData);
-    } catch (err) {
-      reject();
-    }
+      try {
+        // Create the dataSrc entry
+        await dataSrcApi.createDataSrc(newData);
+      } catch (err) {
+        reject();
+      }
 
-    // Refresh Data
-    try {
-      const dataSrcRes = await dataSrcApi.getDataSrc();
-      this.setState({ dataSrc: dataSrcRes.data });
+      // Refresh Data
+      try {
+        const dataSrcRes = await dataSrcApi.getDataSrc();
+        this.setState({ dataSrc: dataSrcRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const dataSrcApi = new DataSrcApi(this.props.token);
+  onRowUpdate = (newData, oldData) =>
+    new Promise(async (resolve, reject) => {
+      const dataSrcApi = new DataSrcApi(this.props.token);
 
-    // Determine if we need to update and what to update
-    let fieldUpdated = false;
-    const updatedFields = {};
+      // Determine if we need to update and what to update
+      let fieldUpdated = false;
+      const updatedFields = {};
 
-    if (newData.shortForm !== oldData.shortForm) {
-      fieldUpdated = true;
-      updatedFields.shortForm = newData.shortForm;
-    }
+      if (newData.shortForm !== oldData.shortForm) {
+        fieldUpdated = true;
+        updatedFields.shortForm = newData.shortForm;
+      }
 
-    if (newData.title !== oldData.title) {
-      fieldUpdated = true;
-      updatedFields.title = newData.title;
-    }
+      if (newData.title !== oldData.title) {
+        fieldUpdated = true;
+        updatedFields.title = newData.title;
+      }
 
-    if (newData.authors !== oldData.authors) {
-      fieldUpdated = true;
-      updatedFields.authors = newData.authors;
-    }
+      if (newData.authors !== oldData.authors) {
+        fieldUpdated = true;
+        updatedFields.authors = newData.authors;
+      }
 
-    if (newData.year !== oldData.year) {
-      fieldUpdated = true;
-      updatedFields.year = newData.year;
-    }
+      if (newData.year !== oldData.year) {
+        fieldUpdated = true;
+        updatedFields.year = newData.year;
+      }
 
-    if (fieldUpdated) {
-      await dataSrcApi.updateDataSrc(newData.dataSrcId, updatedFields);
-    } else {
-      reject();
-      return;
-    }
+      if (fieldUpdated) {
+        await dataSrcApi.updateDataSrc(newData.dataSrcId, updatedFields);
+      } else {
+        reject();
+        return;
+      }
 
-    // Refresh Data
-    try {
-      const dataSrcRes = await dataSrcApi.getDataSrc();
-      this.setState({ dataSrc: dataSrcRes.data });
+      // Refresh Data
+      try {
+        const dataSrcRes = await dataSrcApi.getDataSrc();
+        this.setState({ dataSrc: dataSrcRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const dataSrcApi = new DataSrcApi(this.props.token);
-    try {
-      // Delete the dataSrc
-      await dataSrcApi.deleteDataSrc(oldData.dataSrcId);
-    } catch (err) {
-      reject();
-      return;
-    }
-    // Refresh Data
-    try {
-      const dataSrcRes = await dataSrcApi.getDataSrc();
-      this.setState({ dataSrc: dataSrcRes.data });
+  onRowDelete = (oldData) =>
+    new Promise(async (resolve, reject) => {
+      const dataSrcApi = new DataSrcApi(this.props.token);
+      try {
+        // Delete the dataSrc
+        await dataSrcApi.deleteDataSrc(oldData.dataSrcId);
+      } catch (err) {
+        reject();
+        return;
+      }
+      // Refresh Data
+      try {
+        const dataSrcRes = await dataSrcApi.getDataSrc();
+        this.setState({ dataSrc: dataSrcRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
   render() {
     if (this.props.error) {
-      return (<ErrorPage message={this.props.errorMessage} />);
+      return <ErrorPage message={this.props.errorMessage} />;
     }
     return (
       <div
@@ -169,7 +172,6 @@ class Home extends Component {
               { title: 'Title', field: 'title' },
               { title: 'Authors', field: 'authors' },
               { title: 'Year', field: 'year' },
-
             ]}
             editable={{
               onRowAdd: this.onRowAdd,

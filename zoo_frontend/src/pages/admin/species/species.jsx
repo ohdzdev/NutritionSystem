@@ -37,7 +37,7 @@ class Home extends Component {
     token: '',
     error: false,
     errorMessage: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -47,104 +47,110 @@ class Home extends Component {
     this.notificationsRef = React.createRef();
   }
 
-  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    const speciesApi = new SpeciesApi(this.props.token);
-    // Reject if no species, scientificName
-    if (!newData.species || !newData.scientificName) {
-      this.notificationsRef.current.showNotification('error', 'Please fill out all of the "Species" and "Scientific Name".');
-      reject();
-      return;
-    }
+  onRowAdd = (newData) =>
+    new Promise(async (resolve, reject) => {
+      const speciesApi = new SpeciesApi(this.props.token);
+      // Reject if no species, scientificName
+      if (!newData.species || !newData.scientificName) {
+        this.notificationsRef.current.showNotification(
+          'error',
+          'Please fill out all of the "Species" and "Scientific Name".',
+        );
+        reject();
+        return;
+      }
 
-    try {
-      // Create the species entry
-      await speciesApi.addSpecies(newData);
-    } catch (err) {
-      reject();
-    }
+      try {
+        // Create the species entry
+        await speciesApi.addSpecies(newData);
+      } catch (err) {
+        reject();
+      }
 
-    // Refresh Data
-    try {
-      const specRes = await speciesApi.getSpecies();
-      this.setState({ species: specRes.data });
+      // Refresh Data
+      try {
+        const specRes = await speciesApi.getSpecies();
+        this.setState({ species: specRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const speciesApi = new SpeciesApi(this.props.token);
+  onRowUpdate = (newData, oldData) =>
+    new Promise(async (resolve, reject) => {
+      const speciesApi = new SpeciesApi(this.props.token);
 
-    // Determine if we need to update and what to update
-    let fieldUpdated = false;
-    const updatedFields = {};
+      // Determine if we need to update and what to update
+      let fieldUpdated = false;
+      const updatedFields = {};
 
-    if (newData.species !== oldData.species) {
-      fieldUpdated = true;
-      updatedFields.species = newData.species;
-    }
+      if (newData.species !== oldData.species) {
+        fieldUpdated = true;
+        updatedFields.species = newData.species;
+      }
 
-    if (newData.scientificName !== oldData.scientificName) {
-      fieldUpdated = true;
-      updatedFields.scientificName = newData.scientificName;
-    }
+      if (newData.scientificName !== oldData.scientificName) {
+        fieldUpdated = true;
+        updatedFields.scientificName = newData.scientificName;
+      }
 
-    if (newData.category !== oldData.category) {
-      fieldUpdated = true;
-      updatedFields.category = newData.category;
-    }
+      if (newData.category !== oldData.category) {
+        fieldUpdated = true;
+        updatedFields.category = newData.category;
+      }
 
-    if (newData.type !== oldData.type) {
-      fieldUpdated = true;
-      updatedFields.type = newData.type;
-    }
+      if (newData.type !== oldData.type) {
+        fieldUpdated = true;
+        updatedFields.type = newData.type;
+      }
 
-    if (fieldUpdated) {
-      await speciesApi.updateSpecies(newData.speciesId, updatedFields);
-    } else {
-      reject();
-      return;
-    }
+      if (fieldUpdated) {
+        await speciesApi.updateSpecies(newData.speciesId, updatedFields);
+      } else {
+        reject();
+        return;
+      }
 
-    // Refresh Data
-    try {
-      const specRes = await speciesApi.getSpecies();
-      this.setState({ species: specRes.data });
+      // Refresh Data
+      try {
+        const specRes = await speciesApi.getSpecies();
+        this.setState({ species: specRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const speciesApi = new SpeciesApi(this.props.token);
-    try {
-      // Delete the species
-      await speciesApi.deleteSpecies(oldData.speciesId);
-    } catch (err) {
-      reject();
-      return;
-    }
-    // Refresh Data
-    try {
-      const specRes = await speciesApi.getSpecies();
-      this.setState({ species: specRes.data });
+  onRowDelete = (oldData) =>
+    new Promise(async (resolve, reject) => {
+      const speciesApi = new SpeciesApi(this.props.token);
+      try {
+        // Delete the species
+        await speciesApi.deleteSpecies(oldData.speciesId);
+      } catch (err) {
+        reject();
+        return;
+      }
+      // Refresh Data
+      try {
+        const specRes = await speciesApi.getSpecies();
+        this.setState({ species: specRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
   render() {
     if (this.props.error) {
-      return (<ErrorPage message={this.props.errorMessage} />);
+      return <ErrorPage message={this.props.errorMessage} />;
     }
     return (
       <div
@@ -172,7 +178,6 @@ class Home extends Component {
                 field: 'category',
               },
               { title: 'Type', field: 'type' },
-
             ]}
             editable={{
               onRowAdd: this.onRowAdd,

@@ -1169,7 +1169,7 @@ export default class extends Component {
                     (results) => {
                       this.setState({
                         loading: false,
-                        Animals: results.matchedAnimals || [],
+                        // Animals: results.matchedAnimals || [],
                         CaseNotes: results.matchedCaseNotes || [],
                         DietChanges: results.matchedDietChanges || [],
                         DietHistory: results.matchedDietHistory || [],

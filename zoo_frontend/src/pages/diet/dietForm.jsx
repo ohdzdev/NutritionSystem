@@ -26,6 +26,7 @@ export const DisplayFormikState = props => (
 );
 
 const formikEnhancer = withFormik({
+  enableReinitialize: true,
   validationSchema: Yup.object().shape({
     speciesId: Yup.string().required('Species is required'),
     current: Yup.bool(),
@@ -39,12 +40,12 @@ const formikEnhancer = withFormik({
   }),
   mapPropsToValues: props => ({
     speciesId: props.speciesId ? String(props.speciesId) : '',
-    current: props.current ? props.current === 1 : true, // default true
+    current: props.current != null ? props.current === 1 : true, // default true
     tableId: props.tableId ? String(props.tableId) : '',
     noteId: props.noteId ? props.noteId : '',
-    label: props.label ? props.label === 1 : true, // default true
+    label: props.label != null ? props.label === 1 : true, // default true
     dcId: props.dcId ? String(props.dcId) : '',
-    ncPrepares: props.ncPrepares ? props.ncPrepares === 1 : true, // default true
+    ncPrepares: props.ncPrepares === 1, // default F
     groupId: props.groupId ? String(props.groupId) : '1',
     analyzed: props.analyzed === 1,
     submitForm: props.submitForm, // jank way to send in the function

@@ -57,6 +57,7 @@ import DietHistoryTable from './DietHistory';
 import CurrentDietTable from './CurrentDiet';
 import DietMenu from './DietMenu';
 import NutritionistDialog from './NutritionistEmailDialog';
+import AnimalTable from './AnimalTable';
 
 import blankDietPlanJSON from './blankDietPlan.json';
 
@@ -68,6 +69,7 @@ export default class extends Component {
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
     Diets: PropTypes.arrayOf(PropTypes.object).isRequired,
+    LifeStages: PropTypes.arrayOf(PropTypes.object).isRequired,
     DeliveryContainers: PropTypes.arrayOf(PropTypes.object).isRequired,
     Species: PropTypes.arrayOf(PropTypes.object).isRequired,
     FoodPrepTables: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -79,6 +81,7 @@ export default class extends Component {
     selectedDiet: PropTypes.object,
     new: PropTypes.bool,
 
+    Animals: PropTypes.arrayOf(PropTypes.object),
     CaseNotes: PropTypes.arrayOf(PropTypes.object),
     DietChanges: PropTypes.arrayOf(PropTypes.object),
     DietHistory: PropTypes.arrayOf(PropTypes.object),
@@ -93,6 +96,7 @@ export default class extends Component {
     token: '',
     selectedDiet: null,
     new: false,
+    Animals: [],
     CaseNotes: [],
     DietChanges: [],
     DietHistory: [],
@@ -278,6 +282,7 @@ export default class extends Component {
       dietChangeDialogOpen: false,
 
       // if diet specific stuff is gathered from URL load it into state so we can change dependent tables etc accordingly
+      Animals: props.Animals || [],
       CaseNotes: props.CaseNotes || [],
       DietChanges: props.DietChanges || [],
       DietHistory: props.DietHistory || [],
@@ -1042,7 +1047,7 @@ export default class extends Component {
   }
 
   render() {
-    console.log(this.props);
+    console.log(this.state);
     const { classes } = this.props;
 
     return (
@@ -1169,7 +1174,7 @@ export default class extends Component {
                     (results) => {
                       this.setState({
                         loading: false,
-                        // Animals: results.matchedAnimals || [],
+                        Animals: results.matchedAnimals || [],
                         CaseNotes: results.matchedCaseNotes || [],
                         DietChanges: results.matchedDietChanges || [],
                         DietHistory: results.matchedDietHistory || [],
@@ -1454,6 +1459,14 @@ export default class extends Component {
                     />
                   ))}
                 </List>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Card className={classes.dietPlanCard}>
+                <AnimalTable
+                  dietNumber={this.state.selectedDiet.dietId}
+                  apiToken={this.props.token}
+                />
               </Card>
             </Grid>
           </Grid>

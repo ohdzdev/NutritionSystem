@@ -24,7 +24,6 @@ import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 
 import {
-  Animals,
   CaseNotes,
   DeliveryContainers,
   DietChanges,
@@ -32,7 +31,6 @@ import {
   DietPlans,
   Diets,
   FoodPrepTables,
-  LifeStages,
   PrepNotes,
   Species,
   Subenclosures,
@@ -69,7 +67,6 @@ export default class extends Component {
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
     Diets: PropTypes.arrayOf(PropTypes.object).isRequired,
-    LifeStages: PropTypes.arrayOf(PropTypes.object).isRequired,
     DeliveryContainers: PropTypes.arrayOf(PropTypes.object).isRequired,
     Species: PropTypes.arrayOf(PropTypes.object).isRequired,
     FoodPrepTables: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -81,7 +78,6 @@ export default class extends Component {
     selectedDiet: PropTypes.object,
     new: PropTypes.bool,
 
-    Animals: PropTypes.arrayOf(PropTypes.object),
     CaseNotes: PropTypes.arrayOf(PropTypes.object),
     DietChanges: PropTypes.arrayOf(PropTypes.object),
     DietHistory: PropTypes.arrayOf(PropTypes.object),
@@ -96,7 +92,6 @@ export default class extends Component {
     token: '',
     selectedDiet: null,
     new: false,
-    Animals: [],
     CaseNotes: [],
     DietChanges: [],
     DietHistory: [],
@@ -109,7 +104,6 @@ export default class extends Component {
 
   static async getInitialProps({ query, authToken }) {
     // api helpers on server side
-    const serverAnimalAPI = new Animals(authToken);
     const serverCaseNotesAPI = new CaseNotes(authToken);
     const serverDeliverContainersAPI = new DeliveryContainers(authToken);
     const serverDietChangesAPI = new DietChanges(authToken);
@@ -117,7 +111,6 @@ export default class extends Component {
     const serverDietPlansAPI = new DietPlans(authToken);
     const serverDietsAPI = new Diets(authToken);
     const serverFoodPrepTablesAPI = new FoodPrepTables(authToken);
-    const serverLifeStagesAPI = new LifeStages(authToken);
     const serverPrepNotesAPI = new PrepNotes(authToken);
     const serverSpeciesAPI = new Species(authToken);
     const serverSubenclosuresAPI = new Subenclosures(authToken);
@@ -134,7 +127,6 @@ export default class extends Component {
       AllDeliveryContainers,
       AllDiets,
       AllFoodPrepTables,
-      AllLifeStages,
       AllSpecies,
       AllSubenclosures,
       AllFoods,
@@ -145,7 +137,6 @@ export default class extends Component {
       serverDeliverContainersAPI.getDeliveryContainers(),
       serverDietsAPI.getDiets(),
       serverFoodPrepTablesAPI.getFoodPrepTables(),
-      serverLifeStagesAPI.getLifeStages(),
       serverSpeciesAPI.getSpecies(),
       serverSubenclosuresAPI.getSubenclosures(),
       serverFoodAPI.getFood(),
@@ -180,11 +171,9 @@ export default class extends Component {
 
         if (!matchedDiet) {
           return {
-            Animals: [],
             DeliveryContainers: AllDeliveryContainers.data,
             Diets: AllDiets.data,
             FoodPrepTables: AllFoodPrepTables.data,
-            LifeStages: AllLifeStages.data,
             Species: AllSpecies.data,
             Subenclosures: AllSubenclosures.data,
             Foods: AllFoods.data,
@@ -197,14 +186,12 @@ export default class extends Component {
         const serverMatchedDietQuery = { where: { dietId } };
 
         const [
-          matchedAnimals,
           matchedCaseNotes,
           matchedDietChanges,
           matchedDietHistory,
           matchedDietPlans,
           matchedPrepNotes,
         ] = await Promise.all([
-          serverAnimalAPI.getAnimals(serverMatchedDietQuery),
           serverCaseNotesAPI.getCaseNotes(serverMatchedDietQuery),
           serverDietChangesAPI.getDietChanges(serverMatchedDietQuery),
           serverDietHistoryAPI.getDietHistories(serverMatchedDietQuery),
@@ -213,7 +200,6 @@ export default class extends Component {
         ]);
 
         return {
-          Animals: matchedAnimals.data,
           CaseNotes: matchedCaseNotes.data,
           DeliveryContainers: AllDeliveryContainers.data,
           DietChanges: matchedDietChanges.data,
@@ -222,7 +208,6 @@ export default class extends Component {
           oldDietPlan: matchedDietPlans.data,
           Diets: AllDiets.data,
           FoodPrepTables: AllFoodPrepTables.data,
-          LifeStages: AllLifeStages.data,
           PrepNotes: matchedPrepNotes.data,
           Species: AllSpecies.data,
           Subenclosures: AllSubenclosures.data,
@@ -234,11 +219,9 @@ export default class extends Component {
         };
       }
       return {
-        Animals: [],
         DeliveryContainers: AllDeliveryContainers.data,
         Diets: AllDiets.data,
         FoodPrepTables: AllFoodPrepTables.data,
-        LifeStages: AllLifeStages.data,
         Species: AllSpecies.data,
         Subenclosures: AllSubenclosures.data,
         Foods: AllFoods.data,
@@ -249,11 +232,9 @@ export default class extends Component {
       };
     }
     return {
-      Animals: [],
       DeliveryContainers: AllDeliveryContainers.data,
       Diets: AllDiets.data,
       FoodPrepTables: AllFoodPrepTables.data,
-      LifeStages: AllLifeStages.data,
       Species: AllSpecies.data,
       Subenclosures: AllSubenclosures.data,
       Foods: AllFoods.data,
@@ -282,7 +263,6 @@ export default class extends Component {
       dietChangeDialogOpen: false,
 
       // if diet specific stuff is gathered from URL load it into state so we can change dependent tables etc accordingly
-      Animals: props.Animals || [],
       CaseNotes: props.CaseNotes || [],
       DietChanges: props.DietChanges || [],
       DietHistory: props.DietHistory || [],
@@ -339,7 +319,6 @@ export default class extends Component {
     this.notificationBar = React.createRef();
     this.currentDietRef = React.createRef();
 
-    this.clientAnimalAPI = new Animals(props.token);
     this.clientCaseNotesAPI = new CaseNotes(props.token);
     this.clientDietChangesAPI = new DietChanges(props.token);
     this.clientDietHistoryAPI = new DietHistory(props.token);
@@ -370,14 +349,12 @@ export default class extends Component {
       const serverMatchedDietQuery = { where: { dietId } };
 
       const [
-        matchedAnimals,
         matchedCaseNotes,
         matchedDietChanges,
         matchedDietHistory,
         matchedDietPlans,
         matchedPrepNotes,
       ] = await Promise.all([
-        this.clientAnimalAPI.getAnimals(serverMatchedDietQuery),
         this.clientCaseNotesAPI.getCaseNotes(serverMatchedDietQuery),
         this.clientDietChangesAPI.getDietChanges(serverMatchedDietQuery),
         this.clientDietHistoryAPI.getDietHistories(serverMatchedDietQuery),
@@ -385,7 +362,6 @@ export default class extends Component {
         this.clientPrepNotesAPI.getPrepNotes(serverMatchedDietQuery),
       ]);
       return Promise.resolve({
-        matchedAnimals: matchedAnimals.data,
         matchedCaseNotes: matchedCaseNotes.data,
         matchedDietChanges: matchedDietChanges.data,
         matchedDietHistory: matchedDietHistory.data,

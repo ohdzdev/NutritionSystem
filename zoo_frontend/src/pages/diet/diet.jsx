@@ -24,7 +24,6 @@ import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 
 import {
-  Animals,
   CaseNotes,
   DeliveryContainers,
   DietChanges,
@@ -32,7 +31,6 @@ import {
   DietPlans,
   Diets,
   FoodPrepTables,
-  LifeStages,
   PrepNotes,
   Species,
   Subenclosures,
@@ -57,6 +55,8 @@ import DietHistoryTable from './DietHistory';
 import CurrentDietTable from './CurrentDiet';
 import DietMenu from './DietMenu';
 import NutritionistDialog from './NutritionistEmailDialog';
+import AnimalTable from './AnimalTable';
+
 import blankDietPlanJSON from './blankDietPlan.json';
 
 import Roles from '../../static/Roles';
@@ -104,7 +104,6 @@ export default class extends Component {
 
   static async getInitialProps({ query, authToken }) {
     // api helpers on server side
-    const serverAnimalAPI = new Animals(authToken);
     const serverCaseNotesAPI = new CaseNotes(authToken);
     const serverDeliverContainersAPI = new DeliveryContainers(authToken);
     const serverDietChangesAPI = new DietChanges(authToken);
@@ -112,7 +111,6 @@ export default class extends Component {
     const serverDietPlansAPI = new DietPlans(authToken);
     const serverDietsAPI = new Diets(authToken);
     const serverFoodPrepTablesAPI = new FoodPrepTables(authToken);
-    const serverLifeStagesAPI = new LifeStages(authToken);
     const serverPrepNotesAPI = new PrepNotes(authToken);
     const serverSpeciesAPI = new Species(authToken);
     const serverSubenclosuresAPI = new Subenclosures(authToken);
@@ -126,11 +124,9 @@ export default class extends Component {
     const nutritionFilter = { where: { name: 'nutritionist' } };
 
     const [
-      AllAnimals,
       AllDeliveryContainers,
       AllDiets,
       AllFoodPrepTables,
-      AllLifeStages,
       AllSpecies,
       AllSubenclosures,
       AllFoods,
@@ -138,11 +134,9 @@ export default class extends Component {
       AllUsers,
       nutritionistRole,
     ] = await Promise.all([
-      serverAnimalAPI.getAnimals(),
       serverDeliverContainersAPI.getDeliveryContainers(),
       serverDietsAPI.getDiets(),
       serverFoodPrepTablesAPI.getFoodPrepTables(),
-      serverLifeStagesAPI.getLifeStages(),
       serverSpeciesAPI.getSpecies(),
       serverSubenclosuresAPI.getSubenclosures(),
       serverFoodAPI.getFood(),
@@ -177,11 +171,9 @@ export default class extends Component {
 
         if (!matchedDiet) {
           return {
-            Animals: AllAnimals.data,
             DeliveryContainers: AllDeliveryContainers.data,
             Diets: AllDiets.data,
             FoodPrepTables: AllFoodPrepTables.data,
-            LifeStages: AllLifeStages.data,
             Species: AllSpecies.data,
             Subenclosures: AllSubenclosures.data,
             Foods: AllFoods.data,
@@ -208,7 +200,6 @@ export default class extends Component {
         ]);
 
         return {
-          Animals: AllAnimals.data,
           CaseNotes: matchedCaseNotes.data,
           DeliveryContainers: AllDeliveryContainers.data,
           DietChanges: matchedDietChanges.data,
@@ -217,7 +208,6 @@ export default class extends Component {
           oldDietPlan: matchedDietPlans.data,
           Diets: AllDiets.data,
           FoodPrepTables: AllFoodPrepTables.data,
-          LifeStages: AllLifeStages.data,
           PrepNotes: matchedPrepNotes.data,
           Species: AllSpecies.data,
           Subenclosures: AllSubenclosures.data,
@@ -229,11 +219,9 @@ export default class extends Component {
         };
       }
       return {
-        Animals: AllAnimals.data,
         DeliveryContainers: AllDeliveryContainers.data,
         Diets: AllDiets.data,
         FoodPrepTables: AllFoodPrepTables.data,
-        LifeStages: AllLifeStages.data,
         Species: AllSpecies.data,
         Subenclosures: AllSubenclosures.data,
         Foods: AllFoods.data,
@@ -244,11 +232,9 @@ export default class extends Component {
       };
     }
     return {
-      Animals: AllAnimals.data,
       DeliveryContainers: AllDeliveryContainers.data,
       Diets: AllDiets.data,
       FoodPrepTables: AllFoodPrepTables.data,
-      LifeStages: AllLifeStages.data,
       Species: AllSpecies.data,
       Subenclosures: AllSubenclosures.data,
       Foods: AllFoods.data,
@@ -1037,7 +1023,7 @@ export default class extends Component {
   }
 
   render() {
-    console.log(this.props);
+    console.log(this.state);
     const { classes } = this.props;
 
     return (
@@ -1448,6 +1434,14 @@ export default class extends Component {
                     />
                   ))}
                 </List>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Card className={classes.dietPlanCard}>
+                <AnimalTable
+                  dietNumber={this.state.selectedDiet.dietId}
+                  apiToken={this.props.token}
+                />
               </Card>
             </Grid>
           </Grid>

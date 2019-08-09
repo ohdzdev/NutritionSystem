@@ -28,8 +28,6 @@ class AnimalTable extends Component {
     this.animalAPI = new AnimalsAPI(this.props.apiToken);
     this.lifeStageAPI = new LifeStagesAPI(this.props.apiToken);
 
-    console.log(props);
-
     this.state = {
       lifeStageLookup: {},
       animals: [],
@@ -56,8 +54,6 @@ class AnimalTable extends Component {
       return acc;
     }, lifeStageLookup);
 
-    console.log(lifeStageLookup);
-    console.log(matchedAnimals);
     this.setState({
       animals: matchedAnimals,
       lifeStageLookup,
@@ -135,13 +131,10 @@ class AnimalTable extends Component {
 
   deleteAnimal(animal) {
     return new Promise((res, rej) => {
-      console.log(animal);
       this.animalAPI.deleteAnimals(animal.animalId).then(
         (result) => {
-          console.log(result);
           if (result.data.count > 0) {
             const animalIndex = this.state.animals.findIndex((i) => i.animalId === animal.animalId);
-            console.log(animalIndex);
             if (animalIndex !== -1) {
               this.setState(
                 (prev) => {
@@ -152,7 +145,6 @@ class AnimalTable extends Component {
                   };
                 },
                 () => {
-                  console.log(this.state);
                   res();
                 },
               );

@@ -29,7 +29,7 @@ export default class extends Component {
     classes: PropTypes.object.isRequired,
     prepTables: PropTypes.array.isRequired,
     date: PropTypes.string.isRequired,
-    prepDiets: PropTypes.array.isRequired,
+    prepDiets: PropTypes.array.isRequired, //eslint-disable-line
     prepDietsSub: PropTypes.array.isRequired,
   };
 
@@ -78,7 +78,7 @@ export default class extends Component {
       dc: '',
       dietChanges: ['none'],
       foodPrep: [],
-      prepTables: [],
+      prepTables: [], //eslint-disable-line
     };
 
     /* API */

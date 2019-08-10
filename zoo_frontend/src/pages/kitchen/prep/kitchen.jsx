@@ -9,7 +9,7 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import NextIcon from '@material-ui/icons/NavigateNext';
 import PrevIcon from '@material-ui/icons/NavigateBefore';
 import Paper from '@material-ui/core/Paper';
-import KitchenView from '../../../components/KitchenView';
+import KitchenView from './KitchenView';
 
 // import { hasAccess, Home, Diet } from '../PageAccess';
 
@@ -27,11 +27,10 @@ export default class extends Component {
     // account: PropTypes.object.isRequired,
     token: PropTypes.string,
     classes: PropTypes.object.isRequired,
-    FoodPrepTables: PropTypes.array.isRequired,
+    prepTables: PropTypes.array.isRequired,
     date: PropTypes.string.isRequired,
-    // eslint-disable-next-line react/no-unused-prop-types
-    PrepDiets: PropTypes.array.isRequired,
-    PrepDietsSub: PropTypes.array.isRequired,
+    prepDiets: PropTypes.array.isRequired,
+    prepDietsSub: PropTypes.array.isRequired,
   };
 
   static defaultProps = {
@@ -39,27 +38,31 @@ export default class extends Component {
   };
 
   static async getInitialProps({ query, authToken }) {
-    const serverFoodPrepTablesAPI = new FoodPrepTables(authToken);
-    const serverDietsAPI = new Diets(authToken);
+    const prepTablesAPI = new FoodPrepTables(authToken);
+    const dietsAPI = new Diets(authToken);
+    const dietChangesAPI = new DietChanges(authToken);
 
     try {
-      const [AllFoodPrepTables, AllFoodPrep] = await Promise.all([
-        serverFoodPrepTablesAPI.getFoodPrepTables(),
-        serverDietsAPI.getAnimalPrep(query.date), // this.props.date !!!!!!!!!!
+      const [prepTables, foodPrep, dietChanges] = await Promise.all([
+        prepTablesAPI.getFoodPrepTables(),
+        dietsAPI.getAnimalPrep(query.date), // this.props.date !!!!!!!!!!
+        dietChangesAPI.getLastDietChanges(3),
       ]);
       return {
         ...query,
-        FoodPrepTables: AllFoodPrepTables.data,
-        PrepDiets: AllFoodPrep.data.diets,
-        PrepDietsSub: AllFoodPrep.data.dietsSub,
+        prepTables: prepTables.data || [],
+        prepDiets: foodPrep.data.diets,
+        prepDietsSub: foodPrep.data.dietsSub,
+        dietChanges: dietChanges.data.dietChanges,
       };
     } catch (err) {
       console.error(err);
       return {
         error: true,
-        FoodPrepTables: [],
-        PrepDiets: [],
-        PrepDietsSub: [],
+        prepTables: [],
+        prepDiets: [],
+        prepDietsSub: [],
+        dietChanges: [],
       };
     }
   }
@@ -75,6 +78,7 @@ export default class extends Component {
       dc: '',
       dietChanges: ['none'],
       foodPrep: [],
+      prepTables: [],
     };
 
     /* API */
@@ -136,7 +140,7 @@ export default class extends Component {
   // For entry in dietsSub where diet_id = dietID
   // food, group_amount
   getPrepFood(dietID) {
-    const items = this.props.PrepDietsSub.filter((item) => item.diet_id === dietID);
+    const items = this.props.prepDietsSub.filter((item) => item.diet_id === dietID);
     return items;
   }
 
@@ -173,8 +177,7 @@ export default class extends Component {
 
   render() {
     // const { role } = this.props.account;
-    // eslint-disable-next-line no-shadow
-    const { FoodPrepTables, date } = this.props;
+    const { prepTables, date } = this.props;
 
     return (
       <div
@@ -189,7 +192,7 @@ export default class extends Component {
             variant="extended"
             aria-label="Previous"
             className={this.props.classes.fab}
-            onClick={() => this.handlePrev()}
+            onClick={this.handlePrev}
             disabled={this.state.currentIndex === 0}
           >
             <PrevIcon className={this.props.classes.extendedIcon} />
@@ -203,11 +206,10 @@ export default class extends Component {
             >
               <option value="" />
               {/* value prop is the table_id of FOOD_PREP_TABLES */
-              FoodPrepTables
-                ? FoodPrepTables.map((item) => (
+                prepTables.map((item) => (
                   <option value={item.tableId}>{item.description}</option>
                   ))
-                : null}
+                }
             </NativeSelect>
           </FormControl>
           <Fab
@@ -215,7 +217,7 @@ export default class extends Component {
             color="secondary"
             aria-label="Next"
             className={this.props.classes.fab}
-            onClick={() => this.handleNext()}
+            onClick={this.handleNext}
             disabled={this.state.currentIndex + 1 >= this.state.diets.length}
           >
             Next

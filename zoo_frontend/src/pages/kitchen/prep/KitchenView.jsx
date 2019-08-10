@@ -53,7 +53,6 @@ const KitchenView = ({
   <div>
     <div className={classes.pageText}>
       <Typography>
-        {' '}
         Page {currentPage}/{pageLength}
       </Typography>
     </div>
@@ -106,6 +105,7 @@ const KitchenView = ({
               <TableRow key={row.id}>
                 <TableCell align="left">{row.group_amount + row.unit}</TableCell>
                 <TableCell align="left">{row.food}</TableCell>
+                <TableCell align="right">{row.line_notes || ''}</TableCell>
               </TableRow>
             ))}
           </TableBody>

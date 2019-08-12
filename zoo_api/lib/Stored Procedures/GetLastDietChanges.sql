@@ -1,4 +1,4 @@
-CREATE DEFINER=`zoo`@`%` PROCEDURE `zoo`.`getLastDietChanges`(IN num int(10))
+CREATE DEFINER=`zoo`@`%` PROCEDURE `zoo`.`GetLastDietChanges`(IN num int(10))
 BEGIN
 	SELECT dc1.diet_id, dc1.diet_change_reason, dc1.diet_change_date
 	FROM DIET_CHANGES as dc1

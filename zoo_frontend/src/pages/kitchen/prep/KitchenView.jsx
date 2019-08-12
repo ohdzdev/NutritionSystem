@@ -103,7 +103,8 @@ const KitchenView = ({
           <TableBody>
             {foodPrep.map((row) => (
               <TableRow key={row.id}>
-                <TableCell align="left">{row.group_amount + row.unit}</TableCell>
+                <TableCell align="right">{row.group_amount}</TableCell>
+                <TableCell align="left">{row.unit}</TableCell>
                 <TableCell align="left">{row.food}</TableCell>
                 <TableCell align="right">{row.line_notes || ''}</TableCell>
               </TableRow>

@@ -25,8 +25,6 @@ import {
 
 export default class extends Component {
   static propTypes = {
-    // account: PropTypes.object.isRequired,
-    // token: PropTypes.string,
     classes: PropTypes.object.isRequired,
     prepTables: PropTypes.array.isRequired,
     date: PropTypes.string.isRequired,
@@ -39,7 +37,6 @@ export default class extends Component {
   };
 
   static defaultProps = {
-    // token: '',
     table: 0,
     diet: 0,
   };
@@ -53,7 +50,7 @@ export default class extends Component {
     try {
       const [prepTables, foodPrep, dietChanges, prepNotes] = await Promise.all([
         prepTablesAPI.getFoodPrepTables(),
-        dietsAPI.getAnimalPrep(query.date), // this.props.date !!!!!!!!!!
+        dietsAPI.getAnimalPrep(query.date),
         dietChangesAPI.getLastDietChanges(3),
         prepNotesAPI.getPrepNotes(),
       ]);
@@ -116,7 +113,6 @@ export default class extends Component {
     };
   }
 
-  /* Handle table change !! */
   handleChange = (event) => {
     const value = Number(event.target.value);
     this.setState(({ tables }) => ({
@@ -146,7 +142,7 @@ export default class extends Component {
       route += `&diet=${table.diets[this.state.currentIndex].diet_id}`
     }
 
-    Router.push(route);
+    Router.push(route, route, { shallow: true });
   }
 
   render() {

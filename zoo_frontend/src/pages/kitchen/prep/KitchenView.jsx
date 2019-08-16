@@ -34,10 +34,7 @@ const styles = (theme) => ({
   },
 });
 
-const formatDate = (d) => {
-  const newD = moment(d);
-  return moment(newD).format('MM-DD-YYYY');
-};
+const formatDate = (d) => moment(d).format('MM-DD-YYYY');
 
 const KitchenView = ({
   classes,
@@ -53,7 +50,6 @@ const KitchenView = ({
   <div>
     <div className={classes.pageText}>
       <Typography>
-        {' '}
         Page {currentPage}/{pageLength}
       </Typography>
     </div>
@@ -76,6 +72,9 @@ const KitchenView = ({
           {prepNotes.map((txt) => (
             <Typography style={{ fontSize: 18 }}>{txt.prepNote}</Typography>
           ))}
+          {prepNotes.length === 0 && (
+            <Typography style={{ fontSize: 18 }}>No prep notes.</Typography>
+          )}
         </div>
         <div>
           <Typography variant="h3" style={{ fontSize: 22, marginTop: 30, color: 'grey' }}>
@@ -86,9 +85,9 @@ const KitchenView = ({
               // eslint-disable-next-line implicit-arrow-linebreak
               <div style={{ marginTop: 10 }}>
                 <Typography variant="h4" style={{ fontSize: 14 }}>
-                  {formatDate(txt.dietChangeDate)}
+                  {formatDate(txt.diet_change_date)}
                 </Typography>
-                <Typography style={{ fontSize: 18 }}>{txt.dietChangeReason}</Typography>
+                <Typography style={{ fontSize: 18 }}>{txt.diet_change_reason}</Typography>
               </div>
             ))}
           </div>
@@ -104,8 +103,10 @@ const KitchenView = ({
           <TableBody>
             {foodPrep.map((row) => (
               <TableRow key={row.id}>
-                <TableCell align="left">{row.group_amount + row.unit}</TableCell>
+                <TableCell align="right">{row.group_amount}</TableCell>
+                <TableCell align="left">{row.unit}</TableCell>
                 <TableCell align="left">{row.food}</TableCell>
+                <TableCell align="right">{row.line_notes || ''}</TableCell>
               </TableRow>
             ))}
           </TableBody>

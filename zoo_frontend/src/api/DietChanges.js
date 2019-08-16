@@ -106,6 +106,12 @@ class DietChanges {
     const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
     return res;
   }
+
+  async getLastDietChanges(num) {
+    const uri = `${API_BASE_URL}/api/DietChanges/last-diet-changes?changes=${num}&access_token=${this.token}`;
+    const res = await axios.get(uri);
+    return res;
+  }
 }
 
 export default DietChanges;

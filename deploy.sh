@@ -13,7 +13,7 @@ pm2 start ./ecosystem.config.js -- env production
 
 echo ---------------------------------
 echo .
-echo API available on localhost:3333 /api /explorer
+echo API available on localhost:8080 /api /explorer
 echo frontend available on localhost:3000
 echo .
 echo ---------------------------------

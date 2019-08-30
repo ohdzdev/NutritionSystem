@@ -2,10 +2,13 @@
   "name": "zoo_frontend",
   "version": "1.0.0",
   "license": "ISC",
+  "main": "start.js",
   "scripts": {
     "dev": "next",
     "build": "yarn run next build",
+    "build-docker": "next build",
     "start": "yarn run next start",
+    "start-docker": "node start.js",
     "test:eslint": "eslint */**/*.js */**/*.jsx",
     "test": "echo TODO",
     "pretty": "prettier --config ./.prettierrc.json --write ./**/*.js"

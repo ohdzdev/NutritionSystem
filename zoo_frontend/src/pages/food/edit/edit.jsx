@@ -32,7 +32,7 @@ import {
 } from '../../../api';
 
 // actual API repo
-import nutDataAPIModel from '../../../../../zoo_api/common/models/NUT_DATA.json';
+import nutDataAPIModel from './NUT_DATA.json';
 
 // access control
 import { hasAccess } from '../../PageAccess';

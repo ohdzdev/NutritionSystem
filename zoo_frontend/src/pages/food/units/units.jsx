@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import MaterialTable from 'material-table';
 
-import UnitsAPIModel from '../../../../../zoo_api/common/models/UNITS.json';
+import UnitsAPIModel from './UNITS.json';
 
 import TableColumnHelper from '../../../util/TableColumnHelper';
 import { Units as UnitsAPI } from '../../../api';

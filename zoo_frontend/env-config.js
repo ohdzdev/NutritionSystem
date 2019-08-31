@@ -1,5 +1,5 @@
 const prod = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  'process.env.BACKEND_URL': prod ? 'https://zooapi-qemf447jya-uc.a.run.app/' : 'http://localhost:8080', // TODO change this back to https
+  'process.env.BACKEND_URL': prod ? process.env.PROD_API_URL : 'http://localhost:8080', // TODO change this back to https
 };

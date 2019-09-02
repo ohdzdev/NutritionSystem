@@ -1,0 +1,76 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Mitchell\\projects\\NutritionSystem\\zoo_api\\lib\\DietAnalysisExport\\src\\ExcelApp\\ExcelApp.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Mitchell\\projects\\NutritionSystem\\zoo_api\\lib\\DietAnalysisExport\\src\\ExcelApp\\ExcelApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Mitchell\\projects\\NutritionSystem\\zoo_api\\lib\\DietAnalysisExport\\src\\ExcelApp\\ExcelApp.csproj",
+        "projectName": "ExcelApp",
+        "projectPath": "C:\\Users\\Mitchell\\projects\\NutritionSystem\\zoo_api\\lib\\DietAnalysisExport\\src\\ExcelApp\\ExcelApp.csproj",
+        "packagesPath": "C:\\Users\\Mitchell\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mitchell\\projects\\NutritionSystem\\zoo_api\\lib\\DietAnalysisExport\\src\\ExcelApp\\obj\\publish\\linux-x64\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Mitchell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.1": {
+          "dependencies": {
+            "EPPlus.Core": {
+              "target": "Package",
+              "version": "[1.5.4, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.NETCore.App": {
+              "target": "Package",
+              "version": "[2.1.12, )",
+              "autoReferenced": true
+            },
+            "MySql.Data.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.10.8, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      },
+      "runtimes": {
+        "linux-x64": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

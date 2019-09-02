@@ -5,7 +5,12 @@ const app = require('../../server/server');
 
 const Util = require('../../server/util');
 
-const dbString = `host=/cloudsql/${process.env.SQL_INSTANCE_CONNECTION_NAME};user=${process.env.DB_USER};password=${process.env.DB_PASS};database=${process.env.DB_NAME};protocol=unix`;
+const host =
+  process.env.NODE_ENV === 'production'
+    ? `/cloudsql/${process.env.SQL_INSTANCE_CONNECTION_NAME}`
+    : `${process.env.DB_HOST};port=3306`;
+
+const dbString = `host=${host};user=${process.env.DB_USER};password=${process.env.DB_PASS};database=${process.env.DB_NAME};protocol=unix`;
 
 module.exports = function(Diets) {
   Diets.getDayDiets = function(date, cb) {

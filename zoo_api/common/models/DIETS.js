@@ -60,7 +60,9 @@ module.exports = function(Diets) {
             );
             if (!processResult || processResult.status !== 0) {
               cb(Util.createError('Error running export process'));
-              console.log(processResult.stderr);
+              console.log(processResult);
+              console.log(processResult.stdout);
+              console.log(processResult.error);
             } else {
               res.download(tmpWorkbook, 'DietDataAnalysis.xlsm');
             }

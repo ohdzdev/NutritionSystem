@@ -7,10 +7,10 @@ const Util = require('../../server/util');
 
 const host =
   process.env.NODE_ENV === 'production'
-    ? `/cloudsql/${process.env.SQL_INSTANCE_CONNECTION_NAME}`
+    ? `/cloudsql/${process.env.SQL_INSTANCE_CONNECTION_NAME};protocol=unix`
     : `${process.env.DB_HOST};port=3306`;
 
-const dbString = `host=${host};user=${process.env.DB_USER};password=${process.env.DB_PASS};database=${process.env.DB_NAME};protocol=unix`;
+const dbString = `host=${host};user=${process.env.DB_USER};password=${process.env.DB_PASS};database=${process.env.DB_NAME}`;
 
 module.exports = function(Diets) {
   Diets.getDayDiets = function(date, cb) {
@@ -55,7 +55,7 @@ module.exports = function(Diets) {
               './ExcelApp',
               [`${diet.dietId}`, tmpWorkbook, dbString],
               {
-                cwd: './zoo_api/lib/DietAnalysisExport/bin',
+                cwd: './lib/DietAnalysisExport/bin',
               },
             );
             if (!processResult || processResult.status !== 0) {

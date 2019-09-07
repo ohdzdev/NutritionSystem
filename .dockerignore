@@ -1,0 +1,13 @@
+Dockerfile
+README.md
+node_modules
+**/node_modules/*
+npm-debug.log
+.env
+frontend_docs.sh
+.git
+docs
+.vscode
+DB migration
+.github
+**/.next/*

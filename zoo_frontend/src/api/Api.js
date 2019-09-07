@@ -1,7 +1,11 @@
 import axios from 'axios';
 import LocalStorage from '../static/LocalStorage';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+let API_BASE_URL = process.env.BACKEND_URL;
+
+if (typeof window === 'undefined') {
+  API_BASE_URL = `http://localhost:${process.env.PORT}`;
+}
 
 class Api {
   constructor(token) {

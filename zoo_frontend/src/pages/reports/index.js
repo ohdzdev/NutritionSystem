@@ -2,8 +2,8 @@ import { compose } from 'recompose';
 
 import withAuth from '../../util/withAuth';
 
-import { Profile } from '../PageAccess';
+import { Reports } from '../PageAccess';
 
 import page from './reports';
 
-export default compose(withAuth(Profile.roles))(page);
+export default compose(withAuth(Reports.roles))(page);

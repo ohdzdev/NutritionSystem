@@ -112,3 +112,20 @@ export const Kitchen = {
     roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
   },
 };
+
+export const Reports = {
+  link: '/reports',
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  dietCostReport: {
+    link: 'reports/diet-cost-report',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  },
+  feedingCostReport: {
+    link: 'reports/feeding-cost-report',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  },
+  feedingCostReportGL: {
+    link: 'reports/feeding-cost-report-gl',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  },
+};

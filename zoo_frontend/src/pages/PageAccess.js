@@ -117,15 +117,15 @@ export const Reports = {
   link: '/reports',
   roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   dietCostReport: {
-    link: 'reports/diet-cost-report',
+    link: '/reports/diet-cost-report',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
   feedingCostReport: {
-    link: 'reports/feeding-cost-report',
+    link: '/reports/feeding-cost-report',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
   feedingCostReportGL: {
-    link: 'reports/feeding-cost-report-gl',
+    link: '/reports/feeding-cost-report-gl',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
 };

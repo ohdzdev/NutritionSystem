@@ -1,7 +1,197 @@
 import React, { Component } from 'react';
 
-export default class FeedingCostReport extends Component {
+import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Table from 'react-bootstrap/Table';
+import PropTypes from 'prop-types';
+
+import 'bootstrap/dist/css/bootstrap.css';
+
+import apiData from './test.json';
+
+/**
+ * groups data coming back from API into a JSON with locations as the keys
+ * and the values as arrays of the original data
+ *
+ * if the data comes back presorted on dietId then this will add it to the groups in least to highest order
+ * @param {Array<JSON>} rawData
+ */
+const prepFeedCostData = (rawData) => {
+  return rawData.reduce((acc, curr) => {
+    const keys = Object.keys(acc);
+    const dex = keys.findIndex((i) => i === curr.location);
+    if (dex !== -1) {
+      acc[keys[dex]] = [...acc[keys[dex]], curr];
+    } else {
+      acc[curr.location] = [curr];
+    }
+    return acc;
+  }, {});
+};
+
+const addLocationSubtotals = (d) => {
+  // our data is already grouped into locations, we must iterate over these and get the subtotals
+  // then the sub totals can be added to the orignal dataset
+  const locationSubTotals = {};
+
+  Object.keys(d).forEach((key) => {
+    const groupTotal = d[key].reduce((acc, curr) => {
+      const rowKeys = Object.keys(curr);
+      // here we calculate all the number fields into their own subtotals
+      rowKeys.forEach((rKey) => {
+        if (typeof curr[rKey] === 'number') {
+          if (acc[rKey]) {
+            acc[rKey] += curr[rKey];
+          } else {
+            acc[rKey] = curr[rKey];
+          }
+        }
+      });
+      return acc;
+    }, {});
+    locationSubTotals[key] = groupTotal;
+  });
+  return {
+    data: d,
+    locationSubTotals,
+  };
+};
+
+/**
+ * takes raw API data and on number fields
+ * @param {Array<JSON>} rawData
+ */
+const getTotals = (rawData) => {
+  return rawData.reduce((acc, curr) => {
+    const currKeys = Object.keys(curr);
+    currKeys.forEach((key) => {
+      if (typeof curr[key] === 'number') {
+        // declare the start of a total field
+        if (acc[key] === undefined) {
+          acc[key] = 0;
+        }
+      }
+    });
+    const keys = Object.keys(acc);
+
+    keys.forEach((key) => {
+      if (curr[key]) {
+        acc[key] += curr[key];
+      }
+    });
+    return acc;
+  }, {});
+};
+
+const titleMap = {
+  dietId: 'Diet ID',
+  species: ' Species',
+  numAnimals: 'Number Animals',
+  SumOfCostGPerDay: 'Daily Cost',
+  SumOfCostGPeryear: 'Yearly Cost',
+};
+
+const styleMap = {
+  dietId: 'rightText',
+  species: '',
+  numAnimals: 'rightText',
+  SumOfCostGPerDay: 'rightText',
+  SumOfCostGPeryear: 'rightText',
+};
+
+class FeedingCostReport extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+    };
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        loading: false,
+      });
+    }, 1000);
+  }
+
   render() {
-    return <div>hello world</div>;
+    const { data, locationSubTotals } = addLocationSubtotals(prepFeedCostData(apiData));
+    console.log(data);
+    console.log(locationSubTotals);
+    const totals = getTotals(apiData);
+    const { classes } = this.props;
+    return (
+      <div>
+        {this.state.loading && <LinearProgress />}
+        {!this.state.loading && (
+          <div>
+            <Table bordered striped size="sm">
+              <thead key="header">
+                <tr>
+                  {Object.keys(titleMap).map((key) => (
+                    <th className={classes[styleMap[key]]}>{titleMap[key]}</th>
+                  ))}
+                </tr>
+              </thead>
+              {Object.keys(data).map((locationGroup) => {
+                return (
+                  <tbody key={locationGroup}>
+                    <tr>
+                      <th colSpan={3} style={{ paddingLeft: '20px' }}>
+                        {locationGroup}
+                      </th>
+                      <th className={classes.rightText}>
+                        {locationSubTotals[locationGroup].SumOfCostGPerDay}
+                      </th>
+                      <th className={classes.rightText}>
+                        {locationSubTotals[locationGroup].SumOfCostGPerYear}
+                      </th>
+                    </tr>
+                    {data[locationGroup].map((line) => (
+                      <tr key={line.dietId}>
+                        <td className={classes.rightText}>
+                          <Typography>{line.dietId}</Typography>
+                        </td>
+                        <td>
+                          <Typography>{line.species}</Typography>
+                        </td>
+                        <td className={classes.rightText}>
+                          <Typography>{line.numAnimals}</Typography>
+                        </td>
+                        <td className={classes.rightText}>
+                          <Typography>{line.SumOfCostGPerDay}</Typography>
+                        </td>
+                        <td className={classes.rightText}>
+                          <Typography>{line.SumOfCostGPerYear}</Typography>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                );
+              })}
+              <thead>
+                <tr>
+                  <th colSpan={2} style={{ paddingLeft: '20px' }}>
+                    Grand Totals:
+                  </th>
+                  <th className={classes.rightText}>{totals.numAnimals}</th>
+                  <th className={classes.rightText}>{totals.SumOfCostGPerDay}</th>
+                  <th className={classes.rightText}>{totals.SumOfCostGPerYear}</th>
+                </tr>
+              </thead>
+            </Table>
+          </div>
+        )}
+      </div>
+    );
   }
 }
+
+FeedingCostReport.propTypes = {
+  classes: PropTypes.shape({
+    rightText: PropTypes.object.isRequired,
+  }).isRequired,
+};
+
+export default FeedingCostReport;

@@ -1,0 +1,66 @@
+[
+  {
+    "location": "test",
+    "dc": "dc1",
+    "dietId": 600,
+    "species": "gorilla",
+    "SumOfCostGPerDay": 200.0,
+    "SumOfCostGPerYear": 1,
+    "numAnimals": 1
+  },
+  {
+    "location": "test",
+    "dc": "dc2",
+    "dietId": 60232,
+    "species": "penguin",
+    "SumOfCostGPerDay": 230,
+    "SumOfCostGPerYear": 1,
+    "numAnimals": 2
+  },
+  {
+    "location": "test",
+    "dc": "dc2",
+    "dietId": 602,
+    "species": "penguin",
+    "SumOfCostGPerDay": 230,
+    "SumOfCostGPerYear": 1,
+    "numAnimals": 2
+  },
+
+  {
+    "location": "test",
+    "dc": "dc3",
+    "dietId": 603,
+    "species": "elephant",
+    "SumOfCostGPerDay": 10.97,
+    "SumOfCostGPerYear": 1,
+    "numAnimals": 300
+  },
+  {
+    "location": "test4",
+    "dc": "dc4",
+    "dietId": 604,
+    "species": "toad",
+    "SumOfCostGPerDay": 2,
+    "SumOfCostGPerYear": 1,
+    "numAnimals": 200
+  },
+  {
+    "location": "test5",
+    "dc": "dc2",
+    "dietId": 605,
+    "species": "alligator",
+    "SumOfCostGPerDay": 5,
+    "SumOfCostGPerYear": 1,
+    "numAnimals": 1
+  },
+  {
+    "location": "test6",
+    "dc": "dc1",
+    "dietId": 606,
+    "species": "bafoon",
+    "SumOfCostGPerDay": 2,
+    "SumOfCostGPerYear": 1,
+    "numAnimals": 1
+  }
+]

@@ -33,6 +33,7 @@ import UsersIcon from '@material-ui/icons/SupervisorAccount';
 import BarChart from '@material-ui/icons/BarChart';
 import FastFood from '@material-ui/icons/Fastfood';
 import RestaurantMenu from '@material-ui/icons/RestaurantMenu';
+import AttachMoney from '@material-ui/icons/AttachMoney';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRulerCombined, faCrow } from '@fortawesome/free-solid-svg-icons';
@@ -266,6 +267,16 @@ const SidebarDrawer = (props) => {
                               <DeliveryContainersIcon />
                             </ListItemIcon>
                             <ListItemText inset primary="Delivery Containers" />
+                          </ListItem>
+                        </Link>
+                      )}
+                      {hasAccess(role, Admin.budgetIds.roles) && (
+                        <Link href={Admin.budgetIds.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                              <AttachMoney />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Budget Codes" />
                           </ListItem>
                         </Link>
                       )}

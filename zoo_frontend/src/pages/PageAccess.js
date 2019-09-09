@@ -12,6 +12,10 @@ export { hasAccess };
 export const Admin = {
   link: '/admin',
   roles: [Roles.ADMIN],
+  budgetIds: {
+    link: '/admin/budgetids',
+    roles: [Roles.ADMIN],
+  },
   deliveryContainers: {
     link: '/admin/delivery-containers',
     roles: [Roles.ADMIN],

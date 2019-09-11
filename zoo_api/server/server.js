@@ -21,7 +21,7 @@ app.start = function() {
   server = http.createServer(app);
   server.listen(process.env.PORT || 8080, () => {
     const port = process.env.PORT || 8080;
-    const baseUrl = `http://${app.get('host')}:${port}`;
+    const baseUrl = `http://localhost:${port}`;
     app.emit('started', baseUrl);
     console.log('LoopBack server listening @ %s%s', baseUrl, '/');
     if (app.get('loopback-component-explorer') && process.env.NODE_ENV !== 'production') {

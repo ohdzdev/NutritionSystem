@@ -9,9 +9,7 @@
     "lint": "eslint .",
     "start": "node .",
     "test:eslint": "eslint */**/*.js",
-    "test": "echo TODO",
-    "gcbuild": "gcloud builds submit --tag gcr.io/zoo-nutrition/zoo_api",
-    "gcdeploy": "gcloud beta run deploy --image gcr.io/zoo-nutrition/zoo_api --platform managed"
+    "test": "echo TODO"
   },
   "dependencies": {
     "compression": "^1.7.4",

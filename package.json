@@ -4,11 +4,9 @@
   "description": "this is a stub",
   "main": "ecosystem.config.js",
   "scripts": {
-    "dev": "concurrently --prefix-colors \"bgBlue.bold,bgGreen.bold\" --prefix \"[{name}]\" --names \"frontend,api\" \"next zoo_frontend\" \"cd zoo_api && yarn start\" --kill-others",
-    "test": "concurrently --prefix-colors \"bgBlue.bold,bgGreen.bold\" --prefix \"[{name}]\" --names \"front:test,api:test\" \"yarn test:api\" \"yarn test:frontend\"",
+    "dev": "node ./start.js",
     "test:eslint:frontend": "cd zoo_frontend && yarn test:eslint && cd ../",
     "test:eslint:api": "cd zoo_api && yarn test:eslint && cd ../",
-    "build:frontend": "cd zoo_frontend && yarn build && cd ../",
     "eslint:api": "cd zoo_api && yarn test:eslint && cd ../",
     "eslint:frontend": "cd zoo_frontend && yarn test:eslint && cd ../",
     "test:api": "cd zoo_api && yarn test && cd ../",
@@ -16,7 +14,8 @@
     "powershell:prod": "powershell.exe $env:NODE_ENV='production'",
     "bash:prod": "export NODE_ENV=production",
     "prepush": "concurrently --prefix-colors \"bgBlue.black.bold,bgGreen.black.bold,bgCyan.black.bold,bgYellow.black.bold\" --prefix \"[{name}]\" --names \"lint:api,lint:front,test:api,test:front\" \"yarn eslint:api\" \"yarn eslint:frontend\" \"yarn test:api\" \"yarn test:frontend\"",
-    "docs": "echo \"run this in bash after npm install -g docco: docco zoo_frontend/{**/*,**/**/*,**/**/**/*,**/**/**/**/*,**/**/**/**/**/*,**/**/**/**/**/**/*,**/**/**/**/**/**/**/*}.{jsx,js}\""
+    "gcbuild": "gcloud builds submit --tag gcr.io/zoo-nutrition/zoo_app",
+    "gcdeploy": "gcloud beta run deploy --image gcr.io/zoo-nutrition/zoo_app --platform managed"
   },
   "repository": {
     "type": "git",

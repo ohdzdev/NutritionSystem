@@ -1,5 +1,3 @@
-const start = new Date();
-
 const { parse } = require("url");
 const next = require("next");
 
@@ -7,8 +5,7 @@ const backend = require("./zoo_api");
 
 const dev = process.env.NODE_ENV !== "production";
 
-const frontend = next({ dev: false, dir: "./zoo_frontend" });
-
+const frontend = next({ dev, dir: "./zoo_frontend" });
 const handle = frontend.getRequestHandler();
 
 const router = backend.loopback.Router();

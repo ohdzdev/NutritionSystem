@@ -55,7 +55,7 @@ module.exports = function(Diets) {
               './ExcelApp',
               [`${diet.dietId}`, tmpWorkbook, dbString],
               {
-                cwd: './lib/DietAnalysisExport/bin',
+                cwd: './zoo_api/lib/DietAnalysisExport/bin',
               },
             );
             if (!processResult || processResult.status !== 0) {

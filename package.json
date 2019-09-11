@@ -5,6 +5,7 @@
   "main": "ecosystem.config.js",
   "scripts": {
     "dev": "node ./start.js",
+    "test": "concurrently --prefix-colors \"bgBlue.bold,bgGreen.bold\" --prefix \"[{name}]\" --names \"front:test,api:test\" \"yarn test:api\" \"yarn test:frontend\"",
     "test:eslint:frontend": "cd zoo_frontend && yarn test:eslint && cd ../",
     "test:eslint:api": "cd zoo_api && yarn test:eslint && cd ../",
     "eslint:api": "cd zoo_api && yarn test:eslint && cd ../",

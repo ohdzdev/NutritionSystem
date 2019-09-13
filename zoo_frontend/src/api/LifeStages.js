@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = process.env.BACKEND_URL;
-
-if (typeof window === 'undefined') {
-  API_BASE_URL = `http://localhost:${process.env.PORT}`;
-}
+import API_BASE_URL from '../util/ApiURL';
 
 class LifeStages {
   constructor(token) {
@@ -17,7 +13,7 @@ class LifeStages {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getLifeStages(filter) {
-    let query = `${API_BASE_URL}/api/LifeStages/`;
+    let query = `${API_BASE_URL}/LifeStages/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -44,7 +40,7 @@ class LifeStages {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/LifeStages/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/LifeStages/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -58,7 +54,7 @@ class LifeStages {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/LifeStages/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/LifeStages/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -74,7 +70,7 @@ class LifeStages {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/LifeStages/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/LifeStages/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;

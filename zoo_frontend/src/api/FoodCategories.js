@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = process.env.BACKEND_URL;
-
-if (typeof window === 'undefined') {
-  API_BASE_URL = `http://localhost:${process.env.PORT}`;
-}
+import API_BASE_URL from '../util/ApiURL';
 
 class Food {
   constructor(token) {
@@ -12,7 +8,7 @@ class Food {
   }
 
   async getCategories(filter) {
-    let query = `${API_BASE_URL}/api/FoodCategories/`;
+    let query = `${API_BASE_URL}/FoodCategories/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {

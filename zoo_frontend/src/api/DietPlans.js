@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = process.env.BACKEND_URL;
-
-if (typeof window === 'undefined') {
-  API_BASE_URL = `http://localhost:${process.env.PORT}`;
-}
+import API_BASE_URL from '../util/ApiURL';
 
 class DietPlan {
   constructor(token) {
@@ -17,7 +13,7 @@ class DietPlan {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getDietPlans(filter) {
-    let query = `${API_BASE_URL}/api/DietPlans/`;
+    let query = `${API_BASE_URL}/DietPlans/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -33,7 +29,7 @@ class DietPlan {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getDiets(id) {
-    let query = `${API_BASE_URL}/api/DietPlans/`;
+    let query = `${API_BASE_URL}/DietPlans/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietPlanDiets?access_token=${this.token}`;
     }
@@ -47,7 +43,7 @@ class DietPlan {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getFoods(id) {
-    let query = `${API_BASE_URL}/api/DietPlans/`;
+    let query = `${API_BASE_URL}/DietPlans/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietPlanFoods?access_token=${this.token}`;
     }
@@ -61,7 +57,7 @@ class DietPlan {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getUnits(id) {
-    let query = `${API_BASE_URL}/api/DietPlans/`;
+    let query = `${API_BASE_URL}/DietPlans/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietPlanUnits?access_token=${this.token}`;
     }
@@ -86,7 +82,7 @@ class DietPlan {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/DietPlans/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DietPlans/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -100,7 +96,7 @@ class DietPlan {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/DietPlans/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DietPlans/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -116,7 +112,7 @@ class DietPlan {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/DietPlans/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DietPlans/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;
@@ -134,7 +130,7 @@ class DietPlan {
     if (!dietId) {
       return Promise.reject(new Error('must have dietId to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/DietPlans/deleteAllByDietId?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DietPlans/deleteAllByDietId?access_token=${this.token}`;
     const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
     return res;
   }

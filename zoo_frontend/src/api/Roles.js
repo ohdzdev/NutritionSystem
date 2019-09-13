@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = process.env.BACKEND_URL;
-
-if (typeof window === 'undefined') {
-  API_BASE_URL = `http://localhost:${process.env.PORT}`;
-}
+import API_BASE_URL from '../util/ApiURL';
 
 class Roles {
   constructor(token) {
@@ -12,7 +8,7 @@ class Roles {
   }
 
   async getRoles(filter) {
-    let query = `${API_BASE_URL}/api/Roles`;
+    let query = `${API_BASE_URL}/Roles`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -23,7 +19,7 @@ class Roles {
   }
 
   async getPrincipals(RoleId, filter) {
-    let query = `${API_BASE_URL}/api/Roles/`;
+    let query = `${API_BASE_URL}/Roles/`;
 
     if (!RoleId) {
       return Promise.reject(

@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = process.env.BACKEND_URL;
-
-if (typeof window === 'undefined') {
-  API_BASE_URL = `http://localhost:${process.env.PORT}`;
-}
+import API_BASE_URL from '../util/ApiURL';
 
 class Departments {
   constructor(token) {
@@ -12,7 +8,7 @@ class Departments {
   }
 
   async getDepartments(filter) {
-    let query = `${API_BASE_URL}/api/Locations`;
+    let query = `${API_BASE_URL}/Locations`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -23,7 +19,7 @@ class Departments {
   }
 
   async createDepartment(location, color, shortName) {
-    const uri = `${API_BASE_URL}/api/Locations/replaceOrCreate?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Locations/replaceOrCreate?access_token=${this.token}`;
     const res = await axios.post(uri, {
       location,
       color,
@@ -33,13 +29,13 @@ class Departments {
   }
 
   async updateDepartment(locationId, updates) {
-    const uri = `${API_BASE_URL}/api/Locations/${locationId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Locations/${locationId}?access_token=${this.token}`;
     const res = await axios.patch(uri, updates);
     return res;
   }
 
   async deleteDepartment(locationId) {
-    const uri = `${API_BASE_URL}/api/Locations/${locationId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Locations/${locationId}?access_token=${this.token}`;
     const res = await axios.delete(uri);
     return res;
   }

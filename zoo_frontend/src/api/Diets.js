@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = process.env.BACKEND_URL;
-
-if (typeof window === 'undefined') {
-  API_BASE_URL = `http://localhost:${process.env.PORT}`;
-}
+import API_BASE_URL from '../util/ApiURL';
 
 class Diet {
   constructor(token) {
@@ -17,7 +13,7 @@ class Diet {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getDiets(filter) {
-    let query = `${API_BASE_URL}/api/Diets/`;
+    let query = `${API_BASE_URL}/Diets/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -33,7 +29,7 @@ class Diet {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getDietDeliveryContainers(id) {
-    let query = `${API_BASE_URL}/api/Diets/`;
+    let query = `${API_BASE_URL}/Diets/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietDeliveryContainer?access_token=${this.token}`;
     }
@@ -47,7 +43,7 @@ class Diet {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getFoodPrepTables(id) {
-    let query = `${API_BASE_URL}/api/Diets/`;
+    let query = `${API_BASE_URL}/Diets/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietFoodPrepTable?access_token=${this.token}`;
     }
@@ -61,7 +57,7 @@ class Diet {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getSpecies(id) {
-    let query = `${API_BASE_URL}/api/Diets/`;
+    let query = `${API_BASE_URL}/Diets/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietSpecies?access_token=${this.token}`;
     }
@@ -75,7 +71,7 @@ class Diet {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getSubenclosure(id) {
-    let query = `${API_BASE_URL}/api/Diets/`;
+    let query = `${API_BASE_URL}/Diets/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietSubenclosure?access_token=${this.token}`;
     }
@@ -100,7 +96,7 @@ class Diet {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/Diets/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Diets/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -114,7 +110,7 @@ class Diet {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/Diets/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Diets/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -130,7 +126,7 @@ class Diet {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/Diets/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Diets/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;
@@ -145,13 +141,13 @@ class Diet {
    * @param {integer} dietId diet id for analysis
    */
   async downloadDietAnalysis(dietId) {
-    const uri = `${API_BASE_URL}/api/Diets/${dietId}/export-diet-analysis?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Diets/${dietId}/export-diet-analysis?access_token=${this.token}`;
     // Directing the window location to the file download makes the file download correctly
     // this makes it difficult to know if the call succeeded
     window.location = uri;
   }
   async getAnimalPrep(date) {
-    const query = `${API_BASE_URL}/api/Diets/day-diets?date=${date}&access_token=${this.token}`;
+    const query = `${API_BASE_URL}/Diets/day-diets?date=${date}&access_token=${this.token}`;
     const res = await axios.get(query);
     return res;
   }

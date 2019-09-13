@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = process.env.BACKEND_URL;
-
-if (typeof window === 'undefined') {
-  API_BASE_URL = `http://localhost:${process.env.PORT}`;
-}
+import API_BASE_URL from '../util/ApiURL';
 
 class DataSrc {
   constructor(token) {
@@ -17,7 +13,7 @@ class DataSrc {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getSources(filter) {
-    let query = `${API_BASE_URL}/api/DataSrcs/`;
+    let query = `${API_BASE_URL}/DataSrcs/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -28,7 +24,7 @@ class DataSrc {
   }
 
   async getDataSrc(filter) {
-    let query = `${API_BASE_URL}/api/DataSrcs`;
+    let query = `${API_BASE_URL}/DataSrcs`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -39,19 +35,19 @@ class DataSrc {
   }
 
   async createDataSrc(newData) {
-    const uri = `${API_BASE_URL}/api/DataSrcs/replaceOrCreate?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DataSrcs/replaceOrCreate?access_token=${this.token}`;
     const res = await axios.post(uri, newData);
     return res;
   }
 
   async updateDataSrc(dataSrcId, updates) {
-    const uri = `${API_BASE_URL}/api/DataSrcs/${dataSrcId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DataSrcs/${dataSrcId}?access_token=${this.token}`;
     const res = await axios.patch(uri, updates);
     return res;
   }
 
   async deleteDataSrc(dataSrcId) {
-    const uri = `${API_BASE_URL}/api/DataSrcs/${dataSrcId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DataSrcs/${dataSrcId}?access_token=${this.token}`;
     const res = await axios.delete(uri);
     return res;
   }

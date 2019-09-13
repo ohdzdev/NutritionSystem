@@ -1,7 +1,7 @@
 import axios from 'axios';
 import LocalStorage from '../static/LocalStorage';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class Api {
   constructor(token) {
@@ -23,14 +23,14 @@ class Api {
       );
       throw new Error('Session Token Blank');
     }
-    await axios.post(`${API_BASE_URL}/api/AccessTokens/validate`, {
+    await axios.post(`${API_BASE_URL}/AccessTokens/validate`, {
       token: this.token,
     });
   };
 
   login = async (email, password) => {
     await axios
-      .post(`${API_BASE_URL}/api/accounts/login`, {
+      .post(`${API_BASE_URL}/accounts/login`, {
         email,
         password,
       })
@@ -67,7 +67,7 @@ class Api {
     LocalStorage.setId(0);
     if (this.token) {
       try {
-        await axios.post(`${API_BASE_URL}/api/accounts/logout`, null, {
+        await axios.post(`${API_BASE_URL}/accounts/logout`, null, {
           params: {
             access_token: this.token,
           },

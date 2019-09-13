@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class Food {
   constructor(token) {
@@ -13,7 +13,7 @@ class Food {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getNutData(filter) {
-    let query = `${API_BASE_URL}/api/NutData/`;
+    let query = `${API_BASE_URL}/NutData/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -29,7 +29,7 @@ class Food {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getRelatedNutritonSource(id) {
-    let query = `${API_BASE_URL}/api/NutData/`;
+    let query = `${API_BASE_URL}/NutData/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/nutDataDataSrc?access_token=${this.token}`;
     }
@@ -43,7 +43,7 @@ class Food {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getRelatedFoods(id) {
-    let query = `${API_BASE_URL}/api/NutData/`;
+    let query = `${API_BASE_URL}/NutData/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/nutDataFoods?access_token=${this.token}`;
     }
@@ -57,7 +57,7 @@ class Food {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getRelatedSourceCd(id) {
-    let query = `${API_BASE_URL}/api/NutData/`;
+    let query = `${API_BASE_URL}/NutData/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/nutDataSrcCd?access_token=${this.token}`;
     }
@@ -71,7 +71,7 @@ class Food {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getRelatedNutrDef(id) {
-    let query = `${API_BASE_URL}/api/NutData/`;
+    let query = `${API_BASE_URL}/NutData/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/nutDataNutrDef?access_token=${this.token}`;
     }
@@ -96,7 +96,7 @@ class Food {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/NutData/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/NutData/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -110,7 +110,7 @@ class Food {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/NutData/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/NutData/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -126,7 +126,7 @@ class Food {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/NutData/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/NutData/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class Units {
   constructor(token) {
@@ -8,7 +8,7 @@ class Units {
   }
 
   async getUnits(filter) {
-    let query = `${API_BASE_URL}/api/Units/`;
+    let query = `${API_BASE_URL}/Units/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -29,7 +29,7 @@ class Units {
         ),
       );
     }
-    const uri = `${API_BASE_URL}/api/Units/${speciesId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Units/${speciesId}?access_token=${this.token}`;
     const res = await axios.patch(uri, updates);
     return res;
   }
@@ -42,13 +42,13 @@ class Units {
         ),
       );
     }
-    const uri = `${API_BASE_URL}/api/Units/replaceOrCreate?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Units/replaceOrCreate?access_token=${this.token}`;
     const res = await axios.post(uri, newData);
     return res;
   }
 
   async deleteUnit(speciesId) {
-    const uri = `${API_BASE_URL}/api/Units/${speciesId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Units/${speciesId}?access_token=${this.token}`;
     const res = axios.delete(uri);
     return res;
   }

@@ -1,4 +1,3 @@
-DELIMITER $$
 CREATE DEFINER=`zoo`@`%` PROCEDURE `GetFoodsNotInG`(IN DietId INT)
 BEGIN
 DROP TEMPORARY TABLE IF EXISTS UQryDietWeightsInG;
@@ -92,5 +91,4 @@ FROM
 WHERE
 	QryDietInG.unit <> "g"
     AND DIETS.diet_id = DietId;
-END$$
-DELIMITER ;
+END

@@ -3,7 +3,7 @@ import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 
 // FOOD WEIGHT API MODEL
-import foodWeightsAPIModel from '../../../../../zoo_api/common/models/FOOD_WEIGHTS.json';
+import foodWeightsAPIModel from './FOOD_WEIGHTS.json';
 
 // COMPONENTS
 import { Notifications } from '../../../components';

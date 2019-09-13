@@ -13,7 +13,7 @@ import {
 
 import TableColumnHelper from '../../../util/TableColumnHelper';
 
-import FoodModelAPI from '../../../../../zoo_api/common/models/FOOD.json';
+import FoodModelAPI from './FOOD.json';
 
 import { Food as FoodAPI } from '../../../api';
 import { hasAccess, Food } from '../../PageAccess';

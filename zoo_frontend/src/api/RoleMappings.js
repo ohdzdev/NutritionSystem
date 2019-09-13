@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class RoleMappings {
   constructor(token) {
@@ -8,7 +8,7 @@ class RoleMappings {
   }
 
   async getRoleMappings(filter) {
-    let query = `${API_BASE_URL}/api/RoleMappings`;
+    let query = `${API_BASE_URL}/RoleMappings`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -20,7 +20,7 @@ class RoleMappings {
 
   async assignRole(userId, roleId) {
     if (roleId >= 0) {
-      const url = `${API_BASE_URL}/api/RoleMappings/upsertWithWhere?where=${JSON.stringify({
+      const url = `${API_BASE_URL}/RoleMappings/upsertWithWhere?where=${JSON.stringify({
         and: [{ principalId: `${userId}` }, { principalType: 'USER' }],
       })}&access_token=${this.token}`;
       const res = await axios.post(url, {
@@ -30,13 +30,13 @@ class RoleMappings {
       });
       return res;
     }
-    const geturl = `${API_BASE_URL}/api/RoleMappings/?filter=${JSON.stringify({
+    const geturl = `${API_BASE_URL}/RoleMappings/?filter=${JSON.stringify({
       where: { and: [{ principalId: `${userId}` }, { principalType: 'USER' }] },
     })}&access_token=${this.token}`;
     const res = await axios.get(geturl);
     await Promise.all(
       res.data.map((roleMapping) => {
-        const deleteUrl = `${API_BASE_URL}/api/RoleMappings/${roleMapping.id}?access_token=${this.token}`;
+        const deleteUrl = `${API_BASE_URL}/RoleMappings/${roleMapping.id}?access_token=${this.token}`;
         return axios.delete(deleteUrl);
       }),
     );

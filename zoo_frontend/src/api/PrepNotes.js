@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class PrepNotes {
   constructor(token) {
@@ -13,7 +13,7 @@ class PrepNotes {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getPrepNotes(filter) {
-    let query = `${API_BASE_URL}/api/PrepNotes/`;
+    let query = `${API_BASE_URL}/PrepNotes/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -40,7 +40,7 @@ class PrepNotes {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/PrepNotes/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/PrepNotes/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -54,7 +54,7 @@ class PrepNotes {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/PrepNotes/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/PrepNotes/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -70,7 +70,7 @@ class PrepNotes {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/PrepNotes/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/PrepNotes/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;
@@ -88,7 +88,7 @@ class PrepNotes {
     if (!dietId) {
       return Promise.reject(new Error('must have dietId to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/PrepNotes/deleteAllByDietId?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/PrepNotes/deleteAllByDietId?access_token=${this.token}`;
     const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
     return res;
   }

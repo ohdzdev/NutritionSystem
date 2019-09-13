@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class BudgetIds {
   constructor(token) {
@@ -8,7 +8,7 @@ class BudgetIds {
   }
 
   async getBudgetCodes(filter) {
-    let query = `${API_BASE_URL}/api/BudgetIds/`;
+    let query = `${API_BASE_URL}/BudgetIds/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {

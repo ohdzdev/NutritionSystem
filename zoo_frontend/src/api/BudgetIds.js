@@ -8,7 +8,7 @@ class BudgetIds {
   }
 
   async getBudgetIds(filter) {
-    let query = `${API_BASE_URL}/api/BudgetIds/`;
+    let query = `${API_BASE_URL}/BudgetIds/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -35,7 +35,7 @@ class BudgetIds {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/BudgetIds/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/BudgetIds/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -49,7 +49,7 @@ class BudgetIds {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/BudgetIds/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/BudgetIds/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -65,7 +65,7 @@ class BudgetIds {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/BudgetIds/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/BudgetIds/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;

@@ -22,7 +22,7 @@ This project utilizes [dotenv](https://www.npmjs.com/package/dotenv), please cre
 DB_HOST=ip/url
 DB_USER=coolUser
 DB_PASS=coolPass
-DB=dbName
+DB_NAME=dbName
 HTTP=true ### set to false if https is desired. can only do one or the other
 ```
 

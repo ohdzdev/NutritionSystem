@@ -12,32 +12,19 @@ const loopback = require('loopback');
 const boot = require('loopback-boot');
 
 const http = require('http');
-const https = require('https');
-const sslConfig = require('./ssl-config');
 
 const app = loopback();
 module.exports = app;
 
-app.start = function(httpOnly) {
-  if (httpOnly === undefined) {
-    httpOnly = process.env.HTTP;
-  }
+app.start = function() {
   let server = null;
-  if (!httpOnly) {
-    const options = {
-      key: sslConfig.privateKey,
-      cert: sslConfig.certificate,
-    };
-    server = https.createServer(options, app);
-  } else {
-    console.log('http only');
-    server = http.createServer(app);
-  }
-  server.listen(app.get('port'), () => {
-    const baseUrl = `${(httpOnly ? 'http://' : 'https://') + app.get('host')}:${app.get('port')}`;
+  server = http.createServer(app);
+  server.listen(process.env.PORT || 8080, () => {
+    const port = process.env.PORT || 8080;
+    const baseUrl = `http://localhost:${port}`;
     app.emit('started', baseUrl);
     console.log('LoopBack server listening @ %s%s', baseUrl, '/');
-    if (app.get('loopback-component-explorer')) {
+    if (app.get('loopback-component-explorer') && process.env.NODE_ENV !== 'production') {
       const explorerPath = app.get('loopback-component-explorer').mountPath;
       console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
     }

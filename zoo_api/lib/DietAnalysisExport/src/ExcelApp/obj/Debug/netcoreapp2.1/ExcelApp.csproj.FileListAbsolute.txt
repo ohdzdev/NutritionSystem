@@ -10,3 +10,14 @@ C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Debug
 C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Debug\netcoreapp2.1\ExcelApp.dll
 C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\obj\Debug\netcoreapp2.1\ExcelApp.pdb
 C:\Users\Jason\Documents\Visual Studio 2017\Projects\ExcelApp\ExcelApp\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\bin\Debug\netcoreapp2.1\ExcelApp.deps.json
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\bin\Debug\netcoreapp2.1\ExcelApp.runtimeconfig.json
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\bin\Debug\netcoreapp2.1\ExcelApp.runtimeconfig.dev.json
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\bin\Debug\netcoreapp2.1\ExcelApp.dll
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\bin\Debug\netcoreapp2.1\ExcelApp.pdb
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\obj\Debug\netcoreapp2.1\ExcelApp.csproj.CoreCompileInputs.cache
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\obj\Debug\netcoreapp2.1\ExcelApp.AssemblyInfoInputs.cache
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\obj\Debug\netcoreapp2.1\ExcelApp.AssemblyInfo.cs
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\obj\Debug\netcoreapp2.1\ExcelApp.dll
+C:\Users\Mitchell\projects\NutritionSystem\zoo_api\lib\DietAnalysisExport\src\ExcelApp\obj\Debug\netcoreapp2.1\ExcelApp.pdb

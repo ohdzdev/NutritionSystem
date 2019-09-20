@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class CaseNotes {
   constructor(token) {
@@ -13,7 +13,7 @@ class CaseNotes {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getCaseNotes(filter) {
-    let query = `${API_BASE_URL}/api/CaseNotes/`;
+    let query = `${API_BASE_URL}/CaseNotes/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -29,7 +29,7 @@ class CaseNotes {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getDiet(id) {
-    let query = `${API_BASE_URL}/api/CaseNotes/`;
+    let query = `${API_BASE_URL}/CaseNotes/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/dietCaseNotes?access_token=${this.token}`;
     }
@@ -54,7 +54,7 @@ class CaseNotes {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/CaseNotes/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/CaseNotes/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -68,7 +68,7 @@ class CaseNotes {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/CaseNotes/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/CaseNotes/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -84,7 +84,7 @@ class CaseNotes {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/CaseNotes/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/CaseNotes/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;
@@ -102,7 +102,7 @@ class CaseNotes {
     if (!dietId) {
       return Promise.reject(new Error('must have dietId to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/CaseNotes/deleteAllByDietId?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/CaseNotes/deleteAllByDietId?access_token=${this.token}`;
     const res = await axios.post(uri, { dietId }).catch((err) => Promise.reject(err));
     return res;
   }

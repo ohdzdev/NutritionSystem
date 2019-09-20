@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class FoodWeights {
   constructor(token) {
@@ -8,7 +8,7 @@ class FoodWeights {
   }
 
   async getFoodWeight(filter) {
-    let query = `${API_BASE_URL}/api/FoodWeights/`;
+    let query = `${API_BASE_URL}/FoodWeights/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -29,7 +29,7 @@ class FoodWeights {
         ),
       );
     }
-    const uri = `${API_BASE_URL}/api/FoodWeights/${weightId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/FoodWeights/${weightId}?access_token=${this.token}`;
     const res = await axios.patch(uri, updates);
     return res;
   }
@@ -42,13 +42,13 @@ class FoodWeights {
         ),
       );
     }
-    const uri = `${API_BASE_URL}/api/FoodWeights/replaceOrCreate?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/FoodWeights/replaceOrCreate?access_token=${this.token}`;
     const res = await axios.post(uri, newData);
     return res;
   }
 
   async deleteFoodWeight(weightId) {
-    const uri = `${API_BASE_URL}/api/FoodWeights/${weightId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/FoodWeights/${weightId}?access_token=${this.token}`;
     const res = axios.delete(uri);
     return res;
   }

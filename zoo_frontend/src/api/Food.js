@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class Food {
   constructor(token) {
@@ -8,7 +8,7 @@ class Food {
   }
 
   async getFood(filter) {
-    let query = `${API_BASE_URL}/api/Food`;
+    let query = `${API_BASE_URL}/Food`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -19,7 +19,7 @@ class Food {
   }
 
   async getRelatedCategory(foodId) {
-    let query = `${API_BASE_URL}/api/Food/`;
+    let query = `${API_BASE_URL}/Food/`;
     if (foodId && parseInt(foodId, 10)) {
       query += `${foodId}/foodFoodCategory?access_token=${this.token}`;
     }
@@ -28,7 +28,7 @@ class Food {
   }
 
   async getRelatedBudgetCode(foodId) {
-    let query = `${API_BASE_URL}/api/Food/`;
+    let query = `${API_BASE_URL}/Food/`;
     if (foodId && parseInt(foodId, 10)) {
       query += `${foodId}/foodBudgetId?access_token=${this.token}`;
     }
@@ -53,7 +53,7 @@ class Food {
       );
     }
 
-    const uri = `${API_BASE_URL}/api/Food/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Food/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -67,7 +67,7 @@ class Food {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/Food/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Food/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -83,7 +83,7 @@ class Food {
         new Error('createBlank was false and no params were sent in, invalid config'),
       );
     }
-    const uri = `${API_BASE_URL}/api/Food/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Food/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;
@@ -99,7 +99,7 @@ class Food {
    * @return {array} data returned from the api call
    */
   async getPrepDaySheets(date) {
-    const uri = `${API_BASE_URL}/api/Food/day-prep-sheet-data?date=${date}&access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Food/day-prep-sheet-data?date=${date}&access_token=${this.token}`;
 
     const res = await axios.get(uri);
 

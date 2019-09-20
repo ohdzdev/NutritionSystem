@@ -8,4 +8,5 @@ module.exports = withCSS({
 
     return config;
   },
+  distDir: './.next',
 });

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class DeliveryContainers {
   constructor(token) {
@@ -8,7 +8,7 @@ class DeliveryContainers {
   }
 
   async getDeliveryContainers(filter) {
-    let query = `${API_BASE_URL}/api/DeliveryContainers`;
+    let query = `${API_BASE_URL}/DeliveryContainers`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -19,7 +19,7 @@ class DeliveryContainers {
   }
 
   async createDeliveryContainer(dc, sortOrder, locationId) {
-    const uri = `${API_BASE_URL}/api/DeliveryContainers/replaceOrCreate?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DeliveryContainers/replaceOrCreate?access_token=${this.token}`;
 
     const res = await axios.post(uri, {
       dc,
@@ -30,13 +30,13 @@ class DeliveryContainers {
   }
 
   async updateDeliveryContainer(dcId, updates) {
-    const uri = `${API_BASE_URL}/api/DeliveryContainers/${dcId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DeliveryContainers/${dcId}?access_token=${this.token}`;
     const res = await axios.patch(uri, updates);
     return res;
   }
 
   async deleteDeliveryContainer(dcId) {
-    const uri = `${API_BASE_URL}/api/DeliveryContainers/${dcId}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/DeliveryContainers/${dcId}?access_token=${this.token}`;
     const res = axios.delete(uri);
     return res;
   }

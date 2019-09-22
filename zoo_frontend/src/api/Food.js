@@ -105,6 +105,30 @@ class Food {
 
     return res;
   }
+
+  /**
+   * Get the food cost report
+   * @return {array} data returned from the api call
+   */
+  async getFoodCostReport() {
+    const uri = `${API_BASE_URL}/Food/food-cost-report?access_token=${this.token}`;
+
+    const res = await axios.get(uri);
+
+    return res;
+  }
+
+  /**
+   * Get the food cost report grouped by budget code
+   * @return {array} data returned from the api call
+   */
+  async getFoodCostReportByGL() {
+    const uri = `${API_BASE_URL}/Food/food-cost-report-by-gl?access_token=${this.token}`;
+
+    const res = await axios.get(uri);
+
+    return res;
+  }
 }
 
 export default Food;

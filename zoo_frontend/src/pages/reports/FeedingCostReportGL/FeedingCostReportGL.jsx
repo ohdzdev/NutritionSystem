@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import 'bootstrap/dist/css/bootstrap.css';
 
 import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import Table from 'react-bootstrap/Table';
-import PropTypes from 'prop-types';
 
-import 'bootstrap/dist/css/bootstrap.css';
+import FoodAPI from '../../../api/Food';
 
 import apiData from './test.json';
 
@@ -70,6 +70,8 @@ const getTotals = (rawData) => {
         if (acc[key] === undefined) {
           acc[key] = 0;
         }
+      } else {
+        console.log(`key: ${key} is not a number`);
       }
     });
     const keys = Object.keys(acc);
@@ -98,100 +100,100 @@ const styleMap = {
 };
 
 class FeedingCostReport extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
+  /**
+   * Server side data retrieval
+   */
+  static async getInitialProps({ authToken }) {
+    // api helpers on server side
+    const foodAPI = new FoodAPI(authToken);
+
+    // server side grab all data for list view
+    const res = await foodAPI.getFoodCostReportByGL();
+    return {
+      reportData: res.data,
     };
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-      });
-    }, 1000);
-  }
+  static propTypes = {
+    classes: PropTypes.shape({
+      rightText: PropTypes.object.isRequired,
+    }).isRequired,
+    reportData: PropTypes.array.isRequired,
+  };
 
   render() {
-    const { data, locationSubTotals } = addLocationSubtotals(prepFeedCostData(apiData));
+    const { data, locationSubTotals } = addLocationSubtotals(
+      prepFeedCostData(this.props.reportData),
+    );
     console.log(data);
     console.log(locationSubTotals);
     const totals = getTotals(apiData);
+    console.log(totals);
     const { classes } = this.props;
     return (
       <div>
-        {this.state.loading && <LinearProgress />}
-        {!this.state.loading && (
-          <div>
-            <Table bordered striped size="sm">
-              <thead key="header">
-                <tr>
-                  <th />
-                  {Object.keys(titleMap).map((key) => (
-                    <th className={classes[styleMap[key]]}>{titleMap[key]}</th>
-                  ))}
-                </tr>
-              </thead>
-              {Object.keys(data).map((locationGroup) => {
-                return (
-                  <tbody key={locationGroup}>
-                    <tr>
-                      <th colSpan={2} style={{ paddingLeft: '20px' }}>
-                        {locationGroup}
-                      </th>
-                      <th className={classes.rightText}>
-                        {locationSubTotals[locationGroup].SumOfCostGPerDay}
-                      </th>
-                      <th className={classes.rightText}>
-                        {locationSubTotals[locationGroup].SumOfCostGPerMonth}
-                      </th>
-                      <th className={classes.rightText}>
-                        {locationSubTotals[locationGroup].SumOfCostGPerYear}
-                      </th>
+        <div>
+          <Table bordered striped size="sm">
+            <thead key="header">
+              <tr>
+                <th />
+                {Object.keys(titleMap).map((key) => (
+                  <th className={classes[styleMap[key]]}>{titleMap[key]}</th>
+                ))}
+              </tr>
+            </thead>
+            {Object.keys(data).map((locationGroup) => {
+              return (
+                <tbody key={locationGroup}>
+                  <tr>
+                    <th colSpan={2} style={{ paddingLeft: '20px' }}>
+                      {locationGroup}
+                    </th>
+                    <th className={classes.rightText}>
+                      {locationSubTotals[locationGroup].SumOfCostGPerDay.toFixed(2)}
+                    </th>
+                    <th className={classes.rightText}>
+                      {locationSubTotals[locationGroup].SumOfCostGPerMonth.toFixed(2)}
+                    </th>
+                    <th className={classes.rightText}>
+                      {locationSubTotals[locationGroup].SumOfCostGPerYear.toFixed(2)}
+                    </th>
+                  </tr>
+                  {data[locationGroup].map((line) => (
+                    <tr key={line.dietId}>
+                      <td style={{ width: '8em' }} />
+                      <td className={classes.rightText}>
+                        <Typography>{line.budgetId}</Typography>
+                      </td>
+                      <td className={classes.rightText}>
+                        <Typography>{line.SumOfCostGPerDay}</Typography>
+                      </td>
+                      <td className={classes.rightText}>
+                        <Typography>{line.SumOfCostGPerMonth}</Typography>
+                      </td>
+                      <td className={classes.rightText}>
+                        <Typography>{line.SumOfCostGPerYear}</Typography>
+                      </td>
                     </tr>
-                    {data[locationGroup].map((line) => (
-                      <tr key={line.dietId}>
-                        <td style={{ width: '8em' }} />
-                        <td>
-                          <Typography>{line.budgetId}</Typography>
-                        </td>
-                        <td className={classes.rightText}>
-                          <Typography>{line.SumOfCostGPerDay}</Typography>
-                        </td>
-                        <td className={classes.rightText}>
-                          <Typography>{line.SumOfCostGPerMonth}</Typography>
-                        </td>
-                        <td className={classes.rightText}>
-                          <Typography>{line.SumOfCostGPerYear}</Typography>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                );
-              })}
-              <thead>
-                <tr>
-                  <th colSpan={2} style={{ paddingLeft: '20px' }}>
-                    Grand Totals:
-                  </th>
-                  <th className={classes.rightText}>{totals.SumOfCostGPerDay}</th>
-                  <th className={classes.rightText}>{totals.SumOfCostGPerMonth}</th>
-                  <th className={classes.rightText}>{totals.SumOfCostGPerYear}</th>
-                </tr>
-              </thead>
-            </Table>
-          </div>
-        )}
+                  ))}
+                </tbody>
+              );
+            })}
+            <thead>
+              <tr>
+                <th colSpan={2} style={{ paddingLeft: '20px' }}>
+                  Grand Totals:
+                </th>
+                <th className={classes.rightText}>{totals.SumOfCostGPerDay}</th>
+                <th className={classes.rightText}>{totals.SumOfCostGPerMonth}</th>
+                <th className={classes.rightText}>{totals.SumOfCostGPerYear}</th>
+              </tr>
+            </thead>
+          </Table>
+        </div>
       </div>
     );
   }
 }
-
-FeedingCostReport.propTypes = {
-  classes: PropTypes.shape({
-    rightText: PropTypes.object.isRequired,
-  }).isRequired,
-};
 
 export default FeedingCostReport;

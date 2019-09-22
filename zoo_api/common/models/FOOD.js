@@ -34,4 +34,52 @@ module.exports = function(Food) {
       http: { verb: 'get', path: '/day-prep-sheet-data' },
     }
   );
+
+  Food.getFoodCostReport = function(cb) {
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFoodCostReport()', (err, [rows]) => {
+      if (err) {
+        cb(Util.createError('Error processing request', 500));
+      } else {
+        cb(null, rows);
+      }
+    });
+  };
+
+  Food.remoteMethod(
+    'getFoodCostReport', {
+      description: 'Gets the data for a food cost report',
+      accepts: [],
+      returns: {
+        arg: 'data', type: 'object', root: true,
+      },
+      http: { verb: 'get', path: '/food-cost-report' },
+    }
+  );
+
+  Food.getFoodCostReportByGL = function(cb) {
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFoodCostReportByGL()', (err, [rows]) => {
+      if (err) {
+        cb(Util.createError('Error processing request', 500));
+      } else {
+        const rowsWithMonthAndYearValues = rows.map((row) => ({
+          ...row,
+          SumOfCostGPerMonth: parseFloat((row.SumOfCostGPerDay * 365 / 12).toFixed(2)),
+          SumOfCostGPerYear: parseFloat((row.SumOfCostGPerDay * 365).toFixed(2)),
+        }))
+        cb(null, rowsWithMonthAndYearValues);
+      }
+    });
+  };
+
+  Food.remoteMethod(
+    'getFoodCostReportByGL', {
+      description: 'Gets the data for a food cost report by budget code',
+      accepts: [],
+      returns: {
+        arg: 'data', type: 'object', root: true,
+      },
+      http: { verb: 'get', path: '/food-cost-report-by-gl' },
+    }
+  );
+
 };

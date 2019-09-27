@@ -7,8 +7,6 @@ import Table from 'react-bootstrap/Table';
 
 import FoodAPI from '../../../api/Food';
 
-import apiData from './test.json';
-
 /**
  * groups data coming back from API into a JSON with locations as the keys
  * and the values as arrays of the original data
@@ -127,7 +125,7 @@ class FeedingCostReport extends Component {
     );
     console.log(data);
     console.log(locationSubTotals);
-    const totals = getTotals(apiData);
+    const totals = getTotals(this.props.reportData);
     console.log(totals);
     const { classes } = this.props;
     return (

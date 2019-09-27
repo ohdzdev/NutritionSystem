@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
-import apiData from './test.json';
+import FoodAPI from '../../../api/Food';
 
 /**
  * groups data coming back from API into a JSON with locations as the keys
@@ -100,26 +100,35 @@ const styleMap = {
 };
 
 class FeedingCostReport extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
+  /**
+   * Server side data retrieval
+   */
+  static async getInitialProps({ authToken }) {
+    // api helpers on server side
+
+    const foodAPI = new FoodAPI(authToken);
+
+    // server side grab all data for list view
+    const res = await foodAPI.getFoodCostReport();
+    return {
+      reportData: res.data,
     };
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-      });
-    }, 1000);
-  }
+  static propTypes = {
+    classes: PropTypes.shape({
+      rightText: PropTypes.object.isRequired,
+    }).isRequired,
+    reportData: PropTypes.array.isRequired,
+  };
 
   render() {
-    const { data, locationSubTotals } = addLocationSubtotals(prepFeedCostData(apiData));
+    const { data, locationSubTotals } = addLocationSubtotals(
+      prepFeedCostData(this.props.reportData),
+    );
     console.log(data);
     console.log(locationSubTotals);
-    const totals = getTotals(apiData);
+    const totals = getTotals(this.props.reportData);
     const { classes } = this.props;
     return (
       <div>

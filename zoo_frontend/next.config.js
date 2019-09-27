@@ -1,7 +1,5 @@
-const withCSS = require('@zeit/next-css');
-
-module.exports = withCSS({
-  webpack(config, options) {
+module.exports = {
+  webpack: (config) => {
     config.node = {
       fs: 'empty',
     };
@@ -9,4 +7,4 @@ module.exports = withCSS({
     return config;
   },
   distDir: './.next',
-});
+};

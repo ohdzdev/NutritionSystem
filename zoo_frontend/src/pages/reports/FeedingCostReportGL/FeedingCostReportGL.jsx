@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import 'bootstrap/dist/css/bootstrap.css';
 
 import Typography from '@material-ui/core/Typography';
-import Table from 'react-bootstrap/Table';
 
 import FoodAPI from '../../../api/Food';
 
@@ -131,7 +129,7 @@ class FeedingCostReport extends Component {
     return (
       <div>
         <div>
-          <Table bordered striped size="sm">
+          <table>
             <thead key="header">
               <tr>
                 <th />
@@ -187,7 +185,7 @@ class FeedingCostReport extends Component {
                 <th className={classes.rightText}>{totals.SumOfCostGPerYear}</th>
               </tr>
             </thead>
-          </Table>
+          </table>
         </div>
       </div>
     );

@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 
 import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Table from 'react-bootstrap/Table';
 import PropTypes from 'prop-types';
-
-import 'bootstrap/dist/css/bootstrap.css';
+import ReactToPrint from 'react-to-print';
+import { Button } from '@material-ui/core';
 
 import FoodAPI from '../../../api/Food';
+
+const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+const moneyFormatterUS = (raw) => formatter.format(raw);
 
 /**
  * groups data coming back from API into a JSON with locations as the keys
@@ -116,91 +118,126 @@ class FeedingCostReport extends Component {
   }
 
   static propTypes = {
-    classes: PropTypes.shape({
-      rightText: PropTypes.object.isRequired,
-    }).isRequired,
+    classes: PropTypes.object.isRequired,
     reportData: PropTypes.array.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+    this.tableRef = createRef();
+    this.printer = createRef();
+  }
+
+  print = () => {
+    this.printer.current.handlePrint();
   };
 
   render() {
     const { data, locationSubTotals } = addLocationSubtotals(
       prepFeedCostData(this.props.reportData),
     );
-    console.log(data);
-    console.log(locationSubTotals);
     const totals = getTotals(this.props.reportData);
     const { classes } = this.props;
     return (
       <div>
-        {this.state.loading && <LinearProgress />}
-        {!this.state.loading && (
-          <div>
-            <Table bordered striped size="sm">
-              <thead key="header">
-                <tr>
-                  {Object.keys(titleMap).map((key) => (
-                    <th className={classes[styleMap[key]]}>{titleMap[key]}</th>
-                  ))}
-                </tr>
-              </thead>
-              {Object.keys(data).map((locationGroup) => {
-                return (
-                  <tbody key={locationGroup}>
-                    <tr>
-                      <th colSpan={3} style={{ paddingLeft: '20px' }}>
-                        {locationGroup}
-                      </th>
-                      <th className={classes.rightText}>
-                        {locationSubTotals[locationGroup].SumOfCostGPerDay}
-                      </th>
-                      <th className={classes.rightText}>
-                        {locationSubTotals[locationGroup].SumOfCostGPerYear}
-                      </th>
-                    </tr>
-                    {data[locationGroup].map((line) => (
-                      <tr key={line.dietId}>
-                        <td className={classes.rightText}>
-                          <Typography>{line.dietId}</Typography>
-                        </td>
-                        <td>
-                          <Typography>{line.species}</Typography>
-                        </td>
-                        <td className={classes.rightText}>
-                          <Typography>{line.numAnimals}</Typography>
-                        </td>
-                        <td className={classes.rightText}>
-                          <Typography>{line.SumOfCostGPerDay}</Typography>
-                        </td>
-                        <td className={classes.rightText}>
-                          <Typography>{line.SumOfCostGPerYear}</Typography>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                );
-              })}
-              <thead>
-                <tr>
-                  <th colSpan={2} style={{ paddingLeft: '20px' }}>
-                    Grand Totals:
+        <div className={classes.buttonContainer}>
+          <Button variant="contained" color="secondary" onClick={this.print}>
+            Print
+          </Button>
+        </div>
+        <ReactToPrint
+          ref={this.printer}
+          trigger={() => <div style={{ display: 'none' }} />}
+          content={() => this.tableRef.current}
+          pageStyle={
+            '@page { size: auto;  margin: 6% 5%; } @media print { body { -webkit-print-color-adjust: exact; } }'
+          }
+        />
+        <div ref={this.tableRef}>
+          <table className={classes.table}>
+            <thead key="header">
+              <tr className={classes.headerTr}>
+                {Object.keys(titleMap).map((key) => (
+                  <th key={key} className={classes[styleMap[key]]}>
+                    <Typography variant="subtitle1">{titleMap[key]}</Typography>
                   </th>
-                  <th className={classes.rightText}>{totals.numAnimals}</th>
-                  <th className={classes.rightText}>{totals.SumOfCostGPerDay}</th>
-                  <th className={classes.rightText}>{totals.SumOfCostGPerYear}</th>
-                </tr>
-              </thead>
-            </Table>
-          </div>
-        )}
+                ))}
+              </tr>
+            </thead>
+            {Object.keys(data).map((locationKey) => {
+              return (
+                <tbody key={locationKey}>
+                  <tr className={classes.sectionHeaderTr}>
+                    <th colSpan={2} className={classes.th} style={{ paddingLeft: '20px' }}>
+                      <Typography variant="subtitle1" align="left">
+                        {locationKey}
+                      </Typography>
+                    </th>
+                    <th className={`${classes.rightText} ${classes.th}`}>
+                      <Typography variant="subtitle1">
+                        {locationSubTotals[locationKey].num_animals}
+                      </Typography>
+                    </th>
+                    <th className={`${classes.rightText} ${classes.th}`}>
+                      <Typography variant="subtitle1">
+                        {moneyFormatterUS(locationSubTotals[locationKey].SumOfCostGPerDay)}
+                      </Typography>
+                    </th>
+                    <th className={`${classes.rightText} ${classes.th}`}>
+                      <Typography variant="subtitle1">
+                        {moneyFormatterUS(locationSubTotals[locationKey].SumOfCostGPerDay * 365)}
+                      </Typography>
+                    </th>
+                  </tr>
+                  {data[locationKey].map((line) => (
+                    <tr key={line.diet_id} className={classes.tr}>
+                      <td className={`${classes.rightText} ${classes.td}`}>
+                        <Typography>{line.diet_id}</Typography>
+                      </td>
+                      <td className={classes.td}>
+                        <Typography>{line.species}</Typography>
+                      </td>
+                      <td className={`${classes.rightText} ${classes.td}`}>
+                        <Typography>{line.num_animals}</Typography>
+                      </td>
+                      <td className={`${classes.rightText} ${classes.td}`}>
+                        <Typography>{moneyFormatterUS(line.SumOfCostGPerDay)}</Typography>
+                      </td>
+                      <td className={`${classes.rightText} ${classes.td}`}>
+                        <Typography>{moneyFormatterUS(line.SumOfCostGPerDay * 365)}</Typography>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              );
+            })}
+            <thead>
+              <tr className={classes.totalTr}>
+                <th colSpan={2} style={{ paddingLeft: '20px' }} className={classes.th}>
+                  <Typography variant="subtitle1" align="left">
+                    Grand Totals:
+                  </Typography>
+                </th>
+                <th className={`${classes.rightText} ${classes.th}`}>
+                  <Typography variant="subtitle1">{totals.num_animals}</Typography>
+                </th>
+                <th className={`${classes.rightText} ${classes.th}`}>
+                  <Typography variant="subtitle1">
+                    {moneyFormatterUS(totals.SumOfCostGPerDay)}
+                  </Typography>
+                </th>
+                <th className={`${classes.rightText} ${classes.th}`}>
+                  <Typography variant="subtitle1">
+                    {moneyFormatterUS(totals.SumOfCostGPerDay * 365)}
+                  </Typography>
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
       </div>
     );
   }
 }
-
-FeedingCostReport.propTypes = {
-  classes: PropTypes.shape({
-    rightText: PropTypes.object.isRequired,
-  }).isRequired,
-};
 
 export default FeedingCostReport;

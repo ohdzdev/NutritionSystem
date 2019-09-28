@@ -111,7 +111,7 @@ class Food {
    * @return {array} data returned from the api call
    */
   async getFoodCostReport() {
-    const uri = `${API_BASE_URL}/Food/food-cost-report?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Food/feeding-cost-report?access_token=${this.token}`;
 
     const res = await axios.get(uri);
 
@@ -123,7 +123,7 @@ class Food {
    * @return {array} data returned from the api call
    */
   async getFoodCostReportByGL() {
-    const uri = `${API_BASE_URL}/Food/food-cost-report-by-gl?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Food/feeding-cost-report-by-gl?access_token=${this.token}`;
 
     const res = await axios.get(uri);
 

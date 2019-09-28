@@ -35,8 +35,8 @@ module.exports = function(Food) {
     }
   );
 
-  Food.getFoodCostReport = function(cb) {
-    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFoodCostReport()', (err, [rows]) => {
+  Food.getFeedingCostReport = function(cb) {
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFeedingCostReport()', (err, [rows]) => {
       if (err) {
         cb(Util.createError('Error processing request', 500));
       } else {
@@ -46,18 +46,18 @@ module.exports = function(Food) {
   };
 
   Food.remoteMethod(
-    'getFoodCostReport', {
-      description: 'Gets the data for a food cost report',
+    'getFeedingCostReport', {
+      description: 'Gets the data for a feeding cost report',
       accepts: [],
       returns: {
         arg: 'data', type: 'object', root: true,
       },
-      http: { verb: 'get', path: '/food-cost-report' },
+      http: { verb: 'get', path: '/feeding-cost-report' },
     }
   );
 
-  Food.getFoodCostReportByGL = function(cb) {
-    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFoodCostReportByGL()', (err, [rows]) => {
+  Food.getFeedingCostReportByGL = function(cb) {
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFeedingCostReportByGL()', (err, [rows]) => {
       if (err) {
         cb(Util.createError('Error processing request', 500));
       } else {
@@ -72,13 +72,13 @@ module.exports = function(Food) {
   };
 
   Food.remoteMethod(
-    'getFoodCostReportByGL', {
-      description: 'Gets the data for a food cost report by budget code',
+    'getFeedingCostReportByGL', {
+      description: 'Gets the data for a feeding cost report by budget code',
       accepts: [],
       returns: {
         arg: 'data', type: 'object', root: true,
       },
-      http: { verb: 'get', path: '/food-cost-report-by-gl' },
+      http: { verb: 'get', path: '/feeding-cost-report-by-gl' },
     }
   );
 

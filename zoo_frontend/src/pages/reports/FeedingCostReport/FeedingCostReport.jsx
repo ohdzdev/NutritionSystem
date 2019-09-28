@@ -4,10 +4,13 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import ReactToPrint from 'react-to-print';
 import { Button } from '@material-ui/core';
+import PrintIcon from '@material-ui/icons/Print';
 
 import FoodAPI from '../../../api/Food';
 
 import usdFormatter from '../utils/usdFormatter';
+import addLocationSubtotals from '../utils/addLocationSubtotals';
+import getTotals from '../utils/getTotals';
 
 /**
  * groups data coming back from API into a JSON with locations as the keys
@@ -25,60 +28,6 @@ const prepFeedCostData = (rawData) => {
     } else {
       acc[curr.location] = [curr];
     }
-    return acc;
-  }, {});
-};
-
-const addLocationSubtotals = (d) => {
-  // our data is already grouped into locations, we must iterate over these and get the subtotals
-  // then the sub totals can be added to the orignal dataset
-  const locationSubTotals = {};
-
-  Object.keys(d).forEach((key) => {
-    const groupTotal = d[key].reduce((acc, curr) => {
-      const rowKeys = Object.keys(curr);
-      // here we calculate all the number fields into their own subtotals
-      rowKeys.forEach((rKey) => {
-        if (typeof curr[rKey] === 'number') {
-          if (acc[rKey]) {
-            acc[rKey] += curr[rKey];
-          } else {
-            acc[rKey] = curr[rKey];
-          }
-        }
-      });
-      return acc;
-    }, {});
-    locationSubTotals[key] = groupTotal;
-  });
-  return {
-    data: d,
-    locationSubTotals,
-  };
-};
-
-/**
- * takes raw API data and on number fields
- * @param {Array<JSON>} rawData
- */
-const getTotals = (rawData) => {
-  return rawData.reduce((acc, curr) => {
-    const currKeys = Object.keys(curr);
-    currKeys.forEach((key) => {
-      if (typeof curr[key] === 'number') {
-        // declare the start of a total field
-        if (acc[key] === undefined) {
-          acc[key] = 0;
-        }
-      }
-    });
-    const keys = Object.keys(acc);
-
-    keys.forEach((key) => {
-      if (curr[key]) {
-        acc[key] += curr[key];
-      }
-    });
     return acc;
   }, {});
 };
@@ -141,6 +90,7 @@ class FeedingCostReport extends Component {
         <div className={classes.buttonContainer}>
           <Button variant="contained" color="secondary" onClick={this.print}>
             Print
+            <PrintIcon />
           </Button>
         </div>
         <ReactToPrint

@@ -82,4 +82,38 @@ module.exports = function(Food) {
     }
   );
 
+  Food.getDietCostReport = function(dietId, cb) {
+    let diet = null;
+    if(typeof dietId === 'number') {
+      diet = dietId;
+    }
+
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetDietCostReport(?)', [diet], (err, [rows]) => {
+      if (err) {
+        cb(Util.createError('Error processing request', 500));
+      } else {
+        cb(null, rows);
+      }
+    });
+  };
+
+  Food.remoteMethod(
+    'getDietCostReport', {
+      description: 'Gets the data for a diet cost report',
+      accepts: [
+        {
+          arg: 'dietId',
+          type: 'number',
+          required: false,
+          http: { source: 'query' },
+          description: 'The diet for which to filter upon, could be blank if you wanted to get a lot of data back',
+        },
+      ],
+      returns: {
+        arg: 'data', type: 'object', root: true,
+      },
+      http: { verb: 'get', path: '/diet-cost-report' },
+    }
+  );
+
 };

@@ -7,9 +7,7 @@ import { Button } from '@material-ui/core';
 
 import FoodAPI from '../../../api/Food';
 
-const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-const moneyFormatterUS = (raw) => formatter.format(raw);
+import usdFormatter from '../utils/usdFormatter';
 
 /**
  * groups data coming back from API into a JSON with locations as the keys
@@ -180,12 +178,12 @@ class FeedingCostReport extends Component {
                     </th>
                     <th className={`${classes.rightText} ${classes.th}`}>
                       <Typography variant="subtitle1">
-                        {moneyFormatterUS(locationSubTotals[locationKey].SumOfCostGPerDay)}
+                        {usdFormatter(locationSubTotals[locationKey].SumOfCostGPerDay)}
                       </Typography>
                     </th>
                     <th className={`${classes.rightText} ${classes.th}`}>
                       <Typography variant="subtitle1">
-                        {moneyFormatterUS(locationSubTotals[locationKey].SumOfCostGPerDay * 365)}
+                        {usdFormatter(locationSubTotals[locationKey].SumOfCostGPerDay * 365)}
                       </Typography>
                     </th>
                   </tr>
@@ -201,10 +199,10 @@ class FeedingCostReport extends Component {
                         <Typography>{line.num_animals}</Typography>
                       </td>
                       <td className={`${classes.rightText} ${classes.td}`}>
-                        <Typography>{moneyFormatterUS(line.SumOfCostGPerDay)}</Typography>
+                        <Typography>{usdFormatter(line.SumOfCostGPerDay)}</Typography>
                       </td>
                       <td className={`${classes.rightText} ${classes.td}`}>
-                        <Typography>{moneyFormatterUS(line.SumOfCostGPerDay * 365)}</Typography>
+                        <Typography>{usdFormatter(line.SumOfCostGPerDay * 365)}</Typography>
                       </td>
                     </tr>
                   ))}
@@ -223,12 +221,12 @@ class FeedingCostReport extends Component {
                 </th>
                 <th className={`${classes.rightText} ${classes.th}`}>
                   <Typography variant="subtitle1">
-                    {moneyFormatterUS(totals.SumOfCostGPerDay)}
+                    {usdFormatter(totals.SumOfCostGPerDay)}
                   </Typography>
                 </th>
                 <th className={`${classes.rightText} ${classes.th}`}>
                   <Typography variant="subtitle1">
-                    {moneyFormatterUS(totals.SumOfCostGPerDay * 365)}
+                    {usdFormatter(totals.SumOfCostGPerDay * 365)}
                   </Typography>
                 </th>
               </tr>

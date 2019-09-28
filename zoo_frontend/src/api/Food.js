@@ -129,6 +129,19 @@ class Food {
 
     return res;
   }
+
+    /**
+   * Get the food cost report grouped by budget code
+   * @param {Number} dietId dietid to filter by, can be null
+   * @return {array} data returned from the api call
+   */
+  async getDietCostReport(dietId) {
+    const uri = `${API_BASE_URL}/Food/diet-cost-report?access_token=${this.token}&dietId=${dietId}`;
+
+    const res = await axios.get(uri);
+
+    return res;
+  }
 }
 
 export default Food;

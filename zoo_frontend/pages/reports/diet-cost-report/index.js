@@ -1,1 +1,1 @@
-export { default } from '../../../src/pages/reports/FeedingCostReport';
+export { default } from '../../../src/pages/reports/DietCostReport';

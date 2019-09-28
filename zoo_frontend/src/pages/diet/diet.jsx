@@ -43,7 +43,7 @@ import {
 
 import { Notifications, ConfirmationDialog } from '../../components';
 
-import DietSelect from './DietSelectDialog';
+import DietSelect from '../../components/DietSelectDialog';
 import DietPlanChangeDialog from './DietPlanChangeDialog';
 
 import DietHistoryList from './dietHistoryList';

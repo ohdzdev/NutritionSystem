@@ -136,7 +136,13 @@ class Food {
    * @return {array} data returned from the api call
    */
   async getDietCostReport(dietId) {
-    const uri = `${API_BASE_URL}/Food/diet-cost-report?access_token=${this.token}&dietId=${dietId}`;
+    let uri = '';
+    if(dietId) {
+      uri = `${API_BASE_URL}/Food/diet-cost-report?access_token=${this.token}&dietId=${dietId}`;
+    } else {
+      uri = `${API_BASE_URL}/Food/diet-cost-report?access_token=${this.token}`;
+    }
+    
 
     const res = await axios.get(uri);
 

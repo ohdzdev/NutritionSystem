@@ -220,7 +220,9 @@ export default class DietCostReport extends Component {
                           <Typography variant="subtitle1">Daily Cost</Typography>
                         </td>
                         <td className={`${classes.rightText} ${classes.td}`}>
-                          {usdFormatter(this.state.reportTotals.CostGPerDay)}
+                          <Typography>
+                            {usdFormatter(this.state.reportTotals.CostGPerDay)}
+                          </Typography>
                         </td>
                       </tr>
                       <tr>
@@ -228,7 +230,9 @@ export default class DietCostReport extends Component {
                           <Typography variant="subtitle1">Monthly Cost</Typography>
                         </td>
                         <td className={`${classes.rightText} ${classes.td}`}>
-                          {usdFormatter(this.state.reportTotals.CostGPerDay * 30)}
+                          <Typography>
+                            {usdFormatter(this.state.reportTotals.CostGPerDay * 30)}
+                          </Typography>
                         </td>
                       </tr>
                       <tr>
@@ -236,7 +240,9 @@ export default class DietCostReport extends Component {
                           <Typography variant="subtitle1">Yearly Cost</Typography>
                         </td>
                         <td className={`${classes.rightText} ${classes.td}`}>
-                          {usdFormatter(this.state.reportTotals.CostGPerDay * 365)}
+                          <Typography>
+                            {usdFormatter(this.state.reportTotals.CostGPerDay * 365)}
+                          </Typography>
                         </td>
                       </tr>
                     </tbody>

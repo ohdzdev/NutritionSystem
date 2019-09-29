@@ -12,7 +12,7 @@ import {
 
 import MaterialTable from 'material-table';
 
-import TableColumnHelper from '../../util/TableColumnHelper';
+import TableColumnHelper from '../util/TableColumnHelper';
 
 const applyCellHighlightIfSelected = (data, selected, rowSelected, selectedStyles) => {
   if (rowSelected) {

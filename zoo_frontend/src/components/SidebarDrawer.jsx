@@ -30,6 +30,10 @@ import ProfileIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SpeciesIcon from '@material-ui/icons/Pets';
 import UsersIcon from '@material-ui/icons/SupervisorAccount';
+import BarChart from '@material-ui/icons/BarChart';
+import FastFood from '@material-ui/icons/Fastfood';
+import RestaurantMenu from '@material-ui/icons/RestaurantMenu';
+import AttachMoney from '@material-ui/icons/AttachMoney';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRulerCombined, faCrow } from '@fortawesome/free-solid-svg-icons';
@@ -38,7 +42,7 @@ import Link from 'next/link';
 
 import { AuthContext } from '../util/AuthProvider';
 
-import { hasAccess, Home, Food, Diet, Admin, Profile, Kitchen } from '../pages/PageAccess';
+import { hasAccess, Home, Food, Diet, Admin, Profile, Kitchen, Reports } from '../pages/PageAccess';
 
 const drawerWidth = 240;
 
@@ -67,6 +71,7 @@ const SidebarDrawer = (props) => {
 
   const [adminCollapse, setAdminCollapse] = useState(false);
   const [foodCollapse, setFoodCollapse] = useState(false);
+  const [reportsCollapse, setReportsCollapse] = useState(false);
 
   return (
     <AuthContext.Consumer>
@@ -194,6 +199,56 @@ const SidebarDrawer = (props) => {
                   <Divider />
                 </Fragment>
               )}
+              {hasAccess(role, Reports.roles) && (
+                <Fragment>
+                  <ListItem
+                    button
+                    key="foodMenu"
+                    onClick={() => setReportsCollapse(!reportsCollapse)}
+                  >
+                    <ListItemIcon>
+                      <BarChart />
+                    </ListItemIcon>
+                    <ListItemText primary="Reports" />
+                    {reportsCollapse ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={reportsCollapse} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {hasAccess(role, Reports.dietCostReport.roles) && (
+                        <Link href={Reports.dietCostReport.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                              <FastFood />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Food Cost Report" />
+                          </ListItem>
+                        </Link>
+                      )}
+                      {hasAccess(role, Reports.feedingCostReport.roles) && (
+                        <Link href={Reports.feedingCostReport.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                              <RestaurantMenu />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Feeding Cost Report" />
+                          </ListItem>
+                        </Link>
+                      )}
+                      {hasAccess(role, Reports.feedingCostReportGL.roles) && (
+                        <Link href={Reports.feedingCostReportGL.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                              <RestaurantMenu />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Feeding Cost Report by GL" />
+                          </ListItem>
+                        </Link>
+                      )}
+                    </List>
+                  </Collapse>
+                  <Divider />
+                </Fragment>
+              )}
               {hasAccess(role, Admin.roles) && (
                 <Fragment>
                   <ListItem button key="admin" onClick={() => setAdminCollapse(!adminCollapse)}>
@@ -212,6 +267,16 @@ const SidebarDrawer = (props) => {
                               <DeliveryContainersIcon />
                             </ListItemIcon>
                             <ListItemText inset primary="Delivery Containers" />
+                          </ListItem>
+                        </Link>
+                      )}
+                      {hasAccess(role, Admin.budgetIds.roles) && (
+                        <Link href={Admin.budgetIds.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                              <AttachMoney />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Budget Codes" />
                           </ListItem>
                         </Link>
                       )}

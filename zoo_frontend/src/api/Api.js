@@ -23,9 +23,10 @@ class Api {
       );
       throw new Error('Session Token Blank');
     }
-    await axios.post(`${API_BASE_URL}/AccessTokens/validate`, {
+    const res = await axios.post(`${API_BASE_URL}/AccessTokens/validate`, {
       token: this.token,
     });
+    return res;
   };
 
   login = async (email, password) => {

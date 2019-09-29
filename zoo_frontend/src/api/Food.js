@@ -105,6 +105,49 @@ class Food {
 
     return res;
   }
+
+  /**
+   * Get the food cost report
+   * @return {array} data returned from the api call
+   */
+  async getFoodCostReport() {
+    const uri = `${API_BASE_URL}/Food/feeding-cost-report?access_token=${this.token}`;
+
+    const res = await axios.get(uri);
+
+    return res;
+  }
+
+  /**
+   * Get the food cost report grouped by budget code
+   * @return {array} data returned from the api call
+   */
+  async getFoodCostReportByGL() {
+    const uri = `${API_BASE_URL}/Food/feeding-cost-report-by-gl?access_token=${this.token}`;
+
+    const res = await axios.get(uri);
+
+    return res;
+  }
+
+    /**
+   * Get the food cost report grouped by budget code
+   * @param {Number} dietId dietid to filter by, can be null
+   * @return {array} data returned from the api call
+   */
+  async getDietCostReport(dietId) {
+    let uri = '';
+    if(dietId) {
+      uri = `${API_BASE_URL}/Food/diet-cost-report?access_token=${this.token}&dietId=${dietId}`;
+    } else {
+      uri = `${API_BASE_URL}/Food/diet-cost-report?access_token=${this.token}`;
+    }
+    
+
+    const res = await axios.get(uri);
+
+    return res;
+  }
 }
 
 export default Food;

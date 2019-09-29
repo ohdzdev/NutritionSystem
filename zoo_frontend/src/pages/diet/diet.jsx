@@ -41,9 +41,11 @@ import {
   // RoleMappings,
 } from '../../api';
 
+import { hasAccess, Reports } from '../PageAccess';
+
 import { Notifications, ConfirmationDialog } from '../../components';
 
-import DietSelect from './DietSelectDialog';
+import DietSelect from '../../components/DietSelectDialog';
 import DietPlanChangeDialog from './DietPlanChangeDialog';
 
 import DietHistoryList from './dietHistoryList';
@@ -1063,6 +1065,19 @@ export default class extends Component {
             >
               <DietMenu
                 className={classes.dietActionsMenu}
+                costReport={{
+                  enabled:
+                    !!this.state.selectedDiet &&
+                    hasAccess(this.props.account.role, Reports.dietCostReport.roles),
+                  handler: () => {
+                    const { dietId } = this.state.selectedDiet;
+
+                    window.open(
+                      `${window.location.origin}/reports/diet-cost-report?id=${dietId}`,
+                      '_blank',
+                    );
+                  },
+                }}
                 mail={{
                   enabled: !!this.state.selectedDiet,
                   handler: () => {

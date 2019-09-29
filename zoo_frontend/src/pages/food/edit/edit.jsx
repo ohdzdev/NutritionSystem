@@ -97,7 +97,7 @@ export default class extends Component {
 
       // grab all related records on server
       const foodCategories = await categoryAPI.getCategories().catch(() => []);
-      const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => []);
+      const budgetCodes = await budgetAPI.getBudgetIds().catch(() => []);
       const food = await serverFoodAPI.getFood({ where: { foodId: query.id } }).catch(() => []);
       const category = await serverFoodAPI.getRelatedCategory(query.id).catch(() => []);
       const budgetCode = await serverFoodAPI.getRelatedBudgetCode(query.id).catch(() => []);

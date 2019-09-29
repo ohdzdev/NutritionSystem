@@ -11,6 +11,7 @@ import AddBox from '@material-ui/icons/AddBox';
 import Download from '@material-ui/icons/CloudDownload';
 import Mail from '@material-ui/icons/Mail';
 import Delete from '@material-ui/icons/Delete';
+import FastFood from '@material-ui/icons/Fastfood';
 
 const styles = (theme) => ({
   rightIcon: {
@@ -46,6 +47,19 @@ function DietMenu(props) {
             <MenuIcon className={props.classes.rightIcon} />
           </Button>
           <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+            {props.costReport.enabled && (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  props.costReport.handler();
+                }}
+              >
+                <ListItemIcon>
+                  <FastFood />
+                </ListItemIcon>
+                Diet Cost Report
+              </MenuItem>
+            )}
             {props.mail.enabled && (
               <MenuItem
                 onClick={() => {
@@ -106,6 +120,10 @@ function DietMenu(props) {
 }
 
 DietMenu.propTypes = {
+  costReport: PropTypes.shape({
+    enabled: PropTypes.bool.isRequired,
+    handler: PropTypes.func.isRequired,
+  }).isRequired,
   mail: PropTypes.shape({
     enabled: PropTypes.bool.isRequired,
     handler: PropTypes.func.isRequired,

@@ -12,6 +12,10 @@ export { hasAccess };
 export const Admin = {
   link: '/admin',
   roles: [Roles.ADMIN],
+  budgetIds: {
+    link: '/admin/budgetids',
+    roles: [Roles.ADMIN],
+  },
   deliveryContainers: {
     link: '/admin/delivery-containers',
     roles: [Roles.ADMIN],
@@ -110,5 +114,22 @@ export const Kitchen = {
   prep: {
     link: '/kitchen/prep',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
+  },
+};
+
+export const Reports = {
+  link: '/reports',
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  dietCostReport: {
+    link: '/reports/diet-cost-report',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  },
+  feedingCostReport: {
+    link: '/reports/feeding-cost-report',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  },
+  feedingCostReportGL: {
+    link: '/reports/feeding-cost-report-gl',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
 };

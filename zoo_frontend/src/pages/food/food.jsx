@@ -52,7 +52,7 @@ class FoodPage extends Component {
     const res = await api.getFood().catch((err) => ({ foodItems: [{ err: true, msg: err }] }));
     // grab all categories because its highly likely that we will use them all for ALL the foods listed
     const foodCategories = await categoryAPI.getCategories().catch(() => {});
-    const budgetCodes = await budgetAPI.getBudgetCodes().catch(() => {});
+    const budgetCodes = await budgetAPI.getBudgetIds().catch(() => {});
     // grab all the budget codes for same reason
 
     return {

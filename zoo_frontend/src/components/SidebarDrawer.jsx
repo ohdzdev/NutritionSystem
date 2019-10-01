@@ -34,6 +34,7 @@ import BarChart from '@material-ui/icons/BarChart';
 import FastFood from '@material-ui/icons/Fastfood';
 import RestaurantMenu from '@material-ui/icons/RestaurantMenu';
 import AttachMoney from '@material-ui/icons/AttachMoney';
+import Timer from '@material-ui/icons/Timer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRulerCombined, faCrow } from '@fortawesome/free-solid-svg-icons';
@@ -241,6 +242,16 @@ const SidebarDrawer = (props) => {
                               <RestaurantMenu />
                             </ListItemIcon>
                             <ListItemText inset primary="Feeding Cost Report by GL" />
+                          </ListItem>
+                        </Link>
+                      )}
+                      {hasAccess(role, Reports.recentDietChangesReport.roles) && (
+                        <Link href={Reports.recentDietChangesReport.link}>
+                          <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                              <Timer />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Recent Diet Changes" />
                           </ListItem>
                         </Link>
                       )}

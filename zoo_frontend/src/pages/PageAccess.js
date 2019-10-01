@@ -132,4 +132,8 @@ export const Reports = {
     link: '/reports/feeding-cost-report-gl',
     roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
   },
+  recentDietChangesReport: {
+    link: '/reports/recent-diet-changes-report',
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.SUPERVISOR],
+  }
 };

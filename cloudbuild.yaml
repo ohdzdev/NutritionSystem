@@ -19,6 +19,7 @@ steps:
         "gcr.io/$PROJECT_ID/zoo_app/$BRANCH_NAME",
         "--region",
         "us-central1",
+        "--allow-unauthenticated",
       ]
 images: ["gcr.io/$PROJECT_ID/zoo_app/$BRANCH_NAME"]
 tags: ["$BRANCH_NAME"]

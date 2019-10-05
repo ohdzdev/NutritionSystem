@@ -30,7 +30,7 @@ class RecentDietChanges extends Component {
     const serverUserAPI = new UsersAPI(authToken);
 
     // TODO change to 7 days
-    const sevenDaysAgo = moment().subtract(100, 'days');
+    const sevenDaysAgo = moment().subtract(7, 'days');
     const defaultQuery = { where: { dietChangeDate: { gte: sevenDaysAgo } } };
     const dietChangeRes = await serverDCAPI.getDietChanges(defaultQuery);
 

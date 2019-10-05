@@ -31,7 +31,10 @@ class RecentDietChanges extends Component {
 
     // TODO change to 7 days
     const sevenDaysAgo = moment().subtract(7, 'days');
-    const defaultQuery = { where: { dietChangeDate: { gte: sevenDaysAgo } } };
+    const defaultQuery = {
+      where: { dietChangeDate: { gte: sevenDaysAgo } },
+      order: 'dietChangeDate DESC',
+    };
     const dietChangeRes = await serverDCAPI.getDietChanges(defaultQuery);
 
     // grab all users to make it easier to read who changed what
@@ -66,7 +69,7 @@ class RecentDietChanges extends Component {
 
   async onDateChange(dateTime) {
     this.setState({ loading: true }, async () => {
-      const query = { where: { dietChangeDate: { gte: dateTime } } };
+      const query = { where: { dietChangeDate: { gte: dateTime } }, order: 'dietChangeDate DESC' };
       const res = await this.clientDCAPI.getDietChanges(query);
 
       this.setState({
@@ -131,7 +134,7 @@ class RecentDietChanges extends Component {
               {this.state.reportData.map((dietChange) => {
                 const dietChangedBy = this.props.allUsers.find((u) => u.id === dietChange.userId);
                 return (
-                  <Grid item xs={12} sm={10} lg={8}>
+                  <Grid item xs={12} sm={10} lg={8} key={dietChange.id}>
                     <Card>
                       <CardHeader
                         title={`Diet: ${dietChange.dietId}`}

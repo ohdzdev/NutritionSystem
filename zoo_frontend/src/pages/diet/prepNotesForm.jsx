@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
 
-export const DisplayFormikState = props => (
+export const DisplayFormikState = (props) => (
   <div style={{ margin: '1rem 0' }}>
     <pre
       style={{
@@ -16,8 +16,7 @@ export const DisplayFormikState = props => (
         padding: '.5rem',
       }}
     >
-      <strong>props</strong> ={' '}
-      {JSON.stringify(props, null, 2)}
+      <strong>props</strong> = {JSON.stringify(props, null, 2)}
     </pre>
   </div>
 );
@@ -27,30 +26,28 @@ const formikEnhancer = withFormik({
   validationSchema: Yup.object().shape({
     prepNote: Yup.string().required('Note is required'),
   }),
-  mapPropsToValues: props => ({
+  mapPropsToValues: (props) => ({
     prepNote: props.prepNote ? props.prepNote : '',
     submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
-    const {
-      submitForm, ...rest
-    } = values;
+    const { submitForm, ...rest } = values;
 
-    submitForm(rest).then(() => {
-      setSubmitting(false);
-    }, () => {
-      setSubmitting(false);
-    });
+    submitForm(rest).then(
+      () => {
+        setSubmitting(false);
+      },
+      () => {
+        setSubmitting(false);
+      },
+    );
   },
   displayName: 'MyForm',
 });
 
-
-const Form = props => {
+const Form = (props) => {
   const {
-    values: {
-      prepNote,
-    },
+    values: { prepNote },
     errors,
     touched,
     handleChange,
@@ -98,21 +95,15 @@ const Form = props => {
           />
         </Grid>
       </Grid>
-      {isSubmitting &&
+      {isSubmitting && (
         <Fragment>
           <br />
           <LinearProgress />
           <br />
         </Fragment>
-      }
+      )}
       <Grid item xs={12} style={{ paddingTop: '10px', paddingBottom: '10px' }}>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={!isValid}
-        >
+        <Button type="submit" fullWidth variant="contained" color="primary" disabled={!isValid}>
           {props.submitButtonText}
         </Button>
       </Grid>

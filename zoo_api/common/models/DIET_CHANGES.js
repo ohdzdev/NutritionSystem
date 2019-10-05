@@ -1,6 +1,36 @@
 const Util = require('../../server/util');
+const app = require('../../server/server');
 
 module.exports = function(DietChanges) {
+  DietChanges.getLastDietChanges = function(n, cb) {
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetLastDietChanges(?)', [n], (err, [dietChanges]) => {
+      if (err) {
+        cb(Util.createError('Error processing request', 500));
+      } else {
+        cb(null, {
+          dietChanges,
+        });
+      }
+    });
+  };
+
+  DietChanges.remoteMethod('getLastDietChanges', {
+    description: 'Gets the last n diet changes for each diet',
+    accepts: [
+      {
+        arg: 'changes',
+        type: 'number',
+        required: true,
+        http: { source: 'query' },
+        description: 'The number of diet changes.',
+      },
+    ],
+    returns: {
+      arg: 'data', type: 'object', root: true,
+    },
+    http: { verb: 'get', path: '/last-diet-changes' },
+  });
+
   DietChanges.deleteAllByDietId = function(body, cb) {
     const { dietId } = body;
     if (dietId) {

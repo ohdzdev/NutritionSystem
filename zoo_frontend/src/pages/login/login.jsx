@@ -25,7 +25,7 @@ class Login extends Component {
 
   static defaultProps = {
     account: undefined,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -68,7 +68,10 @@ class Login extends Component {
         Router.events.on('routeChangeError', (err) => {
           console.error(err);
           if (this.notificationsRef && this.notificationsRef.current) {
-            this.notificationsRef.showNotification('error', 'Application redirection error, please close browser and re-open');
+            this.notificationsRef.showNotification(
+              'error',
+              'Application redirection error, please close browser and re-open',
+            );
           }
         }); // leaving this in, let's us see if there are weird /login redirect issues
 
@@ -78,13 +81,16 @@ class Login extends Component {
     } catch (err) {
       if (err.message === 'Role not found') {
         setTimeout(() => {
-          this.notificationsRef.current.showNotification('error', 'This user has no role, please contact the system admin to add a user type to your account');
+          this.notificationsRef.current.showNotification(
+            'error',
+            'This user has no role, please contact the system admin to add a user type to your account',
+          );
         }, 500);
       }
       console.error(err);
       this.setState({ error: true, errorMessage: 'Invalid username/password!' });
     }
-  }
+  };
 
   handleEmailChange = (event) => this.setState({ email: event.target.value });
   handlePasswordChange = (event) => this.setState({ password: event.target.value });
@@ -101,17 +107,12 @@ class Login extends Component {
             Sign in
           </Typography>
           <form className={classes.form} onSubmit={this.handleLoginSubmit}>
-            {this.state.error &&
+            {this.state.error && (
               <FormHelperText error className={classes.errorText}>
                 {this.state.errorMessage}
               </FormHelperText>
-            }
-            <FormControl
-              margin="normal"
-              required
-              fullWidth
-              error={this.state.error}
-            >
+            )}
+            <FormControl margin="normal" required fullWidth error={this.state.error}>
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input
                 id="email"
@@ -122,12 +123,7 @@ class Login extends Component {
                 onChange={this.handleEmailChange}
               />
             </FormControl>
-            <FormControl
-              margin="normal"
-              required
-              fullWidth
-              error={this.state.error}
-            >
+            <FormControl margin="normal" required fullWidth error={this.state.error}>
               <InputLabel htmlFor="password">Password</InputLabel>
               <Input
                 name="password"
@@ -139,14 +135,14 @@ class Login extends Component {
               />
             </FormControl>
             <FormControlLabel
-              control={(
+              control={
                 <Checkbox
                   value="remember"
                   color="primary"
                   checked={this.state.rememberMe}
                   onChange={this.handleRememberMeChange}
                 />
-              )}
+              }
               label="Remember me"
             />
             <Button

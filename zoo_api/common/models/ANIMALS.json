@@ -7,6 +7,11 @@
       "table": "ANIMALS"
     },
     "relations": {
+      "animalLifeStages": {
+        "model": "LifeStages",
+        "type": "belongsTo",
+        "foreignKey": "lifeStage"
+      },
       "animalDiets": {
         "model": "Diets",
         "type": "belongsTo",
@@ -32,17 +37,17 @@
       }
     },
     "accessionNum": {
-      "type": "String",
+      "type": "Number",
       "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
         "columnName": "accession_num",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     },
@@ -62,17 +67,17 @@
       }
     },
     "lifeStage": {
-      "type": "String",
+      "type": "Number",
       "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
         "columnName": "life_stage",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     },
@@ -94,13 +99,11 @@
   },
   "validations": [],
   "relations": {},
-  "acls": [
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "$unauthenticated",
-      "permission": "DENY"
-    }
-  ],
+  "acls": [{
+    "accessType": "*",
+    "principalType": "ROLE",
+    "principalId": "$unauthenticated",
+    "permission": "DENY"
+  }],
   "methods": {}
 }

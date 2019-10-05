@@ -9,6 +9,6 @@ import page from './nutrDef';
 import styles from './nutrDef.styles';
 
 export default compose(
-  withAuth(Food.roles),
+  withAuth(Food.nutrDef.roles),
   withStyles(styles),
 )(page);

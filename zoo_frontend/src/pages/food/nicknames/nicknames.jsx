@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import Edit from '@material-ui/icons/Edit';
 import {
-  TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions,
+  TextField,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@material-ui/core';
 
 import TableColumnHelper from '../../../util/TableColumnHelper';
 
-import FoodModelAPI from '../../../../../zoo_api/common/models/FOOD.json';
+import FoodModelAPI from './FOOD.json';
 
 import { Food as FoodAPI } from '../../../api';
 import { hasAccess, Food } from '../../PageAccess';
@@ -33,11 +38,11 @@ export default class extends Component {
     account: PropTypes.object.isRequired,
     // classes: PropTypes.object.isRequired,
     allFood: PropTypes.array.isRequired,
-  }
+  };
 
   static defaultProps = {
     token: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -52,14 +57,33 @@ export default class extends Component {
     const keys = Object.keys(FoodModelAPI.properties);
     const FoodColumns = {};
     // flip columns around to make nickname appear second
-    keys.reverse().forEach((key) => { FoodColumns[key] = null; });
-    const ignoredFoodWeightColumns = ['foodId', 'sciName', 'manufacturerName', 'costG', 'budgetId', 'category', 'usdaFoodGroupDesc', 'dry', 'meat', 'preChop', 'preBag', 'active'];
+    keys.reverse().forEach((key) => {
+      FoodColumns[key] = null;
+    });
+    const ignoredFoodWeightColumns = [
+      'foodId',
+      'sciName',
+      'manufacturerName',
+      'costG',
+      'budgetId',
+      'category',
+      'usdaFoodGroupDesc',
+      'dry',
+      'meat',
+      'preChop',
+      'preBag',
+      'active',
+    ];
     const renamedFoodWeightColumns = {
       ohdzName: 'Nickname',
       food: 'Food name',
     };
 
-    this.preppedFoodColumns = TableColumnHelper([FoodColumns], ignoredFoodWeightColumns, renamedFoodWeightColumns);
+    this.preppedFoodColumns = TableColumnHelper(
+      [FoodColumns],
+      ignoredFoodWeightColumns,
+      renamedFoodWeightColumns,
+    );
 
     this.clientFoodAPI = new FoodAPI(this.props.token);
     this.notificationBar = React.createRef();
@@ -67,7 +91,7 @@ export default class extends Component {
 
   handleNickNameChange = (rowData) => {
     this.setState({ editDialogOpen: true, dialogRow: { ...rowData } });
-  }
+  };
 
   async handleDialogSave() {
     if (!this.state.dialogRow.ohdzName) {
@@ -79,14 +103,16 @@ export default class extends Component {
     const res = await this.clientFoodAPI.updateFood(id, updates);
     if (res.data) {
       this.setState((prevState) => {
-        const newFoodData = [...prevState.allFood.map((item) => {
-          if (item.foodId !== res.data.foodId) {
-            return item;
-          }
-          const updatedRow = item;
-          Object.assign(updatedRow, res.data);
-          return updatedRow;
-        })];
+        const newFoodData = [
+          ...prevState.allFood.map((item) => {
+            if (item.foodId !== res.data.foodId) {
+              return item;
+            }
+            const updatedRow = item;
+            Object.assign(updatedRow, res.data);
+            return updatedRow;
+          }),
+        ];
         return {
           allFood: newFoodData,
           editDialogOpen: false,
@@ -105,7 +131,7 @@ export default class extends Component {
     const { role } = this.props.account;
     return (
       <div>
-        {this.state.editDialogOpen &&
+        {this.state.editDialogOpen && (
           <Dialog
             key="editDialog"
             open={this.state.editDialogOpen}
@@ -119,7 +145,13 @@ export default class extends Component {
                 id="nickname"
                 label="Nickname"
                 value={this.state.dialogRow.ohdzName}
-                onChange={(evt) => { const newVal = evt.target.value; this.setState((prevState) => ({ dialogRow: { ...prevState.dialogRow, ohdzName: newVal }, dirty: true })); }}
+                onChange={(evt) => {
+                  const newVal = evt.target.value;
+                  this.setState((prevState) => ({
+                    dialogRow: { ...prevState.dialogRow, ohdzName: newVal },
+                    dirty: true,
+                  }));
+                }}
                 margin="normal"
                 fullWidth
               />
@@ -128,12 +160,16 @@ export default class extends Component {
               <Button onClick={() => this.handleCancelDialog()} color="primary">
                 Cancel
               </Button>
-              <Button disabled={!this.state.dirty} onClick={() => this.handleDialogSave()} color="primary">
+              <Button
+                disabled={!this.state.dirty}
+                onClick={() => this.handleDialogSave()}
+                color="primary"
+              >
                 Save
               </Button>
             </DialogActions>
           </Dialog>
-        }
+        )}
         <MaterialTable
           title="Food Nicknames"
           data={this.state.allFood}
@@ -152,9 +188,7 @@ export default class extends Component {
             }),
           ]}
         />
-        <Notifications
-          ref={this.notificationBar}
-        />
+        <Notifications ref={this.notificationBar} />
       </div>
     );
   }

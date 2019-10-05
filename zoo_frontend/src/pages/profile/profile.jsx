@@ -79,43 +79,30 @@ class Profile extends Component {
         });
       }
     }
-  }
+  };
 
   onOldPasswordTextChange = (event) => this.setState({ oldPasswordText: event.target.value });
   onNewPasswordTextChange = (event) => this.setState({ newPasswordText: event.target.value });
-  onConfirmNewPasswordTextChange = (event) => this.setState({ confirmNewPasswordText: event.target.value });
+  onConfirmNewPasswordTextChange = (event) =>
+    this.setState({ confirmNewPasswordText: event.target.value });
 
   render() {
     const { classes, account = {} } = this.props;
-    const {
-      firstName,
-      lastName,
-      email,
-    } = account;
+    const { firstName, lastName, email } = account;
 
     return (
       <div className={classes.container}>
         <Notifications ref={this.notifications} />
         <Paper className={classes.paper}>
-          <Typography variant="h6">
-            Profile
-          </Typography>
+          <Typography variant="h6">Profile</Typography>
           <Typography>
             Name: {firstName} {lastName}
           </Typography>
-          <Typography>
-            Email: {email}
-          </Typography>
+          <Typography>Email: {email}</Typography>
           <Divider className={classes.divider} />
           <form className={classes.formContainer} onSubmit={this.onSubmit}>
-            <Typography variant="h6">
-              Change Password
-            </Typography>
-            {this.state.error &&
-              <FormHelperText error>
-                {this.state.errorMessage}
-              </FormHelperText>
-            }
+            <Typography variant="h6">Change Password</Typography>
+            {this.state.error && <FormHelperText error>{this.state.errorMessage}</FormHelperText>}
             <FormControl
               margin="normal"
               required
@@ -173,7 +160,9 @@ class Profile extends Component {
                 >
                   Change Password
                 </Button>
-                {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                {this.state.loading && (
+                  <CircularProgress size={24} className={classes.buttonProgress} />
+                )}
               </span>
             </div>
           </form>

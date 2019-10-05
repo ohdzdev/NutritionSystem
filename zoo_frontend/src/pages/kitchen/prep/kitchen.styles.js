@@ -1,5 +1,4 @@
 export default (theme) => ({
-
   root: {
     margin: theme.spacing.unit * 3,
     display: 'flex',
@@ -22,7 +21,6 @@ export default (theme) => ({
     marginLeft: theme.spacing.unit * 8,
     marginRight: theme.spacing.unit * 8,
     marginTop: theme.spacing.unit,
-
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,

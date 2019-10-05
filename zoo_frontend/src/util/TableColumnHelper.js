@@ -14,7 +14,7 @@ const columnConfigCreator = (rawData, ignoredColumns, replaceColumns) => {
     .filter((el) => !ignoredColumns.find((item) => item === el[0]))
     // map over ever key from API and make a field that matches the key and a 'title' that is presented to the user
     .map((data) => ({
-      title: camelToNorm(replaceColumns ? (replaceColumns[data[0]] || data[0]) : data[0]),
+      title: camelToNorm(replaceColumns ? replaceColumns[data[0]] || data[0] : data[0]),
       field: data[0],
       // enable these only if you need to mess around with cell and header styles of the table.
       // the jank was too much so I left them disabled

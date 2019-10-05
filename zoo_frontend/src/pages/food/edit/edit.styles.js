@@ -24,7 +24,8 @@ export default (theme) => ({
   saveButton: {
     marginTop: theme.spacing.unit,
   },
-  dialogContent: { // https://github.com/mui-org/material-ui/issues/7431#issuecomment-414703875
+  dialogContent: {
+    // https://github.com/mui-org/material-ui/issues/7431#issuecomment-414703875
     overflow: 'visible',
   },
   foodBox: {

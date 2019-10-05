@@ -1,5 +1,9 @@
 const prod = process.env.NODE_ENV === 'production';
 
+const port = process.env.PORT || 8080;
+
 module.exports = {
-  'process.env.BACKEND_URL': prod ? 'http://172.245.90.230:8080' : 'http://localhost:3333', // TODO change this back to https
+  'process.env.BACKEND_URL': prod
+    ? 'https://zooapp-qemf447jya-uc.a.run.app'
+    : `http://localhost:${port}`,
 };

@@ -1,5 +1,4 @@
-DELIMITER $$
-CREATE DEFINER=`zoo`@`%` PROCEDURE `GetDescriptionData`(IN DietId INT)
+CREATE DEFINER=`zoo`@`%` PROCEDURE `zoo`.`GetDescriptionData`(IN DietId INT)
 BEGIN
 	SELECT 
 		CONCAT("#", diet_id, " (" , note_id, ") ", dc) AS Description
@@ -9,5 +8,4 @@ BEGIN
 			ON LOCATIONS.location_id = DELIVERY_CONTAINERS.location_id
 	WHERE 
 		DIETS.diet_id = DietId;
-END$$
-DELIMITER ;
+END

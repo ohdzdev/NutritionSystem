@@ -37,7 +37,7 @@ class Home extends Component {
     token: '',
     error: false,
     errorMessage: '',
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -47,114 +47,120 @@ class Home extends Component {
     this.notificationsRef = React.createRef();
   }
 
-  onRowAdd = (newData) => new Promise(async (resolve, reject) => {
-    const nutrDefApi = new NutrDefApi(this.props.token);
-    // Reject if no short form
-    if (!newData.tagname || !newData.units || !newData.nutrDesc || !newData.srOrder) {
-      this.notificationsRef.current.showNotification('error', 'Please fill out "Tag Name", "Units", "Description", "SR Order".');
-      reject();
-      return;
-    }
+  onRowAdd = (newData) =>
+    new Promise(async (resolve, reject) => {
+      const nutrDefApi = new NutrDefApi(this.props.token);
+      // Reject if no short form
+      if (!newData.tagname || !newData.units || !newData.nutrDesc || !newData.srOrder) {
+        this.notificationsRef.current.showNotification(
+          'error',
+          'Please fill out "Tag Name", "Units", "Description", "SR Order".',
+        );
+        reject();
+        return;
+      }
 
-    try {
-      // Create the nutrDef entry
-      await nutrDefApi.createNutrDef(newData);
-    } catch (err) {
-      reject();
-    }
+      try {
+        // Create the nutrDef entry
+        await nutrDefApi.createNutrDef(newData);
+      } catch (err) {
+        reject();
+      }
 
-    // Refresh Data
-    try {
-      const nutrDefRes = await nutrDefApi.getNutrDef();
-      this.setState({ nutrDef: nutrDefRes.data });
+      // Refresh Data
+      try {
+        const nutrDefRes = await nutrDefApi.getNutrDef();
+        this.setState({ nutrDef: nutrDefRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowUpdate = (newData, oldData) => new Promise(async (resolve, reject) => {
-    const nutrDefApi = new NutrDefApi(this.props.token);
+  onRowUpdate = (newData, oldData) =>
+    new Promise(async (resolve, reject) => {
+      const nutrDefApi = new NutrDefApi(this.props.token);
 
-    // Determine if we need to update and what to update
-    let fieldUpdated = false;
-    const updatedFields = {};
+      // Determine if we need to update and what to update
+      let fieldUpdated = false;
+      const updatedFields = {};
 
-    if (newData.units !== oldData.units) {
-      fieldUpdated = true;
-      updatedFields.units = newData.units;
-    }
+      if (newData.units !== oldData.units) {
+        fieldUpdated = true;
+        updatedFields.units = newData.units;
+      }
 
-    if (newData.tagname !== oldData.tagname) {
-      fieldUpdated = true;
-      updatedFields.tagname = newData.tagname;
-    }
+      if (newData.tagname !== oldData.tagname) {
+        fieldUpdated = true;
+        updatedFields.tagname = newData.tagname;
+      }
 
-    if (newData.nutrDesc !== oldData.nutrDesc) {
-      fieldUpdated = true;
-      updatedFields.nutrDesc = newData.nutrDesc;
-    }
+      if (newData.nutrDesc !== oldData.nutrDesc) {
+        fieldUpdated = true;
+        updatedFields.nutrDesc = newData.nutrDesc;
+      }
 
-    if (newData.numDec !== oldData.numDec) {
-      fieldUpdated = true;
-      updatedFields.numDec = newData.numDec;
-    }
+      if (newData.numDec !== oldData.numDec) {
+        fieldUpdated = true;
+        updatedFields.numDec = newData.numDec;
+      }
 
-    if (newData.srOrder !== oldData.srOrder) {
-      fieldUpdated = true;
-      updatedFields.srOrder = newData.srOrder;
-    }
+      if (newData.srOrder !== oldData.srOrder) {
+        fieldUpdated = true;
+        updatedFields.srOrder = newData.srOrder;
+      }
 
-    if (newData.bgtName !== oldData.bgtName) {
-      fieldUpdated = true;
-      updatedFields.bgtName = newData.bgtName;
-    }
+      if (newData.bgtName !== oldData.bgtName) {
+        fieldUpdated = true;
+        updatedFields.bgtName = newData.bgtName;
+      }
 
-    if (fieldUpdated) {
-      await nutrDefApi.updateNutrDef(newData.nutrNo, updatedFields);
-    } else {
-      reject();
-      return;
-    }
+      if (fieldUpdated) {
+        await nutrDefApi.updateNutrDef(newData.nutrNo, updatedFields);
+      } else {
+        reject();
+        return;
+      }
 
-    // Refresh Data
-    try {
-      const nutrDefRes = await nutrDefApi.getNutrDef();
-      this.setState({ nutrDef: nutrDefRes.data });
+      // Refresh Data
+      try {
+        const nutrDefRes = await nutrDefApi.getNutrDef();
+        this.setState({ nutrDef: nutrDefRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
-  onRowDelete = (oldData) => new Promise(async (resolve, reject) => {
-    const nutrDefApi = new NutrDefApi(this.props.token);
-    try {
-      // Delete the nutrDef
-      await nutrDefApi.deleteNutrDef(oldData.nutrNo);
-    } catch (err) {
-      reject();
-      return;
-    }
-    // Refresh Data
-    try {
-      const nutrDefRes = await nutrDefApi.getNutrDef();
-      this.setState({ nutrDef: nutrDefRes.data });
+  onRowDelete = (oldData) =>
+    new Promise(async (resolve, reject) => {
+      const nutrDefApi = new NutrDefApi(this.props.token);
+      try {
+        // Delete the nutrDef
+        await nutrDefApi.deleteNutrDef(oldData.nutrNo);
+      } catch (err) {
+        reject();
+        return;
+      }
+      // Refresh Data
+      try {
+        const nutrDefRes = await nutrDefApi.getNutrDef();
+        this.setState({ nutrDef: nutrDefRes.data });
+        resolve();
+      } catch (err) {
+        reject();
+        return;
+      }
       resolve();
-    } catch (err) {
-      reject();
-      return;
-    }
-    resolve();
-  })
+    });
 
   render() {
     if (this.props.error) {
-      return (<ErrorPage message={this.props.errorMessage} />);
+      return <ErrorPage message={this.props.errorMessage} />;
     }
     return (
       <div
@@ -182,8 +188,6 @@ class Home extends Component {
               { title: 'Num Desc', field: 'numDec', lookup: { 0: 0, 1: 1, 2: 2, 3: 3 } },
               { title: 'SR Order', field: 'srOrder' },
               { title: 'Bgt. Name', field: 'bgtName' },
-
-
             ]}
             editable={{
               onRowAdd: this.onRowAdd,

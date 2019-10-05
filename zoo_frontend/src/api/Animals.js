@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.BACKEND_URL;
+import API_BASE_URL from '../util/ApiURL';
 
 class Animals {
   constructor(token) {
@@ -13,7 +13,7 @@ class Animals {
    * @returns {JSON} raw data coming back from request, must use .data to get actual data
    */
   async getAnimals(filter) {
-    let query = `${API_BASE_URL}/api/Animals/`;
+    let query = `${API_BASE_URL}/Animals/`;
     if (filter) {
       query += `?filter=${JSON.stringify(filter)}&access_token=${this.token}`;
     } else {
@@ -29,14 +29,13 @@ class Animals {
    * @returns {JSON} raw data coming back from request, must use .data to get data back
    */
   async getDiet(id) {
-    let query = `${API_BASE_URL}/api/Animals/`;
+    let query = `${API_BASE_URL}/Animals/`;
     if (id && parseInt(id, 10)) {
       query += `${id}/animalDiets?access_token=${this.token}`;
     }
     const res = await axios.get(query);
     return res;
   }
-
 
   /**
    * Update certain values on a Animals record. Must send in an id
@@ -48,10 +47,14 @@ class Animals {
       return Promise.reject(new Error('must have id send into patchAnimals()'));
     }
     if (Object.keys(updates) === undefined || Object.keys(updates).length < 1) {
-      return Promise.reject(new Error('must have object with some keys that will be updated. If meant to delete use deleteAnimals()'));
+      return Promise.reject(
+        new Error(
+          'must have object with some keys that will be updated. If meant to delete use deleteAnimals()',
+        ),
+      );
     }
 
-    const uri = `${API_BASE_URL}/api/Animals/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Animals/${id}?access_token=${this.token}`;
 
     const res = await axios.patch(uri, updates).catch((err) => Promise.reject(err));
     return res;
@@ -65,7 +68,7 @@ class Animals {
     if (!id) {
       return Promise.reject(new Error('must have id to be able to delete'));
     }
-    const uri = `${API_BASE_URL}/api/Animals/${id}?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Animals/${id}?access_token=${this.token}`;
     const res = await axios.delete(uri).catch((err) => Promise.reject(err));
     return res;
   }
@@ -77,9 +80,11 @@ class Animals {
    */
   async createAnimals(params, createBlank) {
     if (!params && !createBlank) {
-      return Promise.reject(new Error('createBlank was false and no params were sent in, invalid config'));
+      return Promise.reject(
+        new Error('createBlank was false and no params were sent in, invalid config'),
+      );
     }
-    const uri = `${API_BASE_URL}/api/Animals/?access_token=${this.token}`;
+    const uri = `${API_BASE_URL}/Animals/?access_token=${this.token}`;
     if (createBlank && !params) {
       const res = await axios.post(uri).catch((err) => Promise.reject(err));
       return res;

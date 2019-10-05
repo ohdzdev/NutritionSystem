@@ -8,7 +8,7 @@ import Drawer from '../components/SidebarDrawer';
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: 'flex',
   },
@@ -40,12 +40,9 @@ const styles = theme => ({
 class PageLayout extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node,
-    ]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
     account: PropTypes.object.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -59,7 +56,8 @@ class PageLayout extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!!prevProps.account.loggedIn !== !!this.props.account.loggedIn) { // account can be {} !! forces a boolean returned if key is undefined
+    if (!!prevProps.account.loggedIn !== !!this.props.account.loggedIn) {
+      // account can be {} !! forces a boolean returned if key is undefined
       if (!this.props.account.loggedIn) {
         this.setState({ drawerOpen: false }); // eslint-disable-line react/no-did-update-set-state
       } else {
@@ -80,14 +78,8 @@ class PageLayout extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Header
-          drawerOpen={this.state.drawerOpen}
-          handleDrawerOpen={this.handleDrawerOpen}
-        />
-        <Drawer
-          drawerOpen={this.state.drawerOpen}
-          handleDrawerClose={this.handleDrawerClose}
-        />
+        <Header drawerOpen={this.state.drawerOpen} handleDrawerOpen={this.handleDrawerOpen} />
+        <Drawer drawerOpen={this.state.drawerOpen} handleDrawerClose={this.handleDrawerClose} />
         <main
           className={classNames(classes.content, {
             [classes.contentShift]: this.state.drawerOpen,

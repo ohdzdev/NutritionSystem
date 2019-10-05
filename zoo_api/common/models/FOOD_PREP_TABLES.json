@@ -39,21 +39,6 @@
         "dataScale": null,
         "nullable": "Y"
       }
-    },
-    "tableCode": {
-      "type": "String",
-      "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "table_code",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      }
     }
   },
   "validations": [],

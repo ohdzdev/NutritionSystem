@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 
-
 import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
 import moment from 'moment';
 import MomentUtils from '@date-io/moment';
@@ -25,14 +24,14 @@ class KitchenHome extends Component {
     };
   }
 
-  onDateChange = (date) => this.setState({ date })
+  onDateChange = (date) => this.setState({ date });
 
   handlePrepScreen = () => {
     Router.push({
       pathname: Kitchen.prep.link,
       query: { date: this.state.date.format('YYYY-M-D') },
     });
-  }
+  };
 
   render() {
     const { classes = {}, token } = this.props;
@@ -55,11 +54,8 @@ class KitchenHome extends Component {
             <PrintPrepSheets date={this.state.date} token={token} />
           </div>
           <div className={classes.item}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.handlePrepScreen}
-            >Open Prep Screen
+            <Button variant="contained" color="primary" onClick={this.handlePrepScreen}>
+              Open Prep Screen
             </Button>
           </div>
         </div>

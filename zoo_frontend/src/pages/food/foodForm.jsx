@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 
 import { FormCheckbox, SingleSelect } from '../../components';
 
-export const DisplayFormikState = props => (
+export const DisplayFormikState = (props) => (
   <div style={{ margin: '1rem 0' }}>
     <pre
       style={{
@@ -19,8 +19,7 @@ export const DisplayFormikState = props => (
         padding: '.5rem',
       }}
     >
-      <strong>props</strong> ={' '}
-      {JSON.stringify(props, null, 2)}
+      <strong>props</strong> = {JSON.stringify(props, null, 2)}
     </pre>
   </div>
 );
@@ -41,7 +40,7 @@ const formikEnhancer = withFormik({
     preBag: Yup.bool(),
     active: Yup.bool(),
   }),
-  mapPropsToValues: props => ({
+  mapPropsToValues: (props) => ({
     food: props.food ? props.food : '',
     sciName: props.sciName ? props.sciName : '',
     manufacturerName: props.manufacturerName ? props.manufacturerName : '',
@@ -58,9 +57,7 @@ const formikEnhancer = withFormik({
     submitForm: props.submitForm, // jank way to send in the function
   }),
   handleSubmit: (values, { setSubmitting }) => {
-    const {
-      dry, meat, preChop, preBag, active, submitForm, ...rest
-    } = values;
+    const { dry, meat, preChop, preBag, active, submitForm, ...rest } = values;
     const payload = {
       dry: dry ? 1 : 0,
       meat: meat ? 1 : 0,
@@ -69,21 +66,35 @@ const formikEnhancer = withFormik({
       active: active ? 1 : 0,
       ...rest,
     };
-    submitForm(payload).then(() => {
-      setSubmitting(false);
-    }, () => {
-      setSubmitting(false);
-    });
+    submitForm(payload).then(
+      () => {
+        setSubmitting(false);
+      },
+      () => {
+        setSubmitting(false);
+      },
+    );
   },
   displayName: 'MyForm',
   enableReinitialize: true,
 });
 
-
-const Form = props => {
+const Form = (props) => {
   const {
     values: {
-      sciName, manufacturerName, ohdzName, food, costG, budgetId, category, usdaFoodGroupDesc, dry, meat, preChop, preBag, active,
+      sciName,
+      manufacturerName,
+      ohdzName,
+      food,
+      costG,
+      budgetId,
+      category,
+      usdaFoodGroupDesc,
+      dry,
+      meat,
+      preChop,
+      preBag,
+      active,
     },
     errors,
     touched,
@@ -307,21 +318,15 @@ const Form = props => {
           />
         </Grid>
       </Grid>
-      {isSubmitting &&
+      {isSubmitting && (
         <Fragment>
           <br />
           <LinearProgress />
           <br />
         </Fragment>
-      }
+      )}
       <Grid item xs={12} md={3} style={{ padding: '10px' }}>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={!isValid}
-        >
+        <Button type="submit" fullWidth variant="contained" color="primary" disabled={!isValid}>
           {props.submitButtonText}
         </Button>
       </Grid>
@@ -353,14 +358,18 @@ Form.propTypes = {
   setFieldTouched: PropTypes.func.isRequired,
   setFieldValue: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  budgetCodes: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.number,
-  })).isRequired,
-  foodCategories: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.number,
-  })).isRequired,
+  budgetCodes: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+    }),
+  ).isRequired,
+  foodCategories: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+    }),
+  ).isRequired,
   isSubmitting: PropTypes.bool,
   submitButtonText: PropTypes.string,
 };
@@ -386,7 +395,7 @@ Form.defaultProps = {
 };
 
 class FormikSelect extends React.Component {
-  handleChange = value => {
+  handleChange = (value) => {
     // this is going to call setFieldValue and manually update values.topcis
     this.props.onChange('topics', value);
   };
@@ -408,9 +417,8 @@ class FormikSelect extends React.Component {
           onBlur={this.handleBlur}
           value={this.props.value}
         />
-        {!!this.props.error &&
-          this.props.touched && (
-            <div style={{ color: 'red', marginTop: '.5rem' }}>{this.props.error}</div>
+        {!!this.props.error && this.props.touched && (
+          <div style={{ color: 'red', marginTop: '.5rem' }}>{this.props.error}</div>
         )}
       </div>
     );
@@ -428,10 +436,12 @@ FormikSelect.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   }).isRequired,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  })).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    }),
+  ).isRequired,
 };
 
 FormikSelect.defaultProps = {

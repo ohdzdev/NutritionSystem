@@ -34,4 +34,86 @@ module.exports = function(Food) {
       http: { verb: 'get', path: '/day-prep-sheet-data' },
     }
   );
+
+  Food.getFeedingCostReport = function(cb) {
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFeedingCostReport()', (err, [rows]) => {
+      if (err) {
+        cb(Util.createError('Error processing request', 500));
+      } else {
+        cb(null, rows);
+      }
+    });
+  };
+
+  Food.remoteMethod(
+    'getFeedingCostReport', {
+      description: 'Gets the data for a feeding cost report',
+      accepts: [],
+      returns: {
+        arg: 'data', type: 'object', root: true,
+      },
+      http: { verb: 'get', path: '/feeding-cost-report' },
+    }
+  );
+
+  Food.getFeedingCostReportByGL = function(cb) {
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetFeedingCostReportByGL()', (err, [rows]) => {
+      if (err) {
+        cb(Util.createError('Error processing request', 500));
+      } else {
+        const rowsWithMonthAndYearValues = rows.map((row) => ({
+          ...row,
+          SumOfCostGPerMonth: parseFloat((row.SumOfCostGPerDay * 365 / 12).toFixed(2)),
+          SumOfCostGPerYear: parseFloat((row.SumOfCostGPerDay * 365).toFixed(2)),
+        }))
+        cb(null, rowsWithMonthAndYearValues);
+      }
+    });
+  };
+
+  Food.remoteMethod(
+    'getFeedingCostReportByGL', {
+      description: 'Gets the data for a feeding cost report by budget code',
+      accepts: [],
+      returns: {
+        arg: 'data', type: 'object', root: true,
+      },
+      http: { verb: 'get', path: '/feeding-cost-report-by-gl' },
+    }
+  );
+
+  Food.getDietCostReport = function(dietId, cb) {
+    let diet = null;
+    if(typeof dietId === 'number') {
+      diet = dietId;
+    }
+
+    app.datasources.zoo_mysql.connector.execute('CALL zoo.GetDietCostReport(?)', [diet], (err, [rows]) => {
+      if (err) {
+        cb(Util.createError('Error processing request', 500));
+      } else {
+        cb(null, rows);
+      }
+    });
+  };
+
+  Food.remoteMethod(
+    'getDietCostReport', {
+      description: 'Gets the data for a diet cost report',
+      accepts: [
+        {
+          arg: 'dietId',
+          type: 'number',
+          required: false,
+          http: { source: 'query' },
+          description: 'The diet for which to filter upon, could be blank if you wanted to get a lot of data back',
+        },
+      ],
+      returns: {
+        arg: 'data', type: 'object', root: true,
+      },
+      http: { verb: 'get', path: '/diet-cost-report' },
+    }
+  );
+
 };

@@ -1,0 +1,24 @@
+steps:
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/zoo_app/$BRANCH_NAME", "."]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/zoo_app/$BRANCH_NAME"]
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        beta",
+        "run",
+        "deploy",
+        "zooapp-$BRANCH_NAME",
+        "--platform",
+        "managed",
+        "--image",
+        "gcr.io/$PROJECT_ID/zoo_app/$BRANCH_NAME",
+        "--region",
+        "us-central1",
+      ]
+images: ["gcr.io/$PROJECT_ID/zoo_app/$BRANCH_NAME"]
+tags: ["$BRANCH_NAME"]

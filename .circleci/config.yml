@@ -1,19 +1,5 @@
 version: 2
 jobs:
-  deployDev:
-    docker:
-      - image: circleci/node:10.15
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "b7:7f:69:26:cd:94:67:ad:2c:c2:14:02:4d:02:74:38"
-      - run:
-          name: Populate known hosts
-          command: ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
-      - run:
-          name: Deploy To VPS
-          command: ssh $SSH_USER@$SSH_HOST "cd ./zooProd; git fetch --all; git reset --hard origin/develop; cp ../appsettings.json ./zoo_api/lib/DietAnalysisExport/bin/appsettings.json; chmod 700 ./deploy.sh; ./deploy.sh;"
   test:
     docker:
       - image: circleci/node:10.15
@@ -31,10 +17,10 @@ jobs:
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
-      - run: 
+      - run:
           name: Eslint Front end
           command: yarn test:eslint:frontend
-      - run: 
+      - run:
           name: Eslint Api
           command: yarn test:eslint:api
       - run:
@@ -46,9 +32,3 @@ workflows:
   testAndDeployDev:
     jobs:
       - test
-      - deployDev:
-          requires:
-            - test
-          filters:
-            branches:
-              only: develop

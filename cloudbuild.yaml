@@ -9,7 +9,7 @@ steps:
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
-        beta",
+        "beta",
         "run",
         "deploy",
         "zooapp-$BRANCH_NAME",

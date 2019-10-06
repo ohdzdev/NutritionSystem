@@ -1,5 +1,5 @@
 import React from 'react';
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import Head from 'next/head';
 import NProgress from 'nprogress';
 import Router from 'next/router';
@@ -12,10 +12,16 @@ import getPageContext from '../src/getPageContext';
 import AuthProvider, { AuthContext } from '../src/util/AuthProvider';
 import PageLayout from '../src/util/PageLayout';
 
+import getFirebase, { FirebaseContext } from '../src/components/Firebase';
+
 NProgress.configure({ showSpinner: false, trickleSpeed: 150, easing: 'ease', speed: 400 });
+
+const firebase = getFirebase();
 
 Router.events.on('routeChangeStart', (url) => {
   console.log(`Loading: ${url}`);
+
+  firebase.analytics().logEvent('screen_view', { screen_name: url });
   NProgress.start();
 });
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -36,6 +42,11 @@ class MyApp extends App {
     super(props);
 
     this.pageContext = getPageContext();
+
+    this.firebase = firebase;
+    if (typeof window !== 'undefined') {
+      firebase.analytics();
+    }
   }
 
   componentDidMount() {
@@ -53,7 +64,7 @@ class MyApp extends App {
     const { Component, ...rest } = this.props;
 
     return (
-      <Container>
+      <>
         <Head>
           <title>Nutrition Asst</title>
           <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
@@ -71,26 +82,28 @@ class MyApp extends App {
             theme={this.pageContext.theme}
             sheetsManager={this.pageContext.sheetsManager}
           >
-            <AuthProvider>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
-              {/* Pass pageContext to the _document though the renderPage enhancer
+            <FirebaseContext.Provider value={this.firebase}>
+              <AuthProvider>
+                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                <CssBaseline />
+                {/* Pass pageContext to the _document though the renderPage enhancer
                   to render collected styles on server-side. */}
 
-              <AuthContext.Consumer>
-                {({ account }) => (
-                  // https://github.com/facebook/react/issues/12397#issuecomment-374004053
-                  <PageLayout
-                    account={account} // needs to know for sidebar initial drawer position in constructor
-                  >
-                    <Component pageContext={this.pageContext} {...rest} />
-                  </PageLayout>
-                )}
-              </AuthContext.Consumer>
-            </AuthProvider>
+                <AuthContext.Consumer>
+                  {({ account }) => (
+                    // https://github.com/facebook/react/issues/12397#issuecomment-374004053
+                    <PageLayout
+                      account={account} // needs to know for sidebar initial drawer position in constructor
+                    >
+                      <Component pageContext={this.pageContext} {...rest} />
+                    </PageLayout>
+                  )}
+                </AuthContext.Consumer>
+              </AuthProvider>
+            </FirebaseContext.Provider>
           </MuiThemeProvider>
         </JssProvider>
-      </Container>
+      </>
     );
   }
 }

@@ -21,6 +21,8 @@ const startFirebase = () => {
     app.app()
   } catch (error) {
     app.initializeApp(firebaseConfig);
+    app.performance();
+    
   }
   return {
     app,

@@ -12,6 +12,7 @@ import getPageContext from '../src/getPageContext';
 import AuthProvider, { AuthContext } from '../src/util/AuthProvider';
 import PageLayout from '../src/util/PageLayout';
 
+// Firebase / Performance Analytics setup
 import getFirebase, { FirebaseContext } from '../src/components/Firebase';
 
 NProgress.configure({ showSpinner: false, trickleSpeed: 150, easing: 'ease', speed: 400 });
@@ -44,9 +45,6 @@ class MyApp extends App {
     this.pageContext = getPageContext();
 
     this.firebase = firebase;
-    if (typeof window !== 'undefined') {
-      firebase.analytics();
-    }
   }
 
   componentDidMount() {
@@ -70,6 +68,7 @@ class MyApp extends App {
           <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
           <link rel="stylesheet" type="text/css" href="/static/nprogress.css" />
+          <link href="/static/first-input-delay.min.js" />
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
         <JssProvider
@@ -95,7 +94,11 @@ class MyApp extends App {
                     <PageLayout
                       account={account} // needs to know for sidebar initial drawer position in constructor
                     >
-                      <Component pageContext={this.pageContext} {...rest} />
+                      <FirebaseContext.Consumer>
+                        {(fb) => (
+                          <Component pageContext={this.pageContext} firebase={fb} {...rest} />
+                        )}
+                      </FirebaseContext.Consumer>
                     </PageLayout>
                   )}
                 </AuthContext.Consumer>

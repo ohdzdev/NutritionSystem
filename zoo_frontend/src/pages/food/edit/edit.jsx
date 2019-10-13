@@ -207,7 +207,7 @@ export default class extends Component {
     }
   };
 
-  handleNutrientSave() {
+  handleNutrientSave = () => {
     if (this.state.dialogRow && this.state.dirty) {
       const row = { ...this.state.dialogRow };
       const tableRow = row.meta.index;
@@ -272,13 +272,13 @@ export default class extends Component {
       // no edits
       this.setState({ customNutEditDialogOpen: false, dialogRow: {}, dirty: false });
     }
-  }
+  };
 
-  handleCancelDialogue() {
+  handleCancelDialogue = () => {
     this.setState({ customNutEditDialogOpen: false, dialogRow: {}, dirty: false });
-  }
+  };
 
-  async handleNutDataDelete(shouldDelete) {
+  handleNutDataDelete = async (shouldDelete) => {
     if (shouldDelete) {
       if (
         this.state.dialogRow &&
@@ -301,13 +301,13 @@ export default class extends Component {
     } else {
       this.setState({ deleteNutDataDialogOpen: false, dialogRow: {} });
     }
-  }
+  };
 
-  handleNewNutrient() {
-    this.setState({ newNutDataDialogOpen: true });
-  }
+  handleNewNutrient = () => {
+    this.setState({ newNutDataDialogOpen: true, dialogRow: {} });
+  };
 
-  async handleNewNutrientDialogClose(cancelled, data) {
+  handleNewNutrientDialogClose = async (cancelled, data) => {
     if (cancelled || !data) {
       this.setState({ newNutDataDialogOpen: false });
     } else {
@@ -332,9 +332,9 @@ export default class extends Component {
         console.error(error);
       }
     }
-  }
+  };
 
-  handleFoodUpdate(payload) {
+  handleFoodUpdate = (payload) => {
     const prom = new Promise((r, rej) => {
       this.clientFoodAPI
         .updateFood(this.state.food[0].foodId, { ...payload, foodId: this.state.food[0].foodId })
@@ -351,7 +351,7 @@ export default class extends Component {
         );
     });
     return prom;
-  }
+  };
 
   render() {
     const composedData = this.state.nutritionData.map((val, index) => {
@@ -448,7 +448,7 @@ export default class extends Component {
                           })),
                         ]}
                         defaultValue={this.state.dialogRow[fieldType.valueKey]}
-                        onChange={(val) => this.handleNutrientFormChange(stateUpdateField)(val)}
+                        onChange={this.handleNutrientFormChange(stateUpdateField)}
                       />
                     </FormControl>
                   );
@@ -457,10 +457,10 @@ export default class extends Component {
               })}
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => this.handleCancelDialogue()} color="primary">
+              <Button onClick={this.handleCancelDialogue} color="primary">
                 Cancel
               </Button>
-              <Button onClick={() => this.handleNutrientSave()} color="primary">
+              <Button onClick={this.handleNutrientSave} color="primary">
                 Save
               </Button>
             </DialogActions>
@@ -487,7 +487,8 @@ export default class extends Component {
                       value: val.nutrNo,
                     })),
                   ]}
-                  onChange={(val) => this.handleNutrientFormChange('nutrNo')(val)}
+                  value={this.state.dialogRow ? this.state.dialogRow.nutrNo : ''}
+                  onChange={this.handleNutrientFormChange('nutrNo')}
                 />
               </FormControl>
               <TextField
@@ -509,7 +510,8 @@ export default class extends Component {
                       value: val.dataSrcId,
                     })),
                   ]}
-                  onChange={(val) => this.handleNutrientFormChange('dataSrcId')(val)}
+                  value={this.state.dialogRow ? this.state.dialogRow.dataSrcId : ''}
+                  onChange={this.handleNutrientFormChange('dataSrcId')}
                 />
               </FormControl>
             </DialogContent>
@@ -533,7 +535,7 @@ export default class extends Component {
               {...this.state.food[0]}
               foodCategories={this.state.foodCategoryOptions}
               budgetCodes={this.state.budgetCodeOptions}
-              submitForm={(payload) => this.handleFoodUpdate(payload)}
+              submitForm={this.handleFoodUpdate}
               submitButtonText="Submit Edit"
             />
           </Paper>
@@ -550,7 +552,7 @@ export default class extends Component {
           color="primary"
           variant="contained"
           className={this.props.classes.nutrientAddButton}
-          onClick={() => this.handleNewNutrient()}
+          onClick={this.handleNewNutrient}
         >
           Add Nutrient
         </Button>
@@ -586,7 +588,7 @@ export default class extends Component {
         <ConfirmationDialog
           id="deleteNutData"
           open={this.state.deleteNutDataDialogOpen}
-          onClose={(close) => this.handleNutDataDelete(close)}
+          onClose={this.handleNutDataDelete}
           title="Are you sure you want to delete this nutrient record?"
         />
         <Notifications ref={this.notificationBar} />

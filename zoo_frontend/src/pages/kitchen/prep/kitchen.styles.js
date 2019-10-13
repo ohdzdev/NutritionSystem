@@ -1,6 +1,5 @@
 export default (theme) => ({
   root: {
-    // margin: theme.spacing.unit * 3,
     position: 'absolute',
     bottom: 15,
     alignSelf: 'center',
@@ -23,7 +22,6 @@ export default (theme) => ({
   fab: {
     marginTop: theme.spacing.unit,
     alignItems: 'center',
-    // justifyContent: 'center',
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,

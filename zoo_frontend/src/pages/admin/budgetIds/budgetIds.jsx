@@ -88,9 +88,13 @@ class Home extends Component {
       let fieldUpdated = false;
       const updatedFields = {};
 
-      if (newData.budgetCode !== oldData.budgetCode) {
+      if (
+        newData.budgetCode !== oldData.budgetCode ||
+        newData.description !== oldData.description
+      ) {
         fieldUpdated = true;
         updatedFields.budgetCode = newData.budgetCode;
+        updatedFields.description = newData.description;
       }
 
       if (fieldUpdated) {
@@ -146,8 +150,8 @@ class Home extends Component {
         <div className={classes.table}>
           <MaterialTable
             columns={[
-              { title: 'ID', field: 'budgetId', editable: 'never' },
               { title: 'Budget Code', field: 'budgetCode' },
+              { title: 'Description', field: 'description' },
             ]}
             data={this.state.budgetIds}
             title="Budget Codes"

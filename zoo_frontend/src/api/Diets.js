@@ -65,6 +65,16 @@ class Diet {
     return res;
   }
 
+    /**
+   * grab related Species
+   * @returns {Array<{diet_id: Number, species: String}>} raw data coming back from request, must use .data to get data back
+   */
+  async getAllDietSpecies() {
+    const query = `${API_BASE_URL}/Diets/diet-species?access_token=${this.token}`;
+    const res = await axios.get(query);
+    return res;
+  }
+
   /**
    * grab related nutrition Subenclosure
    * @param {String} id Diets record id where we want to find all related Subenclosure

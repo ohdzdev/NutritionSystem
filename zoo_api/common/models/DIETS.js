@@ -41,6 +41,30 @@ module.exports = function(Diets) {
     );
   };
 
+  Diets.getDietSpecies = function(cb) {
+    app.datasources.zoo_mysql.connector.execute(
+      'select diet_id, S.species from DIETS D INNER JOIN SPECIES S ON S.species_id = D.species_id',
+      (err, diets) => {
+        if (err) {
+          cb(Util.createError('Error processing request', 500));
+        } else {
+          cb(null, diets);
+        }
+      },
+    );
+  };
+
+  Diets.remoteMethod('getDietSpecies', {
+    description: "Gets all the diet's species.",
+    returns: {
+      arg: 'data',
+      type: 'object',
+      root: true,
+    },
+    http: { verb: 'get', path: '/diet-species' },
+  });
+
+
   Diets.exportDietAnalysis = (dietId, res, cb) => {
     Diets.findById(dietId, (err, diet) => {
       if (err || !diet) {

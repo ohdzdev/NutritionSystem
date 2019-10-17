@@ -38,6 +38,8 @@ frontend.prepare().then(() => {
           process.exit(1);
         }
 
+        console.log("Everything cleaned up! Goodbye!");
+
         process.exit();
       });
     });

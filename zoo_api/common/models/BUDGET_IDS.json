@@ -39,17 +39,30 @@
         "dataScale": null,
         "nullable": "Y"
       }
+    },
+    "description": {
+      "type": "String",
+      "required": false,
+      "length": 255,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "description",
+        "dataType": "varchar",
+        "dataLength": 255,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      }
     }
   },
   "validations": [],
   "relations": {},
-  "acls": [
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "$unauthenticated",
-      "permission": "DENY"
-    }
-  ],
+  "acls": [{
+    "accessType": "*",
+    "principalType": "ROLE",
+    "principalId": "$unauthenticated",
+    "permission": "DENY"
+  }],
   "methods": {}
 }

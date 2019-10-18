@@ -19,6 +19,7 @@ import AccessTime from '@material-ui/icons/AccessTime';
 import Router from 'next/router';
 import DietChangeAPI from '../../../api/DietChanges';
 import UsersAPI from '../../../api/Users';
+import DietsAPI from '../../../api/Diets';
 
 const navigateDiet = (dietId) => {
   Router.push(`/diet?id=${dietId}`);
@@ -28,8 +29,8 @@ class RecentDietChanges extends Component {
   static async getInitialProps({ authToken }) {
     const serverDCAPI = new DietChangeAPI(authToken);
     const serverUserAPI = new UsersAPI(authToken);
+    const serverDietAPI = new DietsAPI(authToken);
 
-    // TODO change to 7 days
     const sevenDaysAgo = moment().subtract(7, 'days');
     const defaultQuery = {
       where: { dietChangeDate: { gte: sevenDaysAgo } },
@@ -40,10 +41,14 @@ class RecentDietChanges extends Component {
     // grab all users to make it easier to read who changed what
     const usersRes = await serverUserAPI.getUsers();
 
+    // grab all the diets' species to make it easier to recognize what the diet is for
+    const dietSpecies = await serverDietAPI.getAllDietSpecies();
+
     return {
       reportData: dietChangeRes.data,
       defaultDate: sevenDaysAgo,
       allUsers: usersRes.data,
+      allDietSpecies: dietSpecies.data,
     };
   }
 
@@ -52,6 +57,12 @@ class RecentDietChanges extends Component {
     api: PropTypes.object.isRequired,
     defaultDate: PropTypes.object.isRequired,
     allUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    allDietSpecies: PropTypes.arrayOf(
+      PropTypes.shape({
+        diet_id: PropTypes.number.isRequired,
+        species: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
   };
 
   constructor(props) {
@@ -132,12 +143,16 @@ class RecentDietChanges extends Component {
           {!this.state.loading && this.state.reportData.length > 0 && (
             <>
               {this.state.reportData.map((dietChange) => {
-                const dietChangedBy = this.props.allUsers.find((u) => u.id === dietChange.userId);
+                const dietChangedBy =
+                  this.props.allUsers.find((u) => u.id === dietChange.userId) || {};
+                const matchedSpecies =
+                  this.props.allDietSpecies.find((s) => s.diet_id === dietChange.dietId) || {};
+                console.log(matchedSpecies);
                 return (
                   <Grid item xs={12} sm={10} lg={8} key={dietChange.id}>
                     <Card>
                       <CardHeader
-                        title={`Diet: ${dietChange.dietId}`}
+                        title={`Diet: ${dietChange.dietId} - ${matchedSpecies.species}`}
                         titleTypographyProps={{ variant: 'h6', color: 'textSecondary' }}
                         subheader={
                           <Grid container>

@@ -21,5 +21,31 @@ frontend.prepare().then(() => {
 
   backend.use(router);
 
-  backend.start();
+  const server = backend.start();
+
+  const shutdown = command => () => {
+    console.log(`Got ${command}. Shutting down.`);
+
+    server.close(err => {
+      if (err) {
+        console.log("Error closing server", err);
+        process.exit(1);
+      }
+
+      backend.datasources.zoo_mysql.disconnect(err => {
+        if (err) {
+          console.log("Error closing database", err);
+          process.exit(1);
+        }
+
+        console.log("Everything cleaned up! Goodbye!");
+
+        process.exit();
+      });
+    });
+  };
+
+  process.on("SIGTERM", shutdown("SIGTERM"));
+  process.on("SIGINT", shutdown("SIGINT"));
+  process.on("EXIT", shutdown("EXIT"));
 });

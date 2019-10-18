@@ -1,6 +1,8 @@
 export default (theme) => ({
   root: {
-    margin: theme.spacing.unit * 3,
+    position: 'absolute',
+    bottom: 15,
+    alignSelf: 'center',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -18,9 +20,8 @@ export default (theme) => ({
     minWidth: 120,
   },
   fab: {
-    marginLeft: theme.spacing.unit * 8,
-    marginRight: theme.spacing.unit * 8,
     marginTop: theme.spacing.unit,
+    alignItems: 'center',
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,
@@ -29,4 +30,7 @@ export default (theme) => ({
     padding: theme.spacing.unit * 2,
     minHeight: '80vh',
   },
+  footer: {
+    height: '10vh',
+  }
 });

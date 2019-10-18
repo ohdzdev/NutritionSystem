@@ -160,7 +160,22 @@ export default class extends Component {
           flexDirection: 'column',
           justifyContent: 'center',
         }}
-      >
+      >  
+        <Paper className={this.props.classes.paper}>
+          {tables[tableIndex] && tables[tableIndex].diets.length > 0 ? (
+            <KitchenView
+              pageLength={tables[tableIndex].diets.length}
+              currentPage={currentIndex + 1}
+              species={tables[tableIndex].diets[currentIndex].species}
+              noteId={tables[tableIndex].diets[currentIndex].note_id}
+              prepNotes={tables[tableIndex].diets[currentIndex].prepNotes}
+              dc={tables[tableIndex].diets[currentIndex].dc}
+              dietChanges={tables[tableIndex].diets[currentIndex].dietChanges}
+              foodPrep={tables[tableIndex].diets[currentIndex].dietSub}
+              date={date}
+            />
+          ) : null}
+        </Paper>
         <div className={this.props.classes.root}>
           <Fab
             variant="extended"
@@ -198,21 +213,7 @@ export default class extends Component {
             <NextIcon className={this.props.classes.extendedIcon} />
           </Fab>
         </div>
-        <Paper className={this.props.classes.paper}>
-          {tables[tableIndex] && tables[tableIndex].diets.length > 0 ? (
-            <KitchenView
-              pageLength={tables[tableIndex].diets.length}
-              currentPage={currentIndex + 1}
-              species={tables[tableIndex].diets[currentIndex].species}
-              noteId={tables[tableIndex].diets[currentIndex].note_id}
-              prepNotes={tables[tableIndex].diets[currentIndex].prepNotes}
-              dc={tables[tableIndex].diets[currentIndex].dc}
-              dietChanges={tables[tableIndex].diets[currentIndex].dietChanges}
-              foodPrep={tables[tableIndex].diets[currentIndex].dietSub}
-              date={date}
-            />
-          ) : null}
-        </Paper>
+        <div className={this.props.classes.footer} />
       </div>
     );
   }

@@ -110,10 +110,10 @@ export const Profile = {
 
 export const Kitchen = {
   link: '/kitchen',
-  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
+  roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR, Roles.KEEPER],
   prep: {
     link: '/kitchen/prep',
-    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR],
+    roles: [Roles.ADMIN, Roles.NUTRITIONIST, Roles.KITCHEN, Roles.KITCHENPLUS, Roles.SUPERVISOR, Roles.KEEPER],
   },
 };
 

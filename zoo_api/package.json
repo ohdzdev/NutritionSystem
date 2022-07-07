@@ -22,7 +22,7 @@
     "loopback-connector-mysql": "^5.4.2",
     "loopback-graphql-server": "^1.1.8",
     "mkdirp": "^0.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "serve-favicon": "^2.5.0",
     "strong-error-handler": "^3.2.0",
     "tmp": "^0.1.0"
